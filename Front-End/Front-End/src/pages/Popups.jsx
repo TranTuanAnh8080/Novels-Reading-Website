@@ -4,7 +4,9 @@ import landscapeImage from "../assets/landscape.jpg";
 // Thư viện pháo giấy
 import Confetti from "react-confetti";
 import image from "../assets/inkrealm_logo.png";
-import vietnamFlag from "../assets/vietnam_flag.png"; 
+import vietnamFlag from "../assets/vietnam_flag.png";
+import LoadingPage from "./LoadingPage";
+
 const Popups = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -33,8 +35,10 @@ const Popups = () => {
         backgroundPosition: "center", // Căn giữa hình ảnh
         backgroundRepeat: "no-repeat", // Không lặp lại hình ảnh
         backgroundAttachment: "fixed", //
-      }}s
+      }}
     >
+      {/* Hiển thị trang LoadingPage khi đang ở trạng thái loading */}
+      {loading && <LoadingPage />}
 
 
       {/* Hiệu ứng pháo giấy */}
@@ -55,7 +59,8 @@ const Popups = () => {
         <img
           src={vietnamFlag}
           alt="Vietnam Flag"
-          className="absolute top-3 left-4 w-12 h-auto contrast-125 brightness-150 saturate-150"
+          className="absolute top-3 left-4 w-12 h-auto 
+          contrast-125 brightness-150 saturate-150 scale-75 hover:scale-100 transition-transform duration-300"
         />
 
         <img
@@ -79,14 +84,13 @@ const Popups = () => {
           mạn, phiêu lưu, kinh dị cho đến truyện ngắn đầy cảm xúc. Hãy tham gia
           cộng đồng Inkrealm để khám phá và chia sẻ những câu chuyện của riêng bạn nhé!
         </h4>
-        <Link to="/LoginPage">
-          <button
-            onClick={() => handleNavigateWithLoading("/LoginPage")}
-            className=" animate-pulse bg-gradient-to-r from-cyan-200 via-sky-100 to-red-200 px-8 py-3 rounded-full text-lg font-mono font-bold text-sky-800 shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
-          >
-            🚀Khám phá ngay
-          </button>
-        </Link>
+        <button
+          onClick={() => handleNavigateWithLoading("/RegisterPage")}
+          className=" animate-pulse bg-gradient-to-r from-cyan-200 via-sky-100 to-red-200 px-8 py-3 rounded-full text-lg font-mono font-bold text-sky-800 shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
+        >
+          🚀Khám phá ngay
+        </button>
+
       </div>
     </div>
   );

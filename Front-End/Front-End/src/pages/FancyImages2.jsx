@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import landScapeImage from "../assets/landscape1.png";
-import landScapeImage2 from "../assets/landscape2.png";
-import landScapeImage3 from "../assets/landscape3.png";
+import landScapeImage4 from "../assets/landscape4.png";
+import landScapeImage5 from "../assets/landscape5.png";
+import landScapeImage6 from "../assets/landscape6.png";
 
-function FancyImages() {
-  const images = [landScapeImage, landScapeImage2, landScapeImage3];
+function FancyImages2() {
+  const images = [landScapeImage4, landScapeImage5, landScapeImage6];
 
   return (
     <div className="flex w-full h-screen overflow-hidden ">
@@ -33,4 +33,4 @@ function FancyImages() {
   );
 }
 
-export default FancyImages;
+export default FancyImages2;

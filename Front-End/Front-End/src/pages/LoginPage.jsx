@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from "react";
 import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";
-import landScapeImage from "../assets/landscape1.png"; 
-import landScapeImage2 from "../assets/landscape2.png";
-import landScapeImage3 from "../assets/landscape3.png";
 import Confetti from "react-confetti";
 import FancyImages from "./FancyImages";
 
 const LoginPage = () => {
-const [showConfetti, setShowConfetti] = useState(true);
+    const [showConfetti, setShowConfetti] = useState(true);
     const [showPassword, setShowPassword] = useState(false); // State để điều khiển hiển thị mật khẩu
 
 
     // tắt confetti sau 8 giây
-  useEffect(() => {
-    const timer = setTimeout(() => setShowConfetti(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
-  
+    useEffect(() => {
+        const timer = setTimeout(() => setShowConfetti(false), 5000);
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
-        
+
         <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 flex-row">
             <FancyImages />
             {/* Hiệu ứng pháo giấy */}
@@ -34,14 +31,17 @@ const [showConfetti, setShowConfetti] = useState(true);
             <img
                 src={vietnamFlag}
                 alt="Vietnam Flag"
-                className="absolute top-3 right-4 w-15 h-auto contrast-125 brightness-150 saturate-150"
+                className="absolute top-3 right-4 w-15 h-auto 
+                contrast-125 brightness-150 saturate-150
+                scale-75 hover:scale-100 transition-transform duration-300
+                "
             />
             <div className="w-auto flex flex-col justify-center px-16 mt-4">
                 {/* Logo Inkrealm */}
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
+                    className="mb-3 w-42 h-17 contrast-125 brightness-90 saturate-200"
                 />
                 <p className="text-gray-600 mb-3 text-3xl font-mono font-bold">
                     Khám phá thế giới truyện <br /> cùng chúng tôi ❤️
@@ -49,7 +49,7 @@ const [showConfetti, setShowConfetti] = useState(true);
                 <form>
                     {/* Email */}
                     <div className="mb-6">
-                        <label className="block text-gray-700 font-mono font-bold mb-2 text-xl">✉️</label>
+                        <label className="block text-gray-700 font-mono font-bold text-xl">✉️</label>
                         <input
                             type="email"
                             placeholder="Nhập email của bạn"
@@ -58,8 +58,8 @@ const [showConfetti, setShowConfetti] = useState(true);
                     </div>
 
                     {/* Password */}
-                    <div className="mb-8">
-                        <label className="block text-gray-700 font-mono font-bold mb-2 text-xl">🔒</label>
+                    <div className="mb-10">
+                        <label className="block text-gray-700 font-mono font-bold text-xl">🔒</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -141,7 +141,7 @@ const [showConfetti, setShowConfetti] = useState(true);
                     <div className="text-center mt-6">
                         <p className="text-gray-600 font-mono font-bold">Bạn chưa có tài khoản?</p>
                         <a
-                            href="/register"
+                            href="/RegisterPage"
                             className="text-blue-500 hover:underline font-mono font-bold"
                         >
                             Tạo tài khoản

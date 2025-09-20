@@ -2,23 +2,23 @@ import React from "react";
 import image from "../assets/inkrealm_logo.png";
 const LoadingPage = () => { 
     return (
-        <div className="relative inset-0 z-50 flex flex-col items-center text-center justify-center 
-        bg-gradient-to-br from-zinc-100 via-sky-100 to-red-100"
+        <div className="fixed inset-0 z-50 flex flex-col items-center text-center justify-center 
+        bg-gradient-to-br from-rose-200 via-rose-50 to-yellow-100"
         >
             <img
                 src={image}
                 alt="Inkrealm Logo"
-                className="h-15 w-auto mb-6 animate-pulse contrast-125 saturate-150 brightness-90"
+                className="h-18 w-auto mb-6 animate-pulse contrast-125 saturate-150 brightness-90 mr-5"
             />
             {/* Spinner */}
-            <div class='flex space-x-2 justify-center items-center'>
+            <div class='flex space-x-2 justify-center items-center mb-5'>
                 <span class='sr-only'>Loading...</span>
-                <div class='h-4 w-4 bg-sky-700 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-                <div class='h-4 w-4 bg-sky-700 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-                <div class='h-4 w-4 bg-sky-700 rounded-full animate-bounce'></div>
+                <div class='h-2 w-2 bg-sky-700 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                <div class='h-2 w-2 bg-sky-700 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                <div class='h-2 w-2 bg-sky-700 rounded-full animate-bounce'></div>
             </div>
-            <p className="mt-5 text-lg font-medium font-mono animate-pulse text-sky-800">
-                "Nơi cảm xúc vỡ òa trong từng chương chữ"
+            <p className="mt-5 text-xl font-extrabold font-mono animate-pulse text-sky-800">
+                "⭐Nơi cảm xúc vỡ òa trong từng chương chữ🌸"
             </p>
         </div>
     );
