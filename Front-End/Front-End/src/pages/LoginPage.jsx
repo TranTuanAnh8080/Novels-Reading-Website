@@ -8,7 +8,6 @@ const LoginPage = () => {
     const [showConfetti, setShowConfetti] = useState(true);
     const [showPassword, setShowPassword] = useState(false); // State để điều khiển hiển thị mật khẩu
 
-
     // tắt confetti sau 8 giây
     useEffect(() => {
         const timer = setTimeout(() => setShowConfetti(false), 5000);
@@ -36,19 +35,19 @@ const LoginPage = () => {
                 scale-75 hover:scale-100 transition-transform duration-300
                 "
             />
-            <div className="w-auto flex flex-col justify-center px-16 mt-4">
+            <div className="w-auto flex flex-col justify-center px-16 mt-4 font-mono">
                 {/* Logo Inkrealm */}
                 <img
                     src={image}
                     alt="Inkrealm Logo"
                     className="mb-3 w-42 h-17 contrast-125 brightness-90 saturate-200"
                 />
-                <p className="text-gray-600 mb-3 text-3xl font-mono font-bold">
+                <p className="text-gray-600 mb-3 text-2xl font-mono font-bold">
                     Khám phá thế giới truyện <br /> cùng chúng tôi ❤️
                 </p>
                 <form>
                     {/* Email */}
-                    <div className="mb-6">
+                    <div className="mb-3">
                         <label className="block text-gray-700 font-mono font-bold text-xl">✉️</label>
                         <input
                             type="email"
@@ -58,7 +57,7 @@ const LoginPage = () => {
                     </div>
 
                     {/* Password */}
-                    <div className="mb-10">
+                    <div className="mb-5">
                         <label className="block text-gray-700 font-mono font-bold text-xl">🔒</label>
                         <div className="relative">
                             <input
@@ -108,14 +107,18 @@ const LoginPage = () => {
                     <button
                         type="submit"
                         className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500 text-white py-2 font-mono rounded-3xl hover:bg-blue-600
-                         transition duration-300 justify-center flex items-center mx-auto mb-4 font-extrabold hover:scale-105 transform"
+                         transition duration-300 justify-center flex items-center
+                          mx-auto mb-4 font-extrabold hover:scale-105 transform mt-7"
                     >
                         Đăng Nhập
                     </button>
 
                     {/* Quên mật khẩu */}
-                    <div className="text-center mt-4">
-                        <a href="/forgot-password" className=" font-mono text-blue-500 hover:underline font-bold">
+                   <div className="text-center mt-6">
+                        <a
+                            href="/ForgotPasswordModal"
+                            className="text-blue-500 hover:underline font-mono font-bold"
+                        >
                             Quên mật khẩu?
                         </a>
                     </div>

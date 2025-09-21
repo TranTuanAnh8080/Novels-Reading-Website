@@ -54,7 +54,7 @@ const Popups = () => {
       {/* Nội dung popup */}
       <div className="relative bg-gradient-to-br from-transparent via-sky-100 to-transparent 
       rounded-4xl p-8 text-center w-11/12 max-w-md shadow-2xl
-       transform scale-100 hover:scale-105 transition-transform duration-300 z-10">
+       transform scale-100 hover:scale-105 transition-transform duration-300 z-10 font-mono">
 
         <img
           src={vietnamFlag}
@@ -68,7 +68,7 @@ const Popups = () => {
           alt="Inkrealm Logo"
           className="ml-27 mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
         />
-        <h1 className="text-3xl mb-7 text-sky-800 font-bold font-mono">
+        <h1 className="text-3xl mb-7 text-sky-800 font-extrabold font-mono">
           Chào mừng bạn đã đến!
         </h1>
         <h2 className="text-sky-800 mb-4 text-lg font-medium font-mono">
@@ -88,7 +88,7 @@ const Popups = () => {
           onClick={() => handleNavigateWithLoading("/RegisterPage")}
           className=" animate-pulse bg-gradient-to-r from-cyan-200 via-sky-100 to-red-200 px-8 py-3 rounded-full text-lg font-mono font-bold text-sky-800 shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
         >
-          🚀Khám phá ngay
+          🚀Khám phá ngay⭐
         </button>
 
       </div>
