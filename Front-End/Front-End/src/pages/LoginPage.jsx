@@ -40,9 +40,9 @@ const LoginPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-3 w-42 h-17 contrast-125 brightness-90 saturate-200"
+                    className="mb-3 w-41 h-16 contrast-125 brightness-90 saturate-200"
                 />
-                <p className="text-gray-600 mb-3 text-2xl font-mono font-bold">
+                <p className="text-gray-700 mb-3 text-2xl font-mono font-bold">
                     Khám phá thế giới truyện <br /> cùng chúng tôi ❤️
                 </p>
                 <form>
@@ -114,22 +114,22 @@ const LoginPage = () => {
                     </button>
 
                     {/* Quên mật khẩu */}
-                   <div className="text-center mt-6">
+                    <div className="text-center mt-6">
                         <a
                             href="/ForgotPasswordModal"
-                            className="text-blue-500 hover:underline font-mono font-bold"
+                            className="text-blue-500 font-mono font-bold"
                         >
                             Quên mật khẩu?
                         </a>
                     </div>
 
                     {/* Đăng nhập với Google */}
-                    <div className="mt-6 rounded-4xl flex justify-center items-center ">
+                    <div className="mt-6 rounded-4xl flex justify-center items-center font-mono">
                         <button
                             type="button"
                             className="w-100 h-auto flex items-center justify-center bg-white border
                              border-gray-300 py-2 rounded-3xl hover:bg-gray-100 
-                             transition duration-300 font-mono"
+                             transition duration-300"
                         >
                             <img
                                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png"
@@ -142,10 +142,10 @@ const LoginPage = () => {
 
                     {/* Tạo tài khoản */}
                     <div className="text-center mt-6">
-                        <p className="text-gray-600 font-mono font-bold">Bạn chưa có tài khoản?</p>
+                        <p className="text-gray-700 font-mono font-bold">Bạn chưa có tài khoản?</p>
                         <a
                             href="/RegisterPage"
-                            className="text-blue-500 hover:underline font-mono font-bold"
+                            className="text-blue-500 font-mono font-bold"
                         >
                             Tạo tài khoản
                         </a>
