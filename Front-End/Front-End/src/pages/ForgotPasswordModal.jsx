@@ -86,11 +86,11 @@ const ForgotPasswordModal = () => {
                         transition={{ duration: 0.4 }}
                         className="fixed top-6 left-1/2 transform -translate-x-1/2 
               bg-gradient-to-r from-emerald-100 via-sky-100 to-pink-100
-              text-green-800 font-mono font-medium
+              text-green-600 font-mono font-medium
               px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50"
                     >
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                        <span>Link khôi phục đã được gửi! Vui lòng kiểm tra email của bạn.</span>
+                        <CheckCircle className="w-5 h-5 text-green-600 font-mono font-bold" />
+                        <p className="font-mono font-bold">Link khôi phục đã được gửi! Vui lòng kiểm tra email của bạn.</p>
                     </motion.div>
                 </AnimatePresence>
             )}

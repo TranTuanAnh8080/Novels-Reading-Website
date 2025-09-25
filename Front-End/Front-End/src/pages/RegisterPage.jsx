@@ -39,7 +39,7 @@ const RegisterPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-5 w-42 h-17 contrast-125 brightness-90 saturate-200 ml-27"
+                    className="mb-5 w-42 h-17 contrast-125 brightness-90 saturate-200 ml-31"
                 />
                 <form>
                     {/* Họ và Tên */}
@@ -122,7 +122,8 @@ const RegisterPage = () => {
                     <div className="mb-7">
                         <label className="block text-gray-700 font-medium mb-2">Ngày sinh <strong className="text-red-500">*</strong></label>
                         <div className="flex space-x-2">
-                            <select className="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select className="w-1/3 px-4 py-2 border rounded-lg focus:outline-none
+                             focus:ring-2 focus:ring-blue-500">
                                 <option>Ngày</option>
                                 {/* Thêm các ngày */}
                                 {[...Array(31)].map((_, i) => (
@@ -159,13 +160,13 @@ const RegisterPage = () => {
                          transition duration-300 justify-center
                           flex items-center mx-auto mb-4 font-extrabold hover:scale-105 transform font-mono"
                     >
-                        Đăng ký
+                        Đăng Ký
                     </button>
 
                     {/* Đã có tài khoản */}
                     <div className="text-center mt-2 font-mono">
-                        <p className="text-gray-600 font-bold">Bạn đã có tài khoản?</p>
-                        <a href="/LoginPage" className="text-blue-600 hover:underline ">
+                        <p className="text-gray-700 font-bold font-mono">Bạn đã có tài khoản?</p>
+                        <a href="/LoginPage" className="text-blue-500 font-bold">
                             Đăng nhập
                         </a>
                     </div>

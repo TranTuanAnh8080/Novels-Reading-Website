@@ -17,7 +17,7 @@ const Popups = () => {
     setTimeout(() => {
       setLoading(false);
       navigate(path);
-    }, 1000); // Giữ trạng thái loading trong 1 giây
+    }, 1500); // Giữ trạng thái loading trong 1.5 giây
   };
 
   // tắt confetti sau 8 giây
