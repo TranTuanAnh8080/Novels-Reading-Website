@@ -5,28 +5,25 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ForgotPasswordModal from "../pages/ForgotPasswordModal";
 import HomePage from "../pages/HomePage";
-
 import PaymentItem from "../pages/PaymentItem";
-
 import HomeLoggedIn from "../pages/HomeLoggedIn";
 import Profile from "../pages/Profile";
 import LibraryPage from "../pages/LibraryPage";
 const AppRouter = createBrowserRouter([
 
-    {path: "/", element: <Popups />},
-    {path: "/LoadingPage", element: <LoadingPage />},
-    {path: "/LoginPage", element: <LoginPage />},
-    {path: "/RegisterPage", element: <RegisterPage />},
-    {path: "/ForgotPasswordModal", element: <ForgotPasswordModal />},
-<<<<<<< HEAD
-    { path: "/HomePage", element: <HomePage /> }, 
+    { path: "/", element: <Popups /> },
+    { path: "/LoadingPage", element: <LoadingPage /> },
+    { path: "/LoginPage", element: <LoginPage /> },
+    { path: "/RegisterPage", element: <RegisterPage /> },
+    { path: "/ForgotPasswordModal", element: <ForgotPasswordModal /> },
+
+    { path: "/HomePage", element: <HomePage /> },
     { path: "/PaymentItem", element: <PaymentItem /> },
-=======
-    {path: "/HomePage", element: <HomePage /> },
-    {path: "/HomeLoggedIn", element: <HomeLoggedIn /> },
-    {path: "/Profile", element: <Profile /> },
-    {path: "/LibraryPage", element: <LibraryPage /> },   
->>>>>>> c409a082e8946802b5f2c261defffdc1cfa9eebb
+
+    { path: "/HomePage", element: <HomePage /> },
+    { path: "/HomeLoggedIn", element: <HomeLoggedIn /> },
+    { path: "/Profile", element: <Profile /> },
+    { path: "/LibraryPage", element: <LibraryPage /> },
 
 ]);
 
