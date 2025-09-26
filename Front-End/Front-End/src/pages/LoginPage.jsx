@@ -23,7 +23,7 @@ const LoginPage = () => {
 
         // TODO: gọi API login check tài khoản ở đây
         // Nếu login ok thì navigate sang HomePage
-        navigate("/HomePage");
+        navigate("/PaymentItem");
     };
 
     return (

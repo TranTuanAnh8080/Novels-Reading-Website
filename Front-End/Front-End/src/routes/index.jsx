@@ -5,6 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ForgotPasswordModal from "../pages/ForgotPasswordModal";
 import HomePage from "../pages/HomePage";
+import PaymentItem from "../pages/PaymentItem";
 const AppRouter = createBrowserRouter([
 
     {path: "/", element: <Popups />},
@@ -13,6 +14,7 @@ const AppRouter = createBrowserRouter([
     {path: "/RegisterPage", element: <RegisterPage />},
     {path: "/ForgotPasswordModal", element: <ForgotPasswordModal />},
     { path: "/HomePage", element: <HomePage /> }, 
+    { path: "/PaymentItem", element: <PaymentItem /> },
 
 ]);
 

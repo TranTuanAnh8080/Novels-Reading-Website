@@ -9,7 +9,7 @@ function Footer() {
         {/* Logo + desc */}
         <div>
           <div className="flex items-center space-x-2 mb-3">
-            <img src={logo} alt="InkRealm" className="h-8 w-auto" />
+            <img src={logo} alt="InkRealm" className="h-10 w-auto" />
           </div>
           <p className="text-sm">
             Nền tảng đọc truyện chữ hàng đầu Việt Nam, với hàng ngàn tác phẩm từ nhiều quốc gia và nền văn hóa.
