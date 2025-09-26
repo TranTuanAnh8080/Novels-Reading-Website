@@ -136,7 +136,7 @@ const LoginPage = () => {
                     <div className="text-center mt-6">
                         <a
                             href="/ForgotPasswordModal"
-                            className="text-blue-500 hover:underline font-mono font-bold"
+                            className="text-blue-500 font-mono font-bold"
                         >
                             Quên mật khẩu?
                         </a>
@@ -166,7 +166,7 @@ const LoginPage = () => {
                         </p>
                         <a
                             href="/RegisterPage"
-                            className="text-blue-500 hover:underline font-mono font-bold"
+                            className="text-blue-500 font-mono font-bold"
                         >
                             Tạo tài khoản
                         </a>
