@@ -1,7 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "../assets/inkrealm_logo.png";
+import logo from "../../assets/inkrealm_logo.png";
 
 function Header() {
   return (

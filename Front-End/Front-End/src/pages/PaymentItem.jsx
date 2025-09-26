@@ -2,8 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Info, AlertTriangle } from "lucide-react";
 import Footer from "../components/Footer";
-import Header from "../components/Header";
-
+import HeaderProfile from "../components/ProfilePage/HeaderProfile";
 const packages = [
     { id: 1, coins: "10.000 xu", price: "10.000đ" },
     { id: 2, coins: "25.000 xu", price: "25.000đ" },
@@ -23,7 +22,7 @@ export default function PaymentItem() {
     return (
         <div className="min-h-screen flex flex-col
          bg-gradient-to-r from-sky-100 via-transparent to-rose-100">
-            <Header />
+            <HeaderProfile />
             {/* Nội dung chính */}
             <main className="flex-grow py-12 px-4">
                 <div className="max-w-4xl mx-auto">

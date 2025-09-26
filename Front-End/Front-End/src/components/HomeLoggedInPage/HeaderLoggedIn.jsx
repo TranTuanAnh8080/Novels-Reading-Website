@@ -1,7 +1,8 @@
 import React from "react";
 import { Search, Bell, Bookmark, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "../assets/inkrealm_logo.png";
+import logo from "../../assets/inkrealm_logo.png";
+
 
 function HeaderLoggedIn() {
   const handleLogout = () => {
@@ -34,7 +35,7 @@ function HeaderLoggedIn() {
           {/* Avatar */}
           <Link to="/Profile">
           <img
-            src="https://img.docnhanh.vn/images/uploads/2025/01/20/avaaaaaaaa-72913.jpg"
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
             alt="user avatar"
             className="w-9 h-9 rounded-full border cursor-pointer hover:opacity-80"
           />

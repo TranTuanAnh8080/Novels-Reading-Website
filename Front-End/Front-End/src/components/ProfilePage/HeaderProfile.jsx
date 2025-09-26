@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/inkrealm_logo.png";
-
+import logo from "../../assets/inkrealm_logo.png";
 function HeaderProfile() {
   return (
     <header className="bg-white shadow-sm">
@@ -21,7 +20,7 @@ function HeaderProfile() {
           </Link>
           <Link to="/Profile">
             <img
-              src="https://img.docnhanh.vn/images/uploads/2025/01/20/avaaaaaaaa-72913.jpg"
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="avatar"
               className="w-9 h-9 rounded-full border"
             />

@@ -51,7 +51,7 @@ function Profile() {
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <img
-                  src="https://img.docnhanh.vn/images/uploads/2025/01/20/avaaaaaaaa-72913.jpg"
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                   alt="avatar"
                   className="w-20 h-20 rounded-full border"
                 />
@@ -78,7 +78,6 @@ function Profile() {
                 </label>
                 <input
                   type="text"
-                  defaultValue="Nguyễn Minh Anh"
                   className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -89,14 +88,15 @@ function Profile() {
                 </label>
                 <input
                   type="text"
-                  defaultValue="MinhAnh_Reader"
                   className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium mb-1">Biệt hiệu</label>
-                <select className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <select className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2
+                 focus:ring-blue-500 focus:outline-none">
+                  <option>Biệt hiệu</option>
                   <option>Độc giả</option>
                   <option>Tác giả</option>
                   <option>Admin</option>
@@ -122,7 +122,6 @@ function Profile() {
                 <label className="block text-sm font-medium mb-1">Email</label>
                 <input
                   type="email"
-                  defaultValue="minh.anh@email.com"
                   className="w-full border rounded-md px-3 py-2 text-sm bg-gray-100 text-gray-600 cursor-not-allowed"
                   disabled
                 />
@@ -137,12 +136,14 @@ function Profile() {
                   <span className="text-lg font-semibold text-gray-800">
                     14.000 xu
                   </span>
+                 <Link to="/PaymentItem">
                   <button
                     type="button"
                     className="px-4 py-2 bg-green-500 text-white rounded-md text-sm hover:bg-green-600"
                   >
                     + Nạp xu
                   </button>
+                 </Link>
                   <button
                     type="button"
                     className="px-4 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600"
