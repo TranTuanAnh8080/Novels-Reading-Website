@@ -85,7 +85,7 @@ const Popups = () => {
           cộng đồng Inkrealm để khám phá và chia sẻ những câu chuyện của riêng bạn nhé!
         </h4>
         <button
-          onClick={() => handleNavigateWithLoading("/RegisterPage")}
+          onClick={() => handleNavigateWithLoading("/HomePage")}
           className=" animate-pulse bg-gradient-to-r from-cyan-200 via-sky-100 to-red-200 px-8 py-3 rounded-full text-lg font-mono font-bold text-sky-800 shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
         >
           🚀Khám phá ngay⭐

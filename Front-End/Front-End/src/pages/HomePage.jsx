@@ -1,9 +1,9 @@
 import React from "react";
-import Header from "../components/Header";
-import HeroSection from "../components/HeroSection";
-import WelcomeSection from "../components/WelcomeSection";
-import FeaturesSection from "../components/FeaturesSection";
-import GenresSection from "../components/GenresSection";
+import Header from "../components/HomePage/Header";
+import HeroSection from "../components/HomePage/HeroSection";
+import WelcomeSection from "../components/HomePage/WelcomeSection";
+import FeaturesSection from "../components/HomePage/FeaturesSection";
+import GenresSection from "../components/HomePage/GenresSection";
 import Footer from "../components/Footer";
 
 function HomePage() {
