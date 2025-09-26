@@ -8,7 +8,7 @@ function SidebarLibrary() {
   const menuItems = [
     { path: "/Profile", label: "Thông tin cá nhân", icon: User },
     { path: "/LibraryPage", label: "Tủ truyện", icon: BookOpen },
-    { path: "/Upload", label: "Đăng truyện", icon: Upload },
+    { path: "/UploadNovel", label: "Đăng truyện", icon: Upload },
     { path: "/Transactions", label: "Lịch sử giao dịch", icon: Clock },
   ];
 

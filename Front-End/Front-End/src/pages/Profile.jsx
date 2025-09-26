@@ -22,10 +22,12 @@ function Profile() {
               <Book className="h-4 w-4" />
               <span>Tủ truyện</span>
             </Link>
-            <button className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
+            <Link to="/UploadNovel"
+              className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
               <Upload className="h-4 w-4" />
               <span>Đăng truyện</span>
-            </button>
+            </Link>
+
             <button className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
               <Clock className="h-4 w-4" />
               <span>Lịch sử giao dịch</span>
@@ -136,14 +138,14 @@ function Profile() {
                   <span className="text-lg font-semibold text-gray-800">
                     14.000 xu
                   </span>
-                 <Link to="/PaymentItem">
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-green-500 text-white rounded-md text-sm hover:bg-green-600"
-                  >
-                    + Nạp xu
-                  </button>
-                 </Link>
+                  <Link to="/PaymentItem">
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-green-500 text-white rounded-md text-sm hover:bg-green-600"
+                    >
+                      + Nạp xu
+                    </button>
+                  </Link>
                   <button
                     type="button"
                     className="px-4 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600"

@@ -56,7 +56,7 @@ function LibraryPage() {
 
       <div className="flex flex-1">
         <SidebarLibrary />
-
+    
         <main className="flex-1 p-6">
           <h1 className="text-xl font-bold mb-4">Tủ truyện của bạn</h1>
 
