@@ -22,8 +22,8 @@ const LoginPage = () => {
         console.log("✅ Login clicked");
 
         // TODO: gọi API login check tài khoản ở đây
-        // Nếu login ok thì navigate sang HomePage
-        navigate("/HomePage");
+        // Nếu login ok thì navigate sang HomeLoggedIn
+        navigate("/HomeLoggedIn");
     };
 
     return (
