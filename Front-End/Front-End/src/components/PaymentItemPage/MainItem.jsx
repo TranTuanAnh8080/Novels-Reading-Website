@@ -36,7 +36,8 @@ const MainItem = () => {
                     </div>
 
                     {/* Thông báo nhỏ */}
-                    <div className="bg-sky-50 border border-sky-200 text-sky-800 rounded-xl px-4 py-3 flex items-start gap-2 mb-10 shadow-sm">
+                    <div className="bg-gradient-to-r bg-violet-100 via-rose-50 to-yellow-100 border border-sky-200 text-sky-800
+                     rounded-xl px-4 py-3 flex items-start gap-2 mb-10 shadow-sm">
                         <Info className="w-5 h-5 text-sky-800 mt-0.5" />
                         <p className="text-center w-full text-sky-800 font-normal">
                             Vui lòng chuyển khoản đúng nội dung để hệ thống tự động cộng xu. <br />
@@ -54,15 +55,13 @@ const MainItem = () => {
                                     key={pkg.id}
                                     className={`relative rounded-3xl p-8 text-center transition-all cursor-pointer
               ${selected === pkg.id
-                                            ? "bg-gradient-to-b from-sky-50 to-white border-2 border-sky-400 shadow-xl"
+                                            ? "bg-gradient-to-r bg-violet-100 via-rose-100 to-yellow-100 shadow-xl"
                                             : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                         }`}
                                     whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.96 }}
                                     onClick={() => handleSelect(pkg)}
                                 >
-
-
                                     <div className="text-5xl mb-4">{pkg.icon}</div>
                                     <h3 className="text-2xl font-extrabold text-gray-800">{pkg.coins}</h3>
                                     <p className="text-gray-500 mt-1 text-lg">{pkg.price}</p>
@@ -85,7 +84,7 @@ const MainItem = () => {
                                     key={pkg.id}
                                     className={`relative rounded-3xl p-8 text-center transition-all cursor-pointer
               ${selected === pkg.id
-                                            ? "bg-gradient-to-b from-sky-50 to-white border-2 border-sky-400 shadow-xl"
+                                            ? "bg-gradient-to-b bg-violet-100 via-rose-100 to-yellow-100 border-sky-400 shadow-xl"
                                             : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                         }`}
                                     whileHover={{ scale: 1.04 }}
@@ -121,7 +120,7 @@ const MainItem = () => {
                                 key={packages[4].id}
                                 className={`relative rounded-3xl p-8 text-center transition-all cursor-pointer md:col-span-2
             ${selected === packages[4].id
-                                        ? "bg-gradient-to-b from-sky-50 to-white border-2 border-sky-400 shadow-xl"
+                                        ? "bg-gradient-to-b bg-violet-100 via-rose-100 to-yellow-100 border-sky-400 shadow-xl"
                                         : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                     }`}
                                 whileHover={{ scale: 1.04 }}
@@ -149,14 +148,34 @@ const MainItem = () => {
                         </div>
                     </div>
 
+                    {/* Button xác nhận lựa chọn gói thanh toán */}
+                    <div className="text-center mt-6 mb-6">
+                        <button
+                            disabled={!selected}
+                            className={`px-4 py-3 rounded-full font-medium shadow-md transition-all 
+        ${selected
+                                    ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:brightness-110"
+                                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                }`}
+                            onClick={() => {
+                                if (selected) {
+                                    alert(`Bạn đã chọn gói: ${packages.find(p => p.id === selected).coins}`);
+                                    // 👉 Sau này có thể gọi API thanh toán tại đây
+                                }
+                            }}
+                        >
+                            {selected ? "Xác nhận gói đã chọn" : "Chọn gói để tiếp tục"}
+                        </button>
+                    </div>
+
                     {/* Hoặc chọn phương thức khác */}
-                    <div className="text-center mb-3 mt-[-2%]">
+                    <div className="text-center mb-3 mt-[-2%] font-medium">
                         <p className="text-gray-600 mb-2">Hoặc chọn phương thức khác</p>
                         {/* Nạp bằng chuyển thẻ cào */}
                         <div className="text-center">
                             <a
                                 href="/ScratchCardPayment"
-                                className="text-blue-600 font-mono font-bold"
+                                className="text-blue-600 font-medium"
                             >
                                 🏦Nạp bằng chuyển thẻ cào💵
                             </a>
