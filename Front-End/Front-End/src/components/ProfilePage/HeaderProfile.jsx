@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/inkrealm_logo.png";
+
 function HeaderProfile() {
   return (
     <header className="bg-white shadow-sm">

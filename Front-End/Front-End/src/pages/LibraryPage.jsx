@@ -60,20 +60,29 @@ function LibraryPage() {
         <main className="flex-1 p-6">
           <h1 className="text-xl font-bold mb-4">Tủ truyện của bạn</h1>
 
-          {/* Filters */}
-          <div className="flex space-x-4 mb-6">
-            <select className="border rounded-md px-3 py-2 text-sm">
-              <option>Trạng thái: Tất cả</option>
-              <option>Đang đọc</option>
-              <option>Đã hoàn thành</option>
-              <option>Chưa đọc</option>
-            </select>
-            <select className="border rounded-md px-3 py-2 text-sm">
-              <option>Sắp xếp theo: Thời gian đọc gần nhất</option>
-              <option>Tên A-Z</option>
-              <option>Tên Z-A</option>
-            </select>
-          </div>
+      {/* Filters */}
+      <div className="bg-white border border-gray-200 rounded-md p-4 flex items-center space-x-6 mb-6 shadow-sm">
+        {/* Trạng thái */}
+        <div className="flex items-center space-x-2">
+          <label className="text-sm text-gray-600">Trạng thái:</label>
+          <select className="border rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option>Tất cả</option>
+            <option>Đang đọc</option>
+            <option>Đã hoàn thành</option>
+            <option>Chưa đọc</option>
+          </select>
+        </div>
+
+        {/* Sắp xếp theo */}
+        <div className="flex items-center space-x-2">
+          <label className="text-sm text-gray-600">Sắp xếp theo:</label>
+          <select className="border rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option>Thời gian đọc gần nhất</option>
+            <option>Tên A-Z</option>
+            <option>Tên Z-A</option>
+          </select>
+        </div>
+      </div>
 
           {/* Book grid */}
           <div className="grid grid-cols-3 gap-6">

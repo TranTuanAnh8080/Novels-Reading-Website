@@ -1,15 +1,14 @@
 import React from 'react';
-import UploadItem from '../components/UploadNovelPage.jsx/UploadItem';
-import HeaderProfile from "../components/ProfilePage/HeaderProfile";
+import UploadItem from '../components/UploadNovelPage/UploadItem';
+import HeaderUpload from "../components/UploadNovelPage/HeaderUpload";
 import Footer from '../components/Footer';
-import SidebarLibrary from '../components/LibraryPage/SidebarLibrary';
+
 const ChooseUploadNovel = () => {
     return (
         <div className='min-h-screen flex flex-col'>
-            <HeaderProfile />
-            <div className="flex flex-1">
-                <SidebarLibrary />
-                <UploadItem />
+            <HeaderUpload />
+            <div className="flex flex-1 justify-center items-center">
+            <UploadItem />
             </div>
             <Footer />
         </div>
