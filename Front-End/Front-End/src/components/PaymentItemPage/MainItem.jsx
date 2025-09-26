@@ -28,7 +28,7 @@ const MainItem = () => {
                     {/* Tiêu đề */}
                     <div className="text-center mb-10">
                         <h1 className="text-3xl font-bold text-sky-800 mb-2">
-                            Nạp Xu Bằng Hình Thức Chuyển Khoản
+                            Nạp xu bằng hình thức chuyển khoản
                         </h1>
                         <p className="text-gray-600">
                             Bạn hãy chọn gói nạp xu phù hợp để mở ra nhiều tiện ích và trải nghiệm tốt hơn nhé 🌟
@@ -54,7 +54,7 @@ const MainItem = () => {
                                 <motion.div
                                     key={pkg.id}
                                     className={`relative rounded-3xl p-8 text-center transition-all cursor-pointer
-              ${selected === pkg.id
+                                    ${selected === pkg.id
                                             ? "bg-gradient-to-r bg-violet-100 via-rose-100 to-yellow-100 shadow-xl"
                                             : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                         }`}
@@ -68,7 +68,7 @@ const MainItem = () => {
 
                                     <button
                                         className={`mt-6 w-full py-3 rounded-full font-bold shadow-md transition-all 
-                ${selected === pkg.id
+                                    ${selected === pkg.id
                                                 ? "bg-sky-600 text-white hover:bg-sky-700"
                                                 : "bg-gradient-to-r from-sky-400 to-indigo-400 text-white hover:brightness-110"
                                             }`}
@@ -83,7 +83,7 @@ const MainItem = () => {
                                 <motion.div
                                     key={pkg.id}
                                     className={`relative rounded-3xl p-8 text-center transition-all cursor-pointer
-              ${selected === pkg.id
+                                    ${selected === pkg.id
                                             ? "bg-gradient-to-b bg-violet-100 via-rose-100 to-yellow-100 border-sky-400 shadow-xl"
                                             : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                         }`}
@@ -105,7 +105,7 @@ const MainItem = () => {
 
                                     <button
                                         className={`mt-6 w-full py-3 rounded-full font-bold shadow-md transition-all 
-                ${selected === pkg.id
+                                    ${selected === pkg.id
                                                 ? "bg-sky-600 text-white hover:bg-sky-700"
                                                 : "bg-gradient-to-r from-sky-400 to-indigo-400 text-white hover:brightness-110"
                                             }`}
@@ -119,7 +119,7 @@ const MainItem = () => {
                             <motion.div
                                 key={packages[4].id}
                                 className={`relative rounded-3xl p-8 text-center transition-all cursor-pointer md:col-span-2
-            ${selected === packages[4].id
+                                ${selected === packages[4].id
                                         ? "bg-gradient-to-b bg-violet-100 via-rose-100 to-yellow-100 border-sky-400 shadow-xl"
                                         : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                     }`}
@@ -137,7 +137,7 @@ const MainItem = () => {
 
                                 <button
                                     className={`mt-6 w-80 py-3 rounded-full font-bold shadow-md transition-all 
-              ${selected === packages[4].id
+                                ${selected === packages[4].id
                                             ? "bg-sky-600 text-white hover:bg-sky-700"
                                             : "bg-gradient-to-r from-indigo-400 to-purple-500 text-white hover:brightness-110"
                                         }`}
@@ -153,7 +153,7 @@ const MainItem = () => {
                         <button
                             disabled={!selected}
                             className={`px-4 py-3 rounded-full font-medium shadow-md transition-all 
-        ${selected
+                            ${selected
                                     ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:brightness-110"
                                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                 }`}
@@ -177,7 +177,7 @@ const MainItem = () => {
                                 href="/ScratchCardPayment"
                                 className="text-blue-600 font-medium"
                             >
-                                🏦Nạp bằng chuyển thẻ cào💵
+                                🏦 Nạp bằng chuyển thẻ cào
                             </a>
                         </div>
                     </div>
@@ -187,7 +187,7 @@ const MainItem = () => {
           rounded-3xl px-4 py-5 flex items-start gap-3 shadow-sm mt-10">
                         <AlertTriangle className="w-6 h-6 text-amber-500 mt-0.5" />
                         <div className="text-sm text-amber-800 space-y-1">
-                            <p>⚠️ <b>Lưu ý quan trọng</b></p>
+                            <p><b>Lưu ý quan trọng</b></p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>Mỗi chuyển sĩ chỉ dùng 1 lần, xu sẽ không được cộng tự động nếu sai nội dung.</li>
                                 <li>Vui lòng chuyển khoản đúng số tiền theo gói đã chọn.</li>

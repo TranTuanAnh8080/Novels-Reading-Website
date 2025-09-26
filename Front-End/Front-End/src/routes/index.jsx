@@ -10,6 +10,7 @@ import HomeLoggedIn from "../pages/HomeLoggedIn";
 import Profile from "../pages/Profile";
 import LibraryPage from "../pages/LibraryPage";
 import ChooseUploadNovel from "../pages/ChooseUploadNovel";
+import UploadPage from "../pages/UploadPage";
 
 const AppRouter = createBrowserRouter([
 
@@ -24,6 +25,7 @@ const AppRouter = createBrowserRouter([
     { path: "/Profile", element: <Profile /> },
     { path: "/LibraryPage", element: <LibraryPage /> },
     { path: "/UploadNovel", element: <ChooseUploadNovel /> },
+    { path: "/UploadPage", element: <UploadPage /> }
 
 ]);
 

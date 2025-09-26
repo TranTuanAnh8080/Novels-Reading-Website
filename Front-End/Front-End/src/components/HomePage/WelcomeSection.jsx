@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function WelcomeSection() {
   return (
@@ -13,9 +14,9 @@ function WelcomeSection() {
           Đăng ký để tạo tủ truyện cá nhân, theo dõi chương mới và đăng truyện của bạn!
         </p>
         <div className="flex space-x-3">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700">
+          <Link to= "/RegisterPage" className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700">
             Đăng ký ngay
-          </button>
+          </Link>
           <button className="px-4 py-2 border border-gray-300 rounded-full text-sm hover:bg-gray-100">
             Tìm hiểu thêm
           </button>

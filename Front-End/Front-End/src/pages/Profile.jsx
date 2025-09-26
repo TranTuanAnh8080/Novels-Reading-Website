@@ -22,7 +22,7 @@ function Profile() {
               <Book className="h-4 w-4" />
               <span>Tủ truyện</span>
             </Link>
-            <Link to="/UploadNovel"
+            <Link to="/UploadPage"
               className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
               <Upload className="h-4 w-4" />
               <span>Đăng truyện</span>

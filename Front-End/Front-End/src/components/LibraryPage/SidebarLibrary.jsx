@@ -8,12 +8,12 @@ function SidebarLibrary() {
   const menuItems = [
     { path: "/Profile", label: "Thông tin cá nhân", icon: User },
     { path: "/LibraryPage", label: "Tủ truyện", icon: BookOpen },
-    { path: "/UploadNovel", label: "Đăng truyện", icon: Upload },
+    { path: "/UploadPage", label: "Đăng truyện", icon: Upload },
     { path: "/Transactions", label: "Lịch sử giao dịch", icon: Clock },
   ];
 
   return (
-    <aside className="w-64 bg-white shadow-md rounded-md p-5 mt-6 inline-block align-top">
+    <aside className="w-64 bg-white shadow-md rounded-md p-5 mt-6 flex flex-col self-start">
       {/* Heading */}
       <h2 className="text-lg font-bold text-gray-800 mb-8">Tủ truyện</h2>
 
