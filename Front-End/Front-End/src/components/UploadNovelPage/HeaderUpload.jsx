@@ -16,7 +16,6 @@ const HeaderUpload = () => {
           <a href="/HomeLoggedIn" className="hover:text-sky-600">Trang chủ</a>
           <a href="/categories" className="hover:text-sky-600">Thể loại</a>
           <a href="/ranking" className="hover:text-sky-600">Bảng xếp hạng</a>
-          <a href="/upload" className="text-sky-600 font-semibold">Đăng truyện</a>
         </nav>
       </div>
     </header>

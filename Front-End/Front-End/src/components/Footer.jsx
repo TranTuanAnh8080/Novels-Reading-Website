@@ -30,12 +30,12 @@ const paymentMethods = [
   { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTlp4qW2M8xPofmuZHwEfGi9mNMWUG0zs53A&s", alt: "ZaloPay" },
   { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOK-ExH64w4vaz6r2HY7kpEc0SEZKmpq7CKg&s", alt: "Visa" },
   { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD7oa6-WXok1YXYt8GN4CWbzJOpeBf69159Q&s", alt: "MasterCard" },
-  { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdhn3H76U6a2Mn_JcMJoT0btH7KSEDXrFtrXzRuQPSLqHEiiRJqKlr8L8ckFomlbYkLBc&usqp=CAU", alt: "MB"},
+  { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdhn3H76U6a2Mn_JcMJoT0btH7KSEDXrFtrXzRuQPSLqHEiiRJqKlr8L8ckFomlbYkLBc&usqp=CAU", alt: "MB" },
 ];
 
 function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 
+    <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 
     text-gray-300 mt-16">
       <div className="max-w-7xl mx-auto px-10 py-10 grid grid-cols-1 md:grid-cols-5 gap-10">
         {/* Logo + desc */}
@@ -116,7 +116,7 @@ function Footer() {
       {/* Copyright */}
       <div className="border-t border-gray-700/70 text-center py-5 text-xs text-gray-400">
         © {new Date().getFullYear()}{" "}
-        <span className="font-semibold text-white">InkRealm</span>. Mọi quyền
+        <span className="font-semibold text-blue-500">InkRealm</span>. Mọi quyền
         được bảo lưu.
       </div>
     </footer>

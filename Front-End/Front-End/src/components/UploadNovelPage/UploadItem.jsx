@@ -78,8 +78,8 @@ const UploadItem = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedType("sangtac")}
                     className={`p-8 rounded-3xl shadow-lg border-2 transition-all cursor-pointer flex flex-col justify-between ${selectedType === "sangtac"
-                            ? "border-green-500 bg-gradient-to-br from-green-50 to-green-100"
-                            : "border-gray-200 bg-white hover:shadow-xl"
+                        ? "border-green-500 bg-gradient-to-br from-green-50 to-green-100"
+                        : "border-gray-200 bg-white hover:shadow-xl"
                         }`}
                 >
                     <div>
@@ -102,7 +102,7 @@ const UploadItem = () => {
                     {/* Nút nằm trong card */}
                     <button className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
                  text-white font-semibold shadow 
-                 flex justify-center items-center gap-2 text-lg transition">
+                 flex justify-center items-center gap-2 text-md transition">
                         <PenTool size={20} /> Đăng truyện sáng tác
                     </button>
                 </motion.div>
@@ -115,8 +115,8 @@ const UploadItem = () => {
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedType("dich")}
                     className={`p-8 rounded-3xl shadow-lg border-2 transition-all cursor-pointer flex flex-col justify-between ${selectedType === "dich"
-                            ? "border-sky-500 bg-gradient-to-br from-sky-50 to-sky-100"
-                            : "border-gray-200 bg-white hover:shadow-xl"
+                        ? "border-sky-500 bg-gradient-to-br from-sky-50 to-sky-100"
+                        : "border-gray-200 bg-white hover:shadow-xl"
                         }`}
                 >
                     <div>
@@ -138,31 +138,49 @@ const UploadItem = () => {
                     </div>
 
                     {/* Nút nằm trong card */}
-                    <button className="mt-6 w-full py-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow flex justify-center items-center gap-2 text-lg transition">
+                    <button className="mt-6 w-full py-4 rounded-xl
+                     bg-sky-600 hover:bg-sky-700 text-white font-semibold
+                      shadow flex justify-center items-center gap-2 text-md transition">
                         <BookOpen size={20} /> Đăng truyện dịch
                     </button>
                 </motion.div>
             </div>
 
             {/* Support Section */}
-            <div className="max-w-2xl mx-auto mt-14">
-                <div className="p-8 rounded-2xl shadow-md border border-gray-100 bg-white text-center">
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">
+            <div className="max-w-2xl mx-auto mt-16">
+                <div className="p-10 rounded-3xl shadow-lg border border-gray-100 bg-gradient-to-br from-white via-gray-50 to-gray-100 text-center relative overflow-hidden">
+                    {/* Background Accent */}
+                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-sky-100 rounded-full blur-3xl opacity-50"></div>
+                    <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-100 rounded-full blur-3xl opacity-50"></div>
+
+                    {/* Icon */}
+                    <div className="flex justify-center mb-4">
+                        <div className="p-4 rounded-full bg-sky-500/10 text-sky-600">
+                            💡
+                        </div>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-2xl font-bold text-blue-700 mb-2">
                         Cần hỗ trợ?
                     </h2>
-                    <p className="text-gray-600 mb-4">
-                        Nếu bạn cần hỗ trợ trong quá trình đăng truyện, hãy liên hệ với chúng tôi.
+                    <p className="text-gray-600 mb-6 text-xs sm:text-base">
+                        Nếu gặp khó khăn trong quá trình đăng truyện, đừng lo.
+                        Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn.
                     </p>
-                    <div className="flex justify-center gap-4">
-                        <button className="px-6 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition flex items-center gap-2">
-                            <ImagePlus size={18} /> Hướng dẫn
+
+                    {/* CTA Buttons */}
+                    <div className="flex justify-center gap-4 flex-wrap">
+                        <button className="px-6 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition shadow-sm flex items-center gap-2 text-gray-700 font-medium text-sm">
+                            📘 Hướng dẫn
                         </button>
-                        <button className="px-6 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white shadow transition flex items-center gap-2">
-                            💬 Hỗ trợ
+                        <button className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-90 text-white shadow-md transition flex items-center gap-2 font-medium text-sm">
+                            💬 Liên hệ hỗ trợ
                         </button>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };

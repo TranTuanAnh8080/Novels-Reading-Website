@@ -3,6 +3,7 @@ import FancyImages2 from "./FancyImages2";
 import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";
 import Confetti from "react-confetti";
+import { Link } from "react-router-dom";
 const RegisterPage = () => {
     const [showConfetti, setShowConfetti] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -62,7 +63,7 @@ const RegisterPage = () => {
                         />
                     </div>
 
-                     {/* Số Điện Thoại */}
+                    {/* Số Điện Thoại */}
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2">Số Điện Thoại <strong className="text-red-500">*</strong></label>
                         <input
@@ -153,16 +154,18 @@ const RegisterPage = () => {
                         </div>
                     </div>
                     {/* Nút đăng ký */}
-                    <button
-                        type="submit"
-                        className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500
+                    <Link to="/LoginPage">
+                        <button
+                            type="submit"
+                            className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500
                          text-white py-2 rounded-3xl hover:bg-blue-600
                          transition duration-300 justify-center
                           flex items-center mx-auto mb-4 font-extrabold hover:scale-105 transform font-mono"
-                    >
-                        Đăng Ký
-                    </button>
+                        >
+                            Đăng Ký
+                        </button>
 
+                    </Link>
                     {/* Đã có tài khoản */}
                     <div className="text-center mt-2 font-mono">
                         <p className="text-gray-700 font-bold font-mono">Bạn đã có tài khoản?</p>
