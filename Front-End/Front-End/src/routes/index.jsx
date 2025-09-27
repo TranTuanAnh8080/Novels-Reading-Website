@@ -13,7 +13,7 @@ import ChooseUploadNovel from "../pages/ChooseUploadNovel";
 import UploadPage from "../pages/UploadPage";
 import CodePayment from "../pages/CodePayment";
 import TransactionPayment from "../pages/TransactionPayment"
-
+import RecommendedAll from "../pages/RecommendedAll";
 
 const AppRouter = createBrowserRouter([
 
@@ -31,7 +31,7 @@ const AppRouter = createBrowserRouter([
     { path: "/UploadPage", element: <UploadPage /> },
     { path: "/CodePayment", element: <CodePayment /> },
     { path: "/TransactionPayment", element: <TransactionPayment /> },
-    
+    { path: "/RecommendedAll", element: <RecommendedAll /> }
 
 ]);
 

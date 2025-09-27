@@ -23,7 +23,7 @@ function HeroSection() {
         <h2 className="text-lg font-semibold">
           🔥 Truyện nổi bật Tháng
         </h2>
-        <button className="text-sm text-blue-600 hover:underline">Xem tất cả</button>
+        <button className="text-sm text-blue-600 hover:underline">Xem tất cả &gt;</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {sampleNovels.slice(0, 6).map((novel) => (
@@ -40,7 +40,7 @@ function HeroSection() {
       {/* Năm */}
       <div className="flex items-center justify-between mt-8 mb-4">
         <h2 className="text-lg font-semibold">🔥 Truyện nổi bật Năm</h2>
-        <button className="text-sm text-blue-600 hover:underline">Xem tất cả</button>
+        <button className="text-sm text-blue-600 hover:underline">Xem tất cả &gt;</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {sampleNovels.slice(6, 12).map((novel) => (

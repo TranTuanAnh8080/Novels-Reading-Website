@@ -10,19 +10,19 @@ const socialLinks = [
 ];
 
 const exploreLinks = [
-  "🔥 Truyện Hot",
-  "🆕 Mới Cập Nhật",
-  "✅ Hoàn Thành",
-  "📚 Thể Loại",
-  "✍️ Tác Giả",
+  "Truyện Hot",
+  "Mới Cập Nhật",
+  "Hoàn Thành",
+  "Thể Loại",
+  "Tác Giả",
 ];
 
 const supportLinks = [
-  "❓ Trợ Giúp",
-  "📖 Điều Khoản",
-  "🔒 Bảo Mật",
-  "🐞 Báo Lỗi",
-  "📩 Liên Hệ",
+  "Trợ Giúp",
+  "Điều Khoản",
+  "Bảo Mật",
+  "Báo Lỗi",
+  "Liên Hệ",
 ];
 
 const paymentMethods = [
