@@ -50,8 +50,8 @@ const UploadItem = () => {
         <div className="min-h-screen flex flex-col font-medium px-6 py-12">
             {/* Nút Trở lại */}
             <div className="max-w-7xl mx-auto w-full px-6 py-4">
-                <Link to="/UploadPage" className="flex items-center gap-2 text-sky-600 hover:underline">
-                <ArrowLeft size={18} /> Trở lại
+                <Link to="/UploadPage" className="flex items-center gap-2 text-sky-700 font-bold">
+                    <ArrowLeft size={18} /> Trở lại
                 </Link>
             </div>
             {/* Header */}
@@ -60,7 +60,7 @@ const UploadItem = () => {
                     Chọn loại truyện bạn muốn đăng
                 </h1>
                 <p className="text-gray-800 font-medium max-w-2xl mx-auto">
-                    Hãy chọn loại truyện phù hợp <br/> để chúng tôi có thể hỗ trợ bạn tốt nhất trong quá trình đăng tải.
+                    Hãy chọn loại truyện phù hợp <br /> để chúng tôi có thể hỗ trợ bạn tốt nhất trong quá trình đăng tải.
                 </p>
                 <p className="text-sm text-gray-500 mt-2 italic">
                     ✨ Tip: Nếu bạn là tác giả, hãy chọn <span className="text-green-600 font-semibold">Truyện sáng tác</span>.
@@ -70,78 +70,78 @@ const UploadItem = () => {
 
             {/* 2 cột card */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
-            {/* Card 1 - Sáng tác */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSelectedType("sangtac")}
-                className={`p-8 rounded-3xl shadow-lg border-2 transition-all cursor-pointer flex flex-col justify-between ${
-                selectedType === "sangtac"
-                    ? "border-green-500 bg-gradient-to-br from-green-50 to-green-100"
-                    : "border-gray-200 bg-white hover:shadow-xl"
-                }`}
-            >
-                <div>
-                <div className="flex flex-col items-center mb-6">
-                    <PenTool className="text-green-600 mb-3" size={42} />
-                    <h3 className="text-xl font-bold text-gray-800 text-center">
-                    Truyện sáng tác
-                    </h3>
-                </div>
+                {/* Card 1 - Sáng tác */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedType("sangtac")}
+                    className={`p-8 rounded-3xl shadow-lg border-2 transition-all cursor-pointer flex flex-col justify-between ${selectedType === "sangtac"
+                            ? "border-green-500 bg-gradient-to-br from-green-50 to-green-100"
+                            : "border-gray-200 bg-white hover:shadow-xl"
+                        }`}
+                >
+                    <div>
+                        <div className="flex flex-col items-center mb-6">
+                            <PenTool className="text-green-600 mb-3" size={42} />
+                            <h3 className="text-xl font-bold text-gray-800 text-center">
+                                Truyện sáng tác
+                            </h3>
+                        </div>
 
-                <div className="space-y-5">
-                    {renderUploadBox(coverPreview1, setCoverPreview1)}
-                    <input type="text" placeholder="Tên truyện của bạn" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
-                    <input type="text" placeholder="Tên nhóm dịch hoặc dịch giả" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
-                    <input type="text" placeholder="Link gốc (nếu có)" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
-                    <textarea rows="4" placeholder="Mô tả ngắn gọn..." className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
-                </div>
-                </div>
+                        <div className="space-y-5">
+                            {renderUploadBox(coverPreview1, setCoverPreview1)}
+                            <input type="text" placeholder="Tên truyện của bạn" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+                            <input type="text" placeholder="Tên nhóm dịch hoặc dịch giả" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+                            <input type="text" placeholder="Link gốc (nếu có)" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+                            <textarea rows="4" placeholder="Mô tả ngắn gọn..." className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+                        </div>
+                    </div>
 
-                {/* Nút nằm trong card */}
-                <button className="mt-6 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold shadow flex justify-center items-center gap-2 text-lg transition">
-                <PenTool size={20} /> Đăng truyện sáng tác
-                </button>
-            </motion.div>
+                    {/* Nút nằm trong card */}
+                    <button className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
+                 text-white font-semibold shadow 
+                 flex justify-center items-center gap-2 text-lg transition">
+                        <PenTool size={20} /> Đăng truyện sáng tác
+                    </button>
+                </motion.div>
 
-            {/* Card 2 - Dịch */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSelectedType("dich")}
-                className={`p-8 rounded-3xl shadow-lg border-2 transition-all cursor-pointer flex flex-col justify-between ${
-                selectedType === "dich"
-                    ? "border-sky-500 bg-gradient-to-br from-sky-50 to-sky-100"
-                    : "border-gray-200 bg-white hover:shadow-xl"
-                }`}
-            >
-                <div>
-                <div className="flex flex-col items-center mb-6">
-                    <BookOpen className="text-blue-700 mb-3" size={42} />
-                    <h3 className="text-xl font-bold text-gray-800 text-center">
-                    Truyện dịch
-                    </h3>
-                </div>
+                {/* Card 2 - Dịch */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedType("dich")}
+                    className={`p-8 rounded-3xl shadow-lg border-2 transition-all cursor-pointer flex flex-col justify-between ${selectedType === "dich"
+                            ? "border-sky-500 bg-gradient-to-br from-sky-50 to-sky-100"
+                            : "border-gray-200 bg-white hover:shadow-xl"
+                        }`}
+                >
+                    <div>
+                        <div className="flex flex-col items-center mb-6">
+                            <BookOpen className="text-blue-700 mb-3" size={42} />
+                            <h3 className="text-xl font-bold text-gray-800 text-center">
+                                Truyện dịch
+                            </h3>
+                        </div>
 
-                <div className="space-y-5">
-                    {renderUploadBox(coverPreview2, setCoverPreview2)}
-                    <input type="text" placeholder="Tên truyện tiếng Việt" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
-                    <input type="text" placeholder="Tên tác giả gốc" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
-                    <input type="text" placeholder="Tên nhóm dịch hoặc dịch giả" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
-                    <input type="text" placeholder="Link gốc (nếu có)" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
-                    <textarea rows="4" placeholder="Mô tả ngắn gọn..." className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
-                </div>
-                </div>
+                        <div className="space-y-5">
+                            {renderUploadBox(coverPreview2, setCoverPreview2)}
+                            <input type="text" placeholder="Tên truyện tiếng Việt" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
+                            <input type="text" placeholder="Tên tác giả gốc" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
+                            <input type="text" placeholder="Tên nhóm dịch hoặc dịch giả" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
+                            <input type="text" placeholder="Link gốc (nếu có)" className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
+                            <textarea rows="4" placeholder="Mô tả ngắn gọn..." className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-sky-400 focus:outline-none" />
+                        </div>
+                    </div>
 
-                {/* Nút nằm trong card */}
-                <button className="mt-6 w-full py-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow flex justify-center items-center gap-2 text-lg transition">
-                <BookOpen size={20} /> Đăng truyện dịch
-                </button>
-            </motion.div>
+                    {/* Nút nằm trong card */}
+                    <button className="mt-6 w-full py-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow flex justify-center items-center gap-2 text-lg transition">
+                        <BookOpen size={20} /> Đăng truyện dịch
+                    </button>
+                </motion.div>
             </div>
 
             {/* Support Section */}

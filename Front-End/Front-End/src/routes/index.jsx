@@ -11,7 +11,7 @@ import Profile from "../pages/Profile";
 import LibraryPage from "../pages/LibraryPage";
 import ChooseUploadNovel from "../pages/ChooseUploadNovel";
 import UploadPage from "../pages/UploadPage";
-
+import CodePayment from "../pages/CodePayment";
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
@@ -25,7 +25,10 @@ const AppRouter = createBrowserRouter([
     { path: "/Profile", element: <Profile /> },
     { path: "/LibraryPage", element: <LibraryPage /> },
     { path: "/UploadNovel", element: <ChooseUploadNovel /> },
-    { path: "/UploadPage", element: <UploadPage /> }
+    { path: "/UploadPage", element: <UploadPage /> },
+    { path: "/CodePayment", element: <CodePayment /> }
+
+    
 
 ]);
 

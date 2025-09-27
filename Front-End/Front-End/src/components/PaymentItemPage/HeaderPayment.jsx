@@ -12,7 +12,7 @@ const HeaderPayment = () => {
           {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer">
             <Link to="/HomeLoggedIn" className="flex items-center space-x-4">
-              <img src={logo} alt="InkRealm" className="h-10 w-auto" />
+              <img src={logo} alt="InkRealm" className="h-12 w-auto" />
             </Link>
           </div>
 
@@ -43,11 +43,13 @@ const HeaderPayment = () => {
 
           {/* Avatar */}
           <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 cursor-pointer">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
-              alt="User Avatar"
-              className="h-full w-full object-cover"
-            />
+            <Link to= "/Profile">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                alt="User Avatar"
+                className="h-full w-full object-cover"
+              />
+            </Link>
           </div>
         </div>
       </div>
