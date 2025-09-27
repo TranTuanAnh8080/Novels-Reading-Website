@@ -50,7 +50,8 @@ const UploadItem = () => {
         <div className="min-h-screen flex flex-col font-medium px-6 py-12">
             {/* Nút Trở lại */}
             <div className="max-w-7xl mx-auto w-full px-6 py-4">
-                <Link to="/UploadPage" className="flex items-center gap-2 text-sky-700 font-bold">
+                <Link to="/UploadPage" 
+                className="flex items-center gap-2 text-sky-700 font-bold">
                     <ArrowLeft size={18} /> Trở lại
                 </Link>
             </div>
@@ -161,7 +162,7 @@ const UploadItem = () => {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-2xl font-bold text-blue-700 mb-2">
+                    <h2 className="text-2xl font-bold text-blue-900 mb-2">
                         Cần hỗ trợ?
                     </h2>
                     <p className="text-gray-600 mb-6 text-xs sm:text-base">

@@ -10,8 +10,7 @@ function SidebarLibrary() {
     { path: "/LibraryPage", label: "Tủ truyện", icon: BookOpen },
     { path: "/UploadPage", label: "Đăng truyện", icon: Upload },
     { path: "/PaymentItem", label: "Nạp xu", icon: CreditCard },
-
-    { path: "/Transactions", label: "Lịch sử giao dịch", icon: Clock },
+    { path: "/TransactionPayment", label: "Lịch sử giao dịch", icon: Clock },
   ];
 
   return (

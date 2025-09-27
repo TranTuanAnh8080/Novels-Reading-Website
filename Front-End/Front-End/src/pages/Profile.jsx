@@ -34,10 +34,11 @@ function Profile() {
               <span>Nạp xu</span>
             </Link>
 
-            <button className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
+             <Link to="/TransactionPayment"
+              className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
               <Clock className="h-4 w-4" />
               <span>Lịch sử giao dịch</span>
-            </button>
+            </Link>
           </nav>
         </aside>
 

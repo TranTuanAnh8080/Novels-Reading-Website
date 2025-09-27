@@ -12,6 +12,9 @@ import LibraryPage from "../pages/LibraryPage";
 import ChooseUploadNovel from "../pages/ChooseUploadNovel";
 import UploadPage from "../pages/UploadPage";
 import CodePayment from "../pages/CodePayment";
+import TransactionPayment from "../pages/TransactionPayment"
+
+
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
@@ -26,8 +29,8 @@ const AppRouter = createBrowserRouter([
     { path: "/LibraryPage", element: <LibraryPage /> },
     { path: "/UploadNovel", element: <ChooseUploadNovel /> },
     { path: "/UploadPage", element: <UploadPage /> },
-    { path: "/CodePayment", element: <CodePayment /> }
-
+    { path: "/CodePayment", element: <CodePayment /> },
+    { path: "/TransactionPayment", element: <TransactionPayment /> },
     
 
 ]);
