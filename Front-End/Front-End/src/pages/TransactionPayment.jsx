@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Calendar, Search } from "lucide-react";
 
+// CHƯA HOÀN CHỈNH - ĐANG LOADING DẦN
 const TransactionPayment = () => {
     const [activeTab, setActiveTab] = useState("all");
 
