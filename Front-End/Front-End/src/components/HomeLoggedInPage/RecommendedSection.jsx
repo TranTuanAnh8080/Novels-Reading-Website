@@ -1,5 +1,6 @@
 import React from "react";
 import { Target, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const recommendedData = [
   {
@@ -41,9 +42,9 @@ function RecommendedSection() {
           <Target className="h-5 w-5 text-red-500 mr-2" />
           Truyện đề cử cho bạn
         </h2>
-        <button className="text-blue-600 text-sm hover:underline">
+        <Link to="/RecommendedAll" className="text-blue-600 text-sm hover:underline">
           Xem tất cả &gt;
-        </button>
+        </Link>
       </div>
 
       {/* Cards */}

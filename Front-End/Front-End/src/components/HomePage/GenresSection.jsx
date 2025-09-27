@@ -29,7 +29,7 @@ const GenresSection = () => {
             Thể loại truyện
           </h2>
           <button className="text-sm text-indigo-600 hover:underline">
-            Xem tất cả
+            Xem tất cả &gt;
           </button>
         </div>
 
