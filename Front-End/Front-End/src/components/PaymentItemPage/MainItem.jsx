@@ -83,7 +83,7 @@ const MainItem = () => {
 
                 {/* Nút Trở lại */}
                 <div className="max-w-7xl mx-auto w-full px-6 py-4">
-                    <Link to="/Profile" className="flex items-center gap-2 text-sky-700 font-bold">
+                    <Link to="/UploadPage" className="flex items-center gap-2 text-sky-700 font-bold">
                         <ArrowLeft size={18} /> Trở lại
                     </Link>
                 </div>
@@ -91,7 +91,7 @@ const MainItem = () => {
                     {/* Tiêu đề */}
                     <div className="text-center mb-10">
                         <h1 className="text-3xl font-bold text-sky-800 mb-2">
-                            Nạp xu bằng hình thức chuyển khoản
+                            Nạp Xu Bằng Hình Thức Chuyển Khoản
                         </h1>
                         <p className="text-gray-600">
                             Bạn hãy chọn gói nạp xu phù hợp để mở ra nhiều tiện ích và trải nghiệm tốt hơn nhé 🌟
@@ -111,7 +111,7 @@ const MainItem = () => {
 
                     {/* Gói nạp xu */}
                     <div className="space-y-10 mb-12">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto cursor-grab">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto cursor-pointer">
                             {/* Card gói */}
                             {packages.map((pkg, idx) => (
                                 <motion.div
@@ -172,7 +172,7 @@ const MainItem = () => {
 
                                     {/* Xem chi tiết */}
                                     <button
-                                        className="mt-3 text-md text-sky-600 hover:underline"
+                                        className="mt-3 text-md text-sky-600 cursor-pointer"
                                         onClick={() => setShowDetail(pkg)}
                                     >
                                         Xem chi tiết

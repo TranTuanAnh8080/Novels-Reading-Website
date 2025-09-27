@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-    Copy,
-    ArrowLeft,
-    Banknote,
-    FileText,
-    Landmark,
-    CreditCard,
-    User,
-    AlertTriangle
-} from "lucide-react";
+import { Copy, ArrowLeft, Banknote, FileText, Landmark, CreditCard, User, AlertTriangle } from "lucide-react";
 
 const CodePayment = () => {
     const [payment, setPayment] = useState(null);
@@ -76,15 +67,15 @@ const CodePayment = () => {
 
                 {/* Tiêu đề */}
                 <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-indigo-600 to-blue-700 bg-clip-text text-transparent">
-                    Thanh toán nạp xu
+                    Thanh Toán Nạp Xu
                 </h2>
                 <p className="text-md text-gray-700 text-center">
-                    Quét mã QR để hoàn tất giao dịch trong vài giây.
+                    Quét mã QR để hoàn tất giao dịch trong vài giây nhé.
                 </p>
 
                 {/* QR Code */}
                 <div className="text-center p-6 rounded-2xl 
-            bg-gradient-to-r bg-rose-100 via-blue-50 to-yellow-50 shadow-inner border border-indigo-100">
+            bg-gradient-to-r bg-rose-100  to-yellow-100 shadow-inner border border-indigo-100">
                     <p className="text-base font-bold text-blue-700 mb-3">
                         Mã QR Thanh Toán
                     </p>

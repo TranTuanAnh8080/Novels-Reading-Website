@@ -1,7 +1,7 @@
 import React from "react";
 import HeaderProfile from "../components/ProfilePage/HeaderProfile";
 import Footer from "../components/Footer";
-import { User, Book, Upload, Clock, Camera, LogOut } from "lucide-react";
+import { User, Book, Upload, Clock, Camera, LogOut, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Profile() {
@@ -26,6 +26,12 @@ function Profile() {
               className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
               <Upload className="h-4 w-4" />
               <span>Đăng truyện</span>
+            </Link>
+
+            <Link to="/PaymentItem"
+              className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
+              <CreditCard className="h-4 w-4" />
+              <span>Nạp xu</span>
             </Link>
 
             <button className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
@@ -80,6 +86,7 @@ function Profile() {
                 </label>
                 <input
                   type="text"
+                  defaultValue={"Nguyễn Minh Anh"}
                   className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -90,6 +97,7 @@ function Profile() {
                 </label>
                 <input
                   type="text"
+                  defaultValue={"Rose"}
                   className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -124,6 +132,7 @@ function Profile() {
                 <label className="block text-sm font-medium mb-1">Email</label>
                 <input
                   type="email"
+                  defaultValue={"nguyenminhanh@gmail.com"}
                   className="w-full border rounded-md px-3 py-2 text-sm bg-gray-100 text-gray-600 cursor-not-allowed"
                   disabled
                 />

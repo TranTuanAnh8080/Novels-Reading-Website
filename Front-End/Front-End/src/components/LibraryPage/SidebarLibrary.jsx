@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { BookOpen, User, Upload, Clock, LogOut } from "lucide-react";
+import { BookOpen, User, Upload, Clock, LogOut, CreditCard } from "lucide-react";
 
 function SidebarLibrary() {
   const location = useLocation();
@@ -9,6 +9,8 @@ function SidebarLibrary() {
     { path: "/Profile", label: "Thông tin cá nhân", icon: User },
     { path: "/LibraryPage", label: "Tủ truyện", icon: BookOpen },
     { path: "/UploadPage", label: "Đăng truyện", icon: Upload },
+    { path: "/PaymentItem", label: "Nạp xu", icon: CreditCard },
+
     { path: "/Transactions", label: "Lịch sử giao dịch", icon: Clock },
   ];
 
