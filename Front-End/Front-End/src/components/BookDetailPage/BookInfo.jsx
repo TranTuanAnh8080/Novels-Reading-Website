@@ -1,8 +1,9 @@
 import React from "react";
 import { Star, BookOpen, Bookmark, Headphones } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function BookInfo({ rating }) {
-  const chapters = [
+export default function BookInfo({ title, img, rating, isFollowing, setIsFollowing }) {
+  const chapters = [  
     { title: "Chương 1250: Chúa Tể Quỷ Bí", time: "1 ngày trước" },
     { title: "Chương 1249: Đại Chiến Hỗn Điện", time: "3 ngày trước" },
     { title: "Chương 1248: Bí Mật Hỗn Điện", time: "5 ngày trước" },
@@ -13,7 +14,7 @@ export default function BookInfo({ rating }) {
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-6">
         Trang chủ / Truyện dịch / Tiên Hiệp /{" "}
-        <span className="text-gray-800 font-medium">Quỷ Bí Chi Chủ</span>
+        <span className="text-gray-800 font-medium">{title}</span>
       </div>
 
       {/* Layout 2 cột */}
@@ -21,7 +22,7 @@ export default function BookInfo({ rating }) {
         {/* Sidebar trái */}
         <div className="col-span-4">
           <img
-            src="https://www.nae.vn/ttv/ttv/public/images/story/23b9f814404ee0a32d03f7d09d762075ef88b0730b0537c8f70ee36c1b37af5e.jpg"
+            src={img}
             alt="Book cover"
             className="w-full aspect-[3/4] object-cover rounded-lg shadow-md mb-4"
           />
@@ -32,10 +33,19 @@ export default function BookInfo({ rating }) {
               <BookOpen className="w-4 h-4" />
               Đọc truyện
             </button>
-            <button className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+
+            <button
+              onClick={() => setIsFollowing(!isFollowing)}
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border ${
+                isFollowing
+                  ? "bg-blue-50 text-blue-600 border-blue-400"
+                  : "text-gray-700 border-gray-300 hover:bg-gray-50"
+              }`}
+            >
               <Bookmark className="w-4 h-4" />
-              Theo dõi
+              {isFollowing ? "Đang theo dõi" : "Theo dõi"}
             </button>
+
             <button className="flex items-center justify-center gap-2 px-4 py-2 bg-[#8B3DFF] text-white rounded-lg hover:bg-purple-700">
               <Headphones className="w-4 h-4" />
               Nghe đọc (TTS)
@@ -63,9 +73,7 @@ export default function BookInfo({ rating }) {
         <div className="col-span-8 flex flex-col gap-6">
           {/* Title & Author */}
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">
-              Quỷ Bí Chi Chủ
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">{title}</h1>
             <div className="text-sm text-gray-700 mb-3">
               Tác giả:{" "}
               <button className="text-blue-600 hover:underline font-medium">
@@ -105,21 +113,23 @@ export default function BookInfo({ rating }) {
                   }`}
                 />
               ))}
-              <span className="ml-2 font-medium text-gray-800">
-                {rating}/5
-              </span>
-              <span className="ml-1 text-gray-500 text-sm">
-                (2,156 đánh giá)
-              </span>
+              <span className="ml-2 font-medium text-gray-800">{rating}/5</span>
+              <span className="ml-1 text-gray-500 text-sm">(2,156 đánh giá)</span>
             </div>
           </div>
 
           {/* Giới thiệu */}
           <div className="mt-6">
             <h2 className="font-bold text-gray-800 mb-2">Giới thiệu</h2>
-            <div className="rounded-2xl border border-gray-200 p-6 bg-gray-50 shadow-sm">
-              <p className="text-gray-800 text-sm leading-relaxed"> Hơi nước cũng mây mọc thủy triều bên trong, ai có thể chạm đến phi phàm? Lịch sử cùng hắc ám trong sương mù, là ai tại thì thầm? Ta theo quỷ bí bên trong thì thầm, mở mắt trông thấy cái thế giới này... 
-                <br /><br /> Súng ống, dao phẫu, cự hạm, khinh khí cầu, máy vi sai; ma dược, bối toán, nguyên rùa, người treo ngược, phong ấn vật… Quang minh vĩnh viễn chiếu rọi, huyền bí chưa bao giờ rời xa, đây là một đoạn “Ngu giả” truyền thuyết... 
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm">
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Hơi nước cùng máy móc thủy triều bên trong, ai có thể chạm đến phi phàm? 
+                Lịch sử cùng hắc ám trong sương mù, là ai tại thì thầm? 
+                Ta theo quỷ bí bên trong tỉnh lại, mở mắt trông thấy cái thế giới này:<br /><br />
+                Súng ống, đại pháo, cự hạm, khinh khí cầu, máy vi sai; ma dược, bói toán, 
+                nguyền rủa, người treo ngược, phong ấn vật... 
+                Quang minh vẫn như cũ chiếu rọi, huyền bí chưa bao giờ rời xa, 
+                đây là một đoạn "Ngu giả" truyền thuyết..
               </p>
             </div>
           </div>
@@ -128,9 +138,9 @@ export default function BookInfo({ rating }) {
           <div>
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-bold text-gray-800">Chương mới nhất</h2>
-              <button className="text-xs text-blue-600 hover:underline">
+              <Link to="/ChapterList" className="text-xs text-blue-600 hover:underline">
                 Xem mục lục
-              </button>
+              </Link>
             </div>
             <div className="divide-y divide-gray-200 border border-gray-200 rounded-lg">
               {chapters.map((chapter, idx) => (
@@ -145,46 +155,53 @@ export default function BookInfo({ rating }) {
             </div>
           </div>
 
-          {/* Thông tin thêm */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Thông tin chi tiết + Dịch bởi */}
+          <div className="grid grid-cols-2 gap-4">
             {/* Thông tin chi tiết */}
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
-              <h2 className="font-semibold text-gray-800 mb-4">
-                Thông tin chi tiết
-              </h2>
-              <div className="grid grid-cols-2 gap-y-3 text-sm text-gray-700">
-                <div className="text-gray-500">Tình trạng:</div>
-                <div className="font-medium">Hoàn thành (1250 chương)</div>
-                <div className="text-gray-500">Nguồn:</div>
-                <div className="font-medium">Dịch từ tiếng Trung</div>
-                <div className="text-gray-500">Cập nhật:</div>
-                <div className="font-medium">26/06/2023</div>
-                <div className="text-gray-500">Độ dài:</div>
-                <div className="font-medium">Trên 5 triệu chữ</div>
-              </div>
-            </div>
-
-            {/* Dịch bởi */}
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
-              <h2 className="font-semibold text-gray-800 mb-4">Dịch bởi</h2>
-              <div className="flex items-center space-x-4">
-                <img
-                  src="https://randomuser.me/api/portraits/men/32.jpg"
-                  alt="Translator"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-medium text-gray-800">Team Truyện Hay</p>
-                  <p className="text-sm text-gray-500">Nhóm dịch từ 2018</p>
-                  <a
-                    href="#"
-                    className="text-sm text-blue-600 hover:underline font-medium"
-                  >
-                    Xem tất cả truyện
-                  </a>
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-3">Thông tin chi tiết</h3>
+              <div className="text-sm text-gray-700 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Tình trạng:</span>
+                  <span className="font-medium text-gray-800">Hoàn thành (1250 chương)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Nguồn:</span>
+                  <span className="font-medium text-gray-800">Dịch từ tiếng Trung</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Cập nhật:</span>
+                  <span className="font-medium text-gray-800">26/06/2023</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Độ dài:</span>
+                  <span className="font-medium text-gray-800">Trên 5 triệu chữ</span>
                 </div>
               </div>
             </div>
+
+          {/* Dịch bởi */}
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm">
+            <h3 className="font-semibold text-gray-800 mb-3">Dịch bởi</h3>
+            
+            <div className="flex items-start gap-3">
+              {/* Avatar */}
+              <img
+                src="https://randomuser.me/api/portraits/men/32.jpg"
+                alt="Translator"
+                className="w-12 h-12 rounded-full object-cover"
+              />
+
+              {/* Info */}
+              <div className="flex flex-col">
+                <h4 className="font-semibold text-gray-800">Team Truyện Hay</h4>
+                <p className="text-sm text-gray-600">Nhóm dịch từ 2018</p>
+                <button className="mt-1 text-sm text-blue-600 hover:underline text-left">
+                  Xem tất cả truyện
+                </button>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </div>

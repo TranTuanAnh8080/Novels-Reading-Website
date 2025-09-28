@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const sampleNovels = [
+export const sampleNovels = [
   { id: 1, title: "Quỷ Bí Chi Chủ", desc: "Một câu truyện về hành trình khám phá sức mạnh của vị chủ nhân bí ẩn trong thế giới ưu tiên đầy nguy hiểm...", img: "https://www.nae.vn/ttv/ttv/public/images/story/23b9f814404ee0a32d03f7d09d762075ef88b0730b0537c8f70ee36c1b37af5e.jpg" },
   { id: 2, title: "Chuyển Sinh Thành Slime", desc: "Câu truyện về một người đàn ông bình thường bị đâm chết và tái sinh thành một con slime trong thế giới fantasy...", img: "https://img4.thuthuatphanmem.vn/uploads/2020/11/10/chuyen-sinh-thanh-slime-tensei-shitara-slime-datta-ken_015456993.jpg" },
   { id: 3, title: "Solo Leveling", desc: "Sung-Jin-Woo, thợ săn yếu nhất thế giới, đã trở thành người duy nhất hoàn thành một ngục tối bí ẩn...", img: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2025/02/solo-leveling-sung-jin-woo-featured-image.jpg" },
@@ -20,20 +21,20 @@ function HeroSection() {
     <section>
       {/* Tháng */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">
-          🔥 Truyện nổi bật Tháng
-        </h2>
+        <h2 className="text-lg font-semibold">🔥 Truyện nổi bật Tháng</h2>
         <button className="text-sm text-blue-600 hover:underline">Xem tất cả &gt;</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {sampleNovels.slice(0, 6).map((novel) => (
-          <div key={novel.id} className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden">
-            <img src={novel.img} alt={novel.title} className="w-full h-40 object-cover" />
-            <div className="p-3">
-              <h3 className="text-sm font-medium">{novel.title}</h3>
-              <p className="text-xs text-gray-500">{novel.desc}</p>
+          <Link to={`/BookDetail/${novel.id}`} key={novel.id}>
+            <div className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden cursor-pointer">
+              <img src={novel.img} alt={novel.title} className="w-full h-40 object-cover" />
+              <div className="p-3">
+                <h3 className="text-sm font-medium">{novel.title}</h3>
+                <p className="text-xs text-gray-500">{novel.desc}</p>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -44,13 +45,15 @@ function HeroSection() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {sampleNovels.slice(6, 12).map((novel) => (
-          <div key={novel.id} className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden">
-            <img src={novel.img} alt={novel.title} className="w-full h-40 object-cover" />
-            <div className="p-3">
-              <h3 className="text-sm font-medium">{novel.title}</h3>
-              <p className="text-xs text-gray-500">{novel.desc}</p>
+          <Link to={`/BookDetail/${novel.id}`} key={novel.id}>
+            <div className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden cursor-pointer">
+              <img src={novel.img} alt={novel.title} className="w-full h-40 object-cover" />
+              <div className="p-3">
+                <h3 className="text-sm font-medium">{novel.title}</h3>
+                <p className="text-xs text-gray-500">{novel.desc}</p>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

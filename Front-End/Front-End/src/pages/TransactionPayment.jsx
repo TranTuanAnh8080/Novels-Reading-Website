@@ -44,7 +44,7 @@ const TransactionPayment = () => {
         <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-sm">
             {/* Header */}
             <h2 className="text-lg font-semibold text-sky-600 flex items-center gap-2 mb-1">
-                📘 Lịch sử giao dịch
+                Lịch sử giao dịch
             </h2>
             <p className="text-sm text-gray-600 mb-6">
                 Theo dõi tất cả các giao dịch nạp xu và tiêu xu của bạn
