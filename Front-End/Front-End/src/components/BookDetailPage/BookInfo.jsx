@@ -13,8 +13,11 @@ export default function BookInfo({ title, img, rating, isFollowing, setIsFollowi
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-6">
-        Trang chủ / Truyện dịch / Tiên Hiệp /{" "}
-        <span className="text-gray-800 font-medium">{title}</span>
+      <Link to="/HomePage" className="hover:underline text-gray-900">
+        Trang chủ
+      </Link>{" "}
+      / Truyện dịch / Tiên Hiệp /{" "}
+        <span className="text-gray-900 font-medium">{title}</span>
       </div>
 
       {/* Layout 2 cột */}
@@ -29,17 +32,17 @@ export default function BookInfo({ title, img, rating, isFollowing, setIsFollowi
 
           {/* Buttons */}
           <div className="flex flex-col gap-3 mb-4">
-            <button className="flex items-center justify-center gap-2 px-4 py-2 bg-[#1A73E8] text-white rounded-lg hover:bg-blue-700">
+            <Link to="/ReadPage" className="flex items-center justify-center gap-2 px-4 py-2 bg-[#2E5BFF] text-white rounded-lg hover:bg-blue-700">
               <BookOpen className="w-4 h-4" />
               Đọc truyện
-            </button>
+            </Link>
 
             <button
               onClick={() => setIsFollowing(!isFollowing)}
               className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border ${
                 isFollowing
-                  ? "bg-blue-50 text-blue-600 border-blue-400"
-                  : "text-gray-700 border-gray-300 hover:bg-gray-50"
+                  ? "bg-blue-50 text-[#2E5BFF] border-blue-400"
+                  : "text-[#2E5BFF] border-[#2E5BFF] hover:bg-gray-50"
               }`}
             >
               <Bookmark className="w-4 h-4" />
@@ -76,11 +79,11 @@ export default function BookInfo({ title, img, rating, isFollowing, setIsFollowi
             <h1 className="text-2xl font-bold text-gray-800 mb-2">{title}</h1>
             <div className="text-sm text-gray-700 mb-3">
               Tác giả:{" "}
-              <button className="text-blue-600 hover:underline font-medium">
+              <button className="text-[#2E5BFF] hover:underline font-medium">
                 Ái Tiêu Đích Sủng Vật
               </button>{" "}
               · Dịch giả:{" "}
-              <button className="text-blue-600 hover:underline font-medium">
+              <button className="text-[#2E5BFF] hover:underline font-medium">
                 Team Truyện Hay
               </button>
             </div>
@@ -138,7 +141,7 @@ export default function BookInfo({ title, img, rating, isFollowing, setIsFollowi
           <div>
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-bold text-gray-800">Chương mới nhất</h2>
-              <Link to="/ChapterList" className="text-xs text-blue-600 hover:underline">
+              <Link to="/ChapterList" className="text-xs text-[#2E5BFF] hover:underline">
                 Xem mục lục
               </Link>
             </div>
@@ -196,7 +199,7 @@ export default function BookInfo({ title, img, rating, isFollowing, setIsFollowi
               <div className="flex flex-col">
                 <h4 className="font-semibold text-gray-800">Team Truyện Hay</h4>
                 <p className="text-sm text-gray-600">Nhóm dịch từ 2018</p>
-                <button className="mt-1 text-sm text-blue-600 hover:underline text-left">
+                <button className="mt-1 text-sm text-[#2E5BFF] hover:underline text-left">
                   Xem tất cả truyện
                 </button>
               </div>

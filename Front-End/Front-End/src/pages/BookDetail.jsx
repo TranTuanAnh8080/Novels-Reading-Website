@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderBook from "../components/BookDetailPage/HeaderBook";
 import Footer from "../components/Footer";
 import BookInfo from "../components/BookDetailPage/BookInfo";
@@ -7,19 +7,31 @@ import SimilarBooks from "../components/BookDetailPage/SimilarBooks";
 import { useParams } from "react-router-dom";
 import { sampleNovels } from "../components/HomePage/HeroSection";
 
-// Khi login thành công
-localStorage.setItem("isLoggedIn", "true");
-
-// Khi logout
-localStorage.removeItem("isLoggedIn");
-
-// Ở BookDetail.jsx hoặc HeaderBook.jsx
-const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
 export default function BookDetail() {
   const { id } = useParams();
   const book = sampleNovels.find((b) => b.id === parseInt(id));
   const [isFollowing, setIsFollowing] = useState(false);
+
+  // state login
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
+
+  // lắng nghe thay đổi localStorage (kể cả khi login/logout cùng tab)
+  useEffect(() => {
+    const checkLogin = () => {
+      setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+    };
+
+    window.addEventListener("storage", checkLogin);
+    // trick: chạy interval check trong cùng tab
+    const interval = setInterval(checkLogin, 500);
+
+    return () => {
+      window.removeEventListener("storage", checkLogin);
+      clearInterval(interval);
+    };
+  }, []);
 
   const similarBooks = [
     { id: 1, title: "Đấu Phá Thương Khung", author: "Thiên Tàm Thổ Đậu", cover: "https://truyenaudio.org/upload/pro/Dau-pha-thuong-khung2.png?quality=100&mode=crop&anchor=topleft&width=450&height=675" },

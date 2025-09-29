@@ -29,7 +29,7 @@ function CommentSection() {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring focus:ring-blue-200"
           />
           <div className="flex justify-end mt-2">
-            <button className="px-4 py-2 bg-[#1A73E8] text-white text-sm rounded-lg hover:bg-blue-700">
+            <button className="px-4 py-2 bg-[#2E5BFF] text-white text-sm rounded-lg hover:bg-blue-700">
               Đăng bình luận
             </button>
           </div>
@@ -81,13 +81,13 @@ function CommentSection() {
           {/* Admin reply */}
           <div className="ml-6 mt-4 p-3 rounded-lg bg-white text-sm">
             <div className="mb-1 flex items-center gap-2">
-              <span className="font-medium text-blue-700">Team Truyện Hay</span>
-              <span className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded-md">
+              <span className="font-medium text-[#2E5BFF]">Team Truyện Hay</span>
+              <span className="px-2 py-0.5 text-xs bg-[#2E5BFF] text-white rounded-md">
                 Admin
               </span>
               <span className="text-gray-500 text-xs">4 ngày trước</span>
             </div>
-            <p className="text-blue-700 mb-2">
+            <p className="text-gray-700 mb-2">
               Cảm ơn bạn đã ủng hộ! Chúng mình sẽ cố gắng duy trì chất lượng dịch
               thuật tốt nhất.
             </p>
