@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import landscapeImage from "../assets/landscape.jpg";
-// Thư viện pháo giấy
 import Confetti from "react-confetti";
 import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";
@@ -10,36 +9,45 @@ import LoadingPage from "./LoadingPage";
 const Popups = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [bgLoaded, setBgLoaded] = useState(false); // trạng thái load background
 
   const handleNavigateWithLoading = (path) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       navigate(path);
-    }, 1500); // Giữ trạng thái loading trong 1.5 giây
+    }, 1500);
   };
 
-  // tắt confetti sau 8 giây
+  // preload background image
   useEffect(() => {
-    const timer = setTimeout(() => setShowConfetti(false), 8000);
-    return () => clearTimeout(timer);
+    const img = new Image();
+    img.src = landscapeImage;
+    img.onload = () => {
+      setBgLoaded(true);
+      setShowConfetti(true); // chỉ bật confetti khi ảnh nền sẵn sàng
+    };
   }, []);
 
   return (
-    <div className="fixed inset-0 
-     flex justify-center items-center z-50 overflow-hidden"
+    <div
+      className="fixed inset-0 flex justify-center items-center z-50 overflow-hidden transition-all duration-700"
       style={{
-        backgroundImage: `url(${landscapeImage})`,
-        backgroundSize: "cover", // Đảm bảo hình ảnh phủ toàn màn hình
-        backgroundPosition: "center", // Căn giữa hình ảnh
-        backgroundRepeat: "no-repeat", // Không lặp lại hình ảnh
-        backgroundAttachment: "fixed", //
+        backgroundImage: bgLoaded ? `url(${landscapeImage})` : "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
       }}
     >
+      {/* Fallback blur background trong lúc ảnh chưa tải */}
+      {!bgLoaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-sky-200 to-sky-100 animate-pulse blur-lg" />
+      )}
+
       {/* Hiển thị trang LoadingPage khi đang ở trạng thái loading */}
       {loading && <LoadingPage />}
-
 
       {/* Hiệu ứng pháo giấy */}
       {showConfetti && (
@@ -47,20 +55,20 @@ const Popups = () => {
           width={window.innerWidth}
           height={window.innerHeight}
           numberOfPieces={1000}
-          recycle={false} // chỉ rơi 1 lần
+          recycle={false}
         />
       )}
 
       {/* Nội dung popup */}
       <div className="relative bg-gradient-to-br from-transparent via-sky-100 to-transparent 
-      rounded-4xl p-8 text-center w-11/12 max-w-md shadow-2xl
-       transform scale-100 hover:scale-105 transition-transform duration-300 z-10 font-mono">
+        rounded-4xl p-8 text-center w-11/12 max-w-md shadow-2xl
+        transform scale-100 hover:scale-105 transition-transform duration-300 z-10 font-mono">
 
         <img
           src={vietnamFlag}
           alt="Vietnam Flag"
           className="absolute top-3 left-4 w-12 h-auto 
-          contrast-125 brightness-150 saturate-150 scale-75 hover:scale-100 transition-transform duration-300"
+            contrast-125 brightness-150 saturate-150 scale-75 hover:scale-100 transition-transform duration-300"
         />
 
         <img
@@ -90,7 +98,6 @@ const Popups = () => {
         >
           🚀Khám phá ngay⭐
         </button>
-
       </div>
     </div>
   );
