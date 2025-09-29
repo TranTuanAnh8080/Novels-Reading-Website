@@ -21,7 +21,7 @@ function UploadBookCard({ title, status, cover }) {
           status === "Đã hoàn thành"
             ? "text-green-600"
             : status === "Đang đăng"
-            ? "text-blue-600"
+            ? "text-[#2E5BFF]"
             : "text-orange-500"
         }`}
       >

@@ -52,7 +52,7 @@ function UploadPage() {
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-xl font-bold">Truyện đã đăng</h1>
 
-            <Link to= "/UploadNovel" className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
+            <Link to= "/UploadNovel" className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700">
               + Đăng truyện mới
             </Link>
           </div>

@@ -14,7 +14,7 @@ function Profile() {
         <aside className="w-64 bg-white shadow rounded-lg p-6">
           <h2 className="text-lg font-bold mb-4">Tài khoản của tôi</h2>
           <nav className="space-y-3">
-            <Link to="/Profile" className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md bg-blue-50 text-blue-600 font-medium">
+            <Link to="/Profile" className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md bg-blue-50 text-[#2E5BFF] font-medium">
               <User className="h-4 w-4" />
               <span>Thông tin cá nhân</span>
             </Link>
@@ -176,7 +176,7 @@ function Profile() {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700"
               >
                 Lưu thay đổi
               </button>
