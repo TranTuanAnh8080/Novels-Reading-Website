@@ -38,11 +38,11 @@ function RecommendedSection() {
     <section className="my-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="flex items-center text-lg font-semibold text-gray-800">
+        <h2 className="flex items-center text-lg font-bold text-gray-800">
           <Target className="h-5 w-5 text-red-500 mr-2" />
           Truyện đề cử cho bạn
         </h2>
-        <Link to="/RecommendedAll" className="text-blue-600 text-sm hover:underline">
+        <Link to="/RecommendedAll" className="text-[#2E5BFF] text-sm hover:underline">
           Xem tất cả &gt;
         </Link>
       </div>
@@ -69,7 +69,7 @@ function RecommendedSection() {
                   <Star className="h-4 w-4 mr-1" />
                   {novel.rating}/5
                 </p>
-                <button className="text-sm text-purple-600 hover:underline">
+                <button className="text-sm text-[#2E5BFF] hover:underline">
                   + Theo dõi
                 </button>
               </div>

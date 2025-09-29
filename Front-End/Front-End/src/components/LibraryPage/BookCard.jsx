@@ -20,7 +20,7 @@ function BookCard({ title, status, btn, color, image }) {
       <button
         className={`px-3 py-1 rounded-md text-white text-xs font-medium ${
           color === "blue"
-            ? "bg-blue-500 hover:bg-blue-600"
+            ? "bg-[#2E5BFF] hover:bg-blue-600"
             : "bg-green-500 hover:bg-green-600"
         }`}
       >

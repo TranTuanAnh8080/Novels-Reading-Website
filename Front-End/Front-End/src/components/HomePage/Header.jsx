@@ -28,12 +28,12 @@ function Header() {
 
         {/* Buttons */}
         <div className="flex items-center space-x-3">
-          <Link to="/LoginPage" className="text-gray-600 text-sm hover:text-blue-600">
+          <Link to="/LoginPage" className="text-gray-600 text-sm hover:text-[#2E5BFF]">
             Đăng nhập
           </Link>
           <Link
             to="/RegisterPage"
-            className="px-4 py-2 rounded-full bg-blue-600 text-white text-sm hover:bg-blue-700"
+            className="px-4 py-2 rounded-full bg-[#2E5BFF] text-white text-sm hover:bg-blue-700"
           >
             Đăng ký
           </Link>

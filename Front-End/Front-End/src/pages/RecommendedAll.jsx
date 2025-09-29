@@ -1,14 +1,25 @@
-// HomeLoggedIn.jsx
-import React from "react";
+import { React, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { BookOpen, Flame, Eye, Plus, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  BookOpen,
+  Flame,
+  Eye,
+  Plus,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import HeaderLoggedIn from "../components/HomeLoggedInPage/HeaderLoggedIn";
 import Footer from "../components/Footer";
 
 export default function RecommendedAll() {
+  // ref cho custom navigation
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
   return (
     <div className="w-full min-h-screen bg-white">
       {/* Header */}
@@ -17,7 +28,7 @@ export default function RecommendedAll() {
       </div>
 
       {/* Container */}
-      <div className="w-full max-w-[1280px] mx-auto px-[32px]">
+      <div className="w-full max-w-[1280px] mx-auto">
         {/* Banner */}
         <div className="w-full rounded-[16px] overflow-hidden mt-[24px] mb-[32px]">
           <img
@@ -44,14 +55,16 @@ export default function RecommendedAll() {
         {/* Section: Đang đọc gần đây */}
         <SectionHeader
           title="Truyện đang đọc gần đây"
-          icon={<BookOpen className="w-5 h-5 text-[#2563EB]" />}
+          icon={<BookOpen className="w-5 h-5 text-[#2E5BFF]" />}
         />
-        <div className="relative">
+        <div className="relative px-8">
           <Swiper
             modules={[Navigation]}
-            navigation={{
-              nextEl: ".custom-next",
-              prevEl: ".custom-prev",
+            onInit={(swiper) => {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.init();
+              swiper.navigation.update();
             }}
             spaceBetween={20}
             slidesPerView={2}
@@ -69,10 +82,16 @@ export default function RecommendedAll() {
           </Swiper>
 
           {/* Custom Navigation */}
-          <button className="custom-prev absolute top-1/2 -left-8 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100">
+          <button
+            ref={prevRef}
+            className="absolute top-1/2 -left-8 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100"
+          >
             <ChevronLeft className="w-5 h-5 text-[#111827]" />
           </button>
-          <button className="custom-next absolute top-1/2 -right-8 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100">
+          <button
+            ref={nextRef}
+            className="absolute top-1/2 -right-8 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100"
+          >
             <ChevronRight className="w-5 h-5 text-[#111827]" />
           </button>
         </div>
@@ -82,7 +101,7 @@ export default function RecommendedAll() {
           title="Truyện nổi bật năm"
           icon={<Flame className="w-5 h-5 text-[#F97316]" />}
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[24px]">
           {highlightBooks.map((b, i) => (
             <BookCardHighlight key={i} {...b} />
           ))}
@@ -101,17 +120,17 @@ export default function RecommendedAll() {
 
 function Section({ title, books }) {
   return (
-    <div className="mb-[56px]">
-      <div className="flex justify-between items-center mb-[20px]">
+    <div className="mb-[48px]">
+      <div className="flex justify-between items-center mb-[16px]">
         <h3 className="text-[22px] font-medium text-[#111827]">{title}</h3>
         <a
           href="#"
-          className="text-[14px] font-medium text-[#2563EB] hover:underline"
+          className="text-[14px] font-medium text-[#2E5BFF] flex items-center gap-1"
         >
-          Xem tất cả &gt;
+          Xem tất cả <ChevronRight className="w-4 h-4" />
         </a>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-[20px]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-[24px]">
         {books.map((b, i) => (
           <BookCardSmall key={i} {...b} />
         ))}
@@ -122,16 +141,16 @@ function Section({ title, books }) {
 
 function SectionHeader({ title, icon }) {
   return (
-    <div className="flex justify-between items-center mb-[20px] mt-[40px]">
+    <div className="flex justify-between items-center mb-[16px] mt-[40px]">
       <h3 className="flex items-center gap-2 text-[22px] font-medium text-[#111827]">
         {icon}
         {title}
       </h3>
       <a
         href="#"
-        className="text-[14px] font-medium text-[#2563EB] hover:underline"
+        className="text-[14px] font-medium text-[#2E5BFF] flex items-center gap-1"
       >
-        Xem tất cả &gt;
+        Xem tất cả <ChevronRight className="w-4 h-4" />
       </a>
     </div>
   );
@@ -139,18 +158,18 @@ function SectionHeader({ title, icon }) {
 
 function BookCardSmall({ img, title, desc, status, rating, showContinue }) {
   return (
-    <div className="bg-white rounded-[12px] shadow-md p-[12px] flex flex-col transform transition duration-200 hover:scale-[1.02] hover:shadow-lg">
+    <div className="bg-white border border-gray-200 rounded-[12px] p-[12px] flex flex-col hover:shadow-md transition">
       <img
         src={img}
         alt={title}
-        className="w-full h-[200px] object-cover rounded-[8px] mb-[12px]"
+        className="w-full h-[160px] object-cover rounded-[8px] mb-[12px]"
       />
       <h4 className="font-medium text-[15px] text-[#111827] mb-[6px] line-clamp-1">
         {title}
       </h4>
       <p className="text-[13px] text-[#6B7280] mb-[8px] line-clamp-2">{desc}</p>
       {showContinue ? (
-        <button className="mt-auto flex items-center justify-center gap-1 text-[13px] font-medium bg-[#2563EB] text-white px-[10px] py-[6px] rounded-[6px]">
+        <button className="mt-auto flex items-center justify-center gap-1 text-[13px] font-medium bg-[#2E5BFF] text-white px-[10px] py-[6px] rounded-[6px]">
           <BookOpen className="w-4 h-4" />
           {status}
         </button>
@@ -163,7 +182,7 @@ function BookCardSmall({ img, title, desc, status, rating, showContinue }) {
 
 function BookCardHighlight({ img, title, desc, rank, readers, following }) {
   return (
-    <div className="bg-white rounded-[12px] shadow-md overflow-hidden transform transition duration-200 hover:scale-[1.02] hover:shadow-lg flex flex-col">
+    <div className="bg-white border border-gray-200 rounded-[12px] overflow-hidden hover:shadow-md transition flex flex-col">
       <div className="relative">
         <img src={img} alt={title} className="w-full h-[200px] object-cover" />
         <span className="absolute bottom-2 left-2 bg-[#FACC15] text-[#111827] text-[12px] font-semibold px-[8px] py-[2px] rounded-[6px]">
@@ -184,7 +203,7 @@ function BookCardHighlight({ img, title, desc, rank, readers, following }) {
               <Check className="w-4 h-4" /> Đang theo dõi
             </button>
           ) : (
-            <button className="flex items-center gap-1 text-[#9333EA] font-medium">
+            <button className="flex items-center gap-1 text-[#2E5BFF] font-medium">
               <Plus className="w-4 h-4" /> Theo dõi
             </button>
           )}

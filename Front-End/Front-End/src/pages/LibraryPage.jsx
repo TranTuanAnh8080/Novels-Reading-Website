@@ -10,7 +10,7 @@ function LibraryPage() {
       title: "Quỷ Bí Chi Chủ",  
       status: "Đang đọc: Chương 125",
       btn: "Tiếp tục đọc",
-      color: "blue",
+      color: "blue",  
       image: "https://www.nae.vn/ttv/ttv/public/images/story/23b9f814404ee0a32d03f7d09d762075ef88b0730b0537c8f70ee36c1b37af5e.jpg"
     },
     {
@@ -94,7 +94,7 @@ function LibraryPage() {
           {/* Pagination */}
           <div className="flex justify-center items-center space-x-2 mt-6">
             <button className="px-3 py-1 border rounded-md text-sm">&lt;</button>
-            <button className="px-3 py-1 border rounded-md bg-blue-500 text-white text-sm">
+            <button className="px-3 py-1 border rounded-md bg-[#2E5BFF] text-white text-sm">
               1
             </button>
             <button className="px-3 py-1 border rounded-md text-sm">2</button>
