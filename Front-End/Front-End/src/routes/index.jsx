@@ -16,6 +16,7 @@ import TransactionPayment from "../pages/TransactionPayment"
 import RecommendedAll from "../pages/RecommendedAll";
 import BookDetail from "../pages/BookDetail";
 import ChapterList from "../pages/ChapterList";
+import ReadPage from "../pages/ReadPage";
 
 const AppRouter = createBrowserRouter([
 
@@ -35,7 +36,8 @@ const AppRouter = createBrowserRouter([
     { path: "/TransactionPayment", element: <TransactionPayment /> },
     { path: "/RecommendedAll", element: <RecommendedAll /> },
     { path: "/BookDetail/:id", element: <BookDetail /> },
-    { path: "/ChapterList", element: <ChapterList /> }
+    { path: "/ChapterList", element: <ChapterList /> },
+    { path: "/ReadPage", element: <ReadPage /> }
 ]);
 
 export default AppRouter;

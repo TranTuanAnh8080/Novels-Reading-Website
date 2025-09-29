@@ -21,6 +21,11 @@ const LoginPage = () => {
         e.preventDefault(); // ngăn reload
         console.log("✅ Login clicked");
 
+        // Ghi trạng thái login vào localStorage
+        localStorage.setItem("isLoggedIn", "true");
+        // Ép trigger cho HeaderBook/BookDetail cập nhật
+        window.dispatchEvent(new Event("storage"));
+
         // TODO: gọi API login check tài khoản ở đây
         // Nếu login ok thì navigate sang HomeLoggedIn
         navigate("/HomeLoggedIn");

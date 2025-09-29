@@ -6,6 +6,7 @@ import {
   BookOpen,
   User,
   Clock,
+  LogOut
 } from "lucide-react";
 import logo from "../assets/inkrealm_logo.png";
 import Footer from "../components/Footer";
@@ -40,7 +41,7 @@ export default function ChapterList() {
           className="flex items-center gap-2 text-gray-700 cursor-pointer hover:text-gray-900"
         >
           <ChevronLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">Quay lại</span>
+          <span className="text-sm font-medium text-gray-600">Quay lại</span>
         </div>
 
         {/* Logo */}
@@ -62,11 +63,43 @@ export default function ChapterList() {
         </div>
 
         {/* User */}
-        <img
-        src="https://randomuser.me/api/portraits/men/45.jpg"
-        alt="user"
-        className="w-9 h-9 rounded-full object-cover border"
-        />
+        <div className="flex items-center space-x-6">
+          {localStorage.getItem("isLoggedIn") === "true" ? (
+            <>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                alt="user avatar"
+                className="w-9 h-9 rounded-full border cursor-pointer hover:opacity-80"
+              />
+              <button
+                onClick={() => {
+                  localStorage.removeItem("isLoggedIn");
+                  window.location.href = "/HomePage";
+                }}
+                className="flex items-center space-x-1 text-red-600 hover:text-red-700 text-sm font-medium"
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                <span>Đăng xuất</span>
+              </button>
+            </>
+          ) : (
+
+            <div className="flex items-center space-x-3">
+              <Link
+                to="/LoginPage"
+                className="text-sm font-medium text-gray-600 hover:text-blue-600"
+              >
+                Đăng nhập
+              </Link>
+              <Link
+                to="/RegisterPage"
+                className="bg-[#2E5BFF] hover:bg-indigo-600 text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
+              >
+                Đăng ký
+              </Link>
+            </div>
+          )}
+        </div>
     </div>
     </header>
 
@@ -90,15 +123,15 @@ export default function ChapterList() {
               {/* Meta info */}
             <div className="flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
-                <BookOpen className="w-4 h-4 text-indigo-600" />
+                <BookOpen className="w-4 h-4 text-[#2E5BFF]" />
                 <span className="font-medium text-gray-500">1.432 chương</span>
             </div>
             <div className="flex items-center gap-1">
-                <User className="w-4 h-4 text-indigo-600" />
+                <User className="w-4 h-4 text-[#2E5BFF]" />
                 <span className="font-medium text-gray-500">Cuttlefish That Loves Diving</span>
             </div>
             <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4 text-indigo-600" />
+                <Clock className="w-4 h-4 text-[#2E5BFF]" />
                 <span className="font-medium text-gray-500">Cập nhật: 2 giờ trước</span>
             </div>
             </div>
@@ -113,15 +146,16 @@ export default function ChapterList() {
         {/* Danh sách chương */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4">
           <div className="flex justify-between items-center p-4">
-            <h2 className="font-semibold text-gray-800">
-              Danh sách chương <span className="text-gray-500">(1.432 chương)</span>
+            <h2 className="font-bold text-gray-800">
+              Danh sách chương <span className="font-medium text-gray-500">(1.432 chương)</span>
             </h2>
             <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Sắp xếp:</span>
               <select className="text-sm border border-gray-300 rounded-md px-2 py-1">
                 <option>Tăng dần</option>
                 <option>Giảm dần</option>
               </select>
-              <button className="flex items-center gap-1 text-sm bg-indigo-500 text-white px-3 py-1.5 rounded-md hover:bg-indigo-600">
+              <button className="flex items-center gap-1 text-sm bg-[#2E5BFF] text-white px-3 py-1.5 rounded-md hover:bg-indigo-600">
                 <Filter className="w-4 h-4" />
                 Lọc
               </button>
@@ -144,8 +178,8 @@ export default function ChapterList() {
               <tbody className="divide-y divide-gray-200">
                 {chapters.map((chapter) => (
                   <tr key={chapter.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-indigo-600 font-medium">{chapter.id}</td>
-                    <td className="px-4 py-3 text-gray-800">{chapter.title}</td>
+                    <td className="px-4 py-3 text-[#2E5BFF] font-medium">{chapter.id}</td>
+                    <td className="px-4 py-3 text-gray-800 font-semibold">{chapter.title}</td>
                     <td className="px-4 py-3 text-gray-600">{chapter.uploader}</td>
                     <td className="px-4 py-3 text-gray-600">{chapter.time}</td>
                   </tr>
@@ -155,8 +189,8 @@ export default function ChapterList() {
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between items-center px-4 py-3 text-sm text-gray-600 border-t border-gray-200">
-            <span>Hiển thị 1-10 của 1.432 chương</span>
+          <div className="flex justify-between items-center px-4 py-3 text-sm text-gray-700 border-t border-gray-200">
+            <span>Hiển thị 1-15 của 1.432 chương</span>
             <div className="flex gap-1">
               <button className="px-2 py-1 border rounded-md hover:bg-gray-100">{"<"}</button>
               <button className="px-2 py-1 border rounded-md hover:bg-gray-100">{">"}</button>
