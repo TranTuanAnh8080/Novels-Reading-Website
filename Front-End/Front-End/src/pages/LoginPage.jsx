@@ -32,7 +32,8 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 flex-row">
+        <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 
+        flex-row">
             <FancyImages />
 
             {/* Hiệu ứng pháo giấy */}
@@ -53,14 +54,14 @@ const LoginPage = () => {
           scale-75 hover:scale-100 transition-transform duration-300"
             />
 
-            <div className="w-auto flex flex-col justify-center px-16 mt-4 font-mono">
+            <div className="w-auto flex flex-col justify-center px-16 mt-4">
                 {/* Logo Inkrealm */}
                 <img
                     src={image}
                     alt="Inkrealm Logo"
                     className="mb-3 w-42 h-17 contrast-125 brightness-90 saturate-200"
                 />
-                <p className="text-gray-600 mb-3 text-2xl font-mono font-bold">
+                <p className="text-gray-600 mb-3 text-2xl font-medium">
                     Khám phá thế giới truyện <br /> cùng chúng tôi ❤️
                 </p>
 
@@ -68,26 +69,27 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                     {/* Email */}
                     <div className="mb-3">
-                        <label className="block text-gray-700 font-mono font-bold text-xl">
+                        <label className="block text-gray-700 font-bold text-xl">
                             ✉️
                         </label>
                         <input
                             type="email"
                             placeholder="Nhập email của bạn"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 font-mono"
+                            className="w-full px-4 py-2 border rounded-lg 
+                            focus:outline-none focus:ring-2 focus:ring-blue-300"
                         />
                     </div>
 
                     {/* Password */}
                     <div className="mb-5">
-                        <label className="block text-gray-700 font-mono font-bold text-xl">
+                        <label className="block text-gray-700 font-bold text-xl">
                             🔒
                         </label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Nhập mật khẩu của bạn"
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300 font-mono"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
                             />
 
                             <button
@@ -130,9 +132,9 @@ const LoginPage = () => {
                     {/* Đăng nhập */}
                     <button
                         type="submit"
-                        className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500 text-white py-2 font-mono rounded-3xl hover:bg-blue-600
+                        className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500 text-white py-2 rounded-3xl hover:bg-blue-600
               transition duration-300 justify-center flex items-center
-              mx-auto mb-4 font-extrabold hover:scale-105 transform mt-7"
+              mx-auto mb-4 font-bold hover:scale-105 transform mt-7"
                     >
                         Đăng Nhập
                     </button>
@@ -141,7 +143,7 @@ const LoginPage = () => {
                     <div className="text-center mt-6">
                         <a
                             href="/ForgotPasswordModal"
-                            className="text-blue-500 font-mono font-bold"
+                            className="text-blue-500 font-medium"
                         >
                             Quên mật khẩu?
                         </a>
@@ -153,7 +155,7 @@ const LoginPage = () => {
                             type="button"
                             className="w-100 h-auto flex items-center justify-center bg-white border
                 border-gray-300 py-2 rounded-3xl hover:bg-gray-100 
-                transition duration-300 font-mono"
+                transition duration-300"
                         >
                             <img
                                 src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
@@ -166,12 +168,12 @@ const LoginPage = () => {
 
                     {/* Tạo tài khoản */}
                     <div className="text-center mt-6">
-                        <p className="text-gray-600 font-mono font-bold">
+                        <p className="text-gray-600 font-medium">
                             Bạn chưa có tài khoản?
                         </p>
                         <a
                             href="/RegisterPage"
-                            className="text-blue-500 font-mono font-bold"
+                            className="text-blue-500 font-medium"
                         >
                             Tạo tài khoản
                         </a>

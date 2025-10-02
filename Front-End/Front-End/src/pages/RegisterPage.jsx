@@ -28,7 +28,7 @@ const RegisterPage = () => {
             )}
 
             {/* Form đăng ký */}
-            <div className="w-1/2 h-full flex flex-col justify-center px-16 mt-5 font-mono">
+            <div className="w-1/2 h-full flex flex-col justify-center px-16 mt-5">
                 <img
                     src={vietnamFlag}
                     alt="Vietnam Flag"
@@ -40,7 +40,7 @@ const RegisterPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-5 w-42 h-17 contrast-125 brightness-90 saturate-200 ml-31"
+                    className="mb-5 w-38 h-15 contrast-125 brightness-90 saturate-200 ml-31"
                 />
                 <form>
                     {/* Họ và Tên */}
@@ -49,7 +49,7 @@ const RegisterPage = () => {
                         <input
                             type="text"
                             placeholder="Nhập họ và tên của bạn"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-mono mt-2"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-mono mt-2"
                         />
                     </div>
 
@@ -59,7 +59,7 @@ const RegisterPage = () => {
                         <input
                             type="email"
                             placeholder="Nhập địa chỉ email"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
@@ -69,7 +69,7 @@ const RegisterPage = () => {
                         <input
                             type="tel"
                             placeholder="Nhập số điện thoại của bạn"
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
@@ -80,7 +80,7 @@ const RegisterPage = () => {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Nhập mật khẩu"
-                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <button
                                 type="button"
@@ -123,7 +123,7 @@ const RegisterPage = () => {
                     <div className="mb-7">
                         <label className="block text-gray-700 font-medium mb-2">Ngày sinh <strong className="text-red-500">*</strong></label>
                         <div className="flex space-x-2">
-                            <select className="w-1/3 px-4 py-2 border rounded-lg focus:outline-none
+                            <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none
                              focus:ring-2 focus:ring-blue-500">
                                 <option>Ngày</option>
                                 {/* Thêm các ngày */}
@@ -133,7 +133,7 @@ const RegisterPage = () => {
                                     </option>
                                 ))}
                             </select>
-                            <select className="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option>Tháng</option>
                                 {/* Thêm các tháng */}
                                 {[...Array(12)].map((_, i) => (
@@ -142,7 +142,7 @@ const RegisterPage = () => {
                                     </option>
                                 ))}
                             </select>
-                            <select className="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option>Năm</option>
                                 {/* độ tuổi bắt đầu từ 30 tuổi */}
                                 {[...Array(36)].map((_, i) => (
@@ -160,16 +160,16 @@ const RegisterPage = () => {
                             className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500
                          text-white py-2 rounded-3xl hover:bg-blue-600
                          transition duration-300 justify-center
-                          flex items-center mx-auto mb-4 font-extrabold hover:scale-105 transform font-mono"
+                          flex items-center mx-auto mb-4 font-bold hover:scale-105 transform"
                         >
                             Đăng Ký
                         </button>
 
                     </Link>
                     {/* Đã có tài khoản */}
-                    <div className="text-center mt-2 font-mono">
-                        <p className="text-gray-700 font-bold font-mono">Bạn đã có tài khoản?</p>
-                        <a href="/LoginPage" className="text-blue-500 font-bold">
+                    <div className="text-center mt-2">
+                        <p className="text-gray-600 font-medium">Bạn đã có tài khoản?</p>
+                        <a href="/LoginPage" className="text-blue-500 font-medium">
                             Đăng nhập
                         </a>
                     </div>

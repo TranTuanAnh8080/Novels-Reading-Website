@@ -154,14 +154,14 @@ const MainItem = () => {
                                         </span>
                                     )}
                                     <div className="text-5xl mb-4">{pkg.icon}</div>
-                                    <h3 className="text-2xl font-extrabold text-gray-800">{pkg.coins}</h3>
+                                    <h3 className="text-2xl font-bold text-gray-800">{pkg.coins}</h3>
                                     <p className="text-gray-600">
                                         {pkg.price.toLocaleString("vi-VN")}đ
                                     </p>
 
                                     {/* Button chọn gói */}
                                     <button
-                                        className={`mt-6 w-full py-3 rounded-xl font-medium shadow-md transition-all ${selected === pkg.id
+                                        className={`mt-6 w-full py-3 rounded-xl font-bold shadow-md transition-all ${selected === pkg.id
                                             ? "bg-sky-600 text-white hover:bg-sky-700"
                                             : "bg-gradient-to-r from-sky-400 to-indigo-400 text-white hover:brightness-110"
                                             }`}
@@ -172,7 +172,7 @@ const MainItem = () => {
 
                                     {/* Xem chi tiết */}
                                     <button
-                                        className="mt-3 text-md text-sky-600 cursor-pointer"
+                                        className="mt-3 text-md font-medium text-sky-600 cursor-pointer"
                                         onClick={() => setShowDetail(pkg)}
                                     >
                                         Xem chi tiết

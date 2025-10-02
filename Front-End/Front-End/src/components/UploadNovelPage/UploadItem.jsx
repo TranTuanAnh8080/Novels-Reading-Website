@@ -57,7 +57,7 @@ const UploadItem = () => {
             </div>
             {/* Header */}
             <div className="max-w-4xl mx-auto text-center mb-12">
-                <h1 className="text-4xl font-bold text-sky-700 mb-3 flex justify-center items-center gap-2">
+                <h1 className="text-3xl font-bold text-sky-700 mb-3 flex justify-center items-center gap-2">
                     Chọn loại truyện bạn muốn đăng
                 </h1>
                 <p className="text-gray-800 font-medium max-w-2xl mx-auto">
