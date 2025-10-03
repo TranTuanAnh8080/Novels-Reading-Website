@@ -18,6 +18,7 @@ import BookDetail from "../pages/BookDetail";
 import ChapterList from "../pages/ChapterList";
 import ReadPage from "../pages/ReadPage";
 import SoloLevelingSearch from "../pages/SoloLevelingSearch";
+import ModeratorHomePage from "../pages/ModeratorHomePage";
 
 const AppRouter = createBrowserRouter([
 
@@ -39,7 +40,9 @@ const AppRouter = createBrowserRouter([
     { path: "/BookDetail/:id", element: <BookDetail /> },
     { path: "/ChapterList", element: <ChapterList /> },
     { path: "/ReadPage", element: <ReadPage /> },
-    { path: "/SoloLevelingSearch", element: <SoloLevelingSearch /> }
+    { path: "/SoloLevelingSearch", element: <SoloLevelingSearch /> },
+    { path: "/ModeratorHomePage", element: <ModeratorHomePage /> }
+
 ]);
 
 export default AppRouter;

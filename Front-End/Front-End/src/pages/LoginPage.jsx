@@ -28,7 +28,7 @@ const LoginPage = () => {
 
         // TODO: gọi API login check tài khoản ở đây
         // Nếu login ok thì navigate sang HomeLoggedIn
-        navigate("/HomeLoggedIn");
+        navigate("/ModeratorHomePage");
     };
 
     return (
