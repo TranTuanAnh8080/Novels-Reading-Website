@@ -80,17 +80,27 @@ const ForgotPasswordModal = () => {
             {showMessage && (
                 <AnimatePresence>
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4 }}
+                        initial={{ opacity: 0, y: -20, scale: 0.9 }} // Thêm scale để animation mượt mà hơn
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
                         className="fixed top-6 left-1/2 transform -translate-x-1/2 
-              bg-gradient-to-r from-emerald-100 via-sky-100 to-pink-100
-              text-green-600 font-mono font-medium
-              px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50"
+                       
+                       bg-white text-gray-800 
+                       border border-indigo-200 
+                       font-sans font-semibold 
+                       px-5 py-3 rounded-xl
+                       shadow-xl 
+                       flex items-center gap-3 z-50 
+                       min-w-[300px]" // Thiết lập kích thước tối thiểu
                     >
-                        <CheckCircle className="w-5 h-5 text-green-600 font-mono font-bold" />
-                        <p className="font-mono font-bold">Link khôi phục đã được gửi! Vui lòng kiểm tra email của bạn.</p>
+                        {/* Sử dụng màu xanh chủ đạo cho Icon */}
+                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+
+                        {/* Nội dung thông báo */}
+                        <p className="text-md text-gray-700">
+                            Link khôi phục đã được gửi thành công! Vui lòng kiểm tra email của bạn.
+                        </p>
                     </motion.div>
                 </AnimatePresence>
             )}

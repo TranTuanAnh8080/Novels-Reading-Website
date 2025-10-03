@@ -19,6 +19,9 @@ import ChapterList from "../pages/ChapterList";
 import ReadPage from "../pages/ReadPage";
 import SoloLevelingSearch from "../pages/SoloLevelingSearch";
 import ModeratorHomePage from "../pages/ModeratorHomePage";
+import ModerateOriginalNovels from "../pages/ModerateOriginalNovels";
+import ModerateTranslatedNovels from "../pages/ModerateTranslatedNovels";
+
 
 const AppRouter = createBrowserRouter([
 
@@ -41,7 +44,9 @@ const AppRouter = createBrowserRouter([
     { path: "/ChapterList", element: <ChapterList /> },
     { path: "/ReadPage", element: <ReadPage /> },
     { path: "/SoloLevelingSearch", element: <SoloLevelingSearch /> },
-    { path: "/ModeratorHomePage", element: <ModeratorHomePage /> }
+    { path: "/ModeratorHomePage", element: <ModeratorHomePage /> },
+    { path: "/ModerateOriginalNovels", element: <ModerateOriginalNovels /> },
+    { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> }
 
 ]);
 
