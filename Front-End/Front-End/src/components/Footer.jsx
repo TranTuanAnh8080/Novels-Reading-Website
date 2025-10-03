@@ -35,7 +35,7 @@ const paymentMethods = [
 
 function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 
+    <footer className="w-full bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 
     text-gray-300 mt-16">
       <div className="max-w-7xl mx-auto px-10 py-10 grid grid-cols-1 md:grid-cols-5 gap-10">
         {/* Logo + desc */}
