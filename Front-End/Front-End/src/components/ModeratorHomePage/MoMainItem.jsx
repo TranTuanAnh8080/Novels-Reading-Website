@@ -160,7 +160,7 @@ const MoMainItem = () => {
                             </p>
 
                             <h4 className="font-bold text-lg text-yellow-800 mb-3">Các Trách Nhiệm Chính:</h4>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                            <ul className="grid grid-cols-1 md:grid-cols-1 gap-4 text-sm text-gray-700">
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 flex-shrink-0 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                                     <div>
@@ -453,7 +453,7 @@ const MoMainItem = () => {
                         </aside>
                     </div>
                     {/* Categories */}
-                    <div className="mt-3">
+                    <div className="mt-16">
                         <h3 className="text-xl font-bold mb-8 text-gray-900">📖Chi Tiết Kiểm Duyệt Theo Từng Thể Loại Truyện</h3>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -577,7 +577,7 @@ const MoMainItem = () => {
                                         <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Hài Hước (Comedy)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Hài Hước</h4>
                                         <p className="text-sm text-gray-600 mt-1">Không bôi nhọ cá nhân, sắc tộc, tôn giáo. Nội dung phải phù hợp cho đa số độc giả (General Audience).</p>
                                     </div>
                                 </div>
@@ -593,7 +593,7 @@ const MoMainItem = () => {
                                         <svg className="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 21h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Kinh Dị (Horror)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Kinh Dị</h4>
                                         <p className="text-sm text-gray-600 mt-1">Phải gắn nhãn cảnh báo rõ ràng. Tránh chi tiết quá máu me, tra tấn hoặc gây ám ảnh bệnh hoạn.</p>
                                     </div>
                                 </div>
@@ -658,7 +658,7 @@ const MoMainItem = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-lg text-gray-800">Đấu Trường / Cạnh Tranh</h4>
-                                        <p className="text-sm text-gray-600 mt-1">Thường liên quan đến chiến đấu, giải đấu. Tránh bạo lực thái quá, mô tả chi tiết không cần thiết.</p>
+                                        <p className="text-sm text-gray-600 mt-1">Thường liên quan đến chiến đấu, giải đấu. Tránh bạo lực thái quá.</p>
                                     </div>
                                 </div>
                                 <div className="mt-4 pt-3 border-t border-rose-100 text-xs text-rose-700 italic font-medium bg-rose-50 p-2 rounded-md">
@@ -673,7 +673,7 @@ const MoMainItem = () => {
                                         <HiOutlineUserGroup className="w-6 h-6 text-cyan-600" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Đại Lục Giả Tưởng (Fantasy)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Đại Lục Giả Tưởng</h4>
                                         <p className="text-sm text-gray-600 mt-1">Thế giới riêng cần có quy tắc. Không copy thế giới nổi tiếng có sẵn (Middle-earth, Westeros).</p>
                                     </div>
                                 </div>
@@ -689,7 +689,7 @@ const MoMainItem = () => {
                                         <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 12h2m10 0h2M7 5h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Khoa Học Viễn Tưởng (Sci-fi)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Khoa Học Viễn Tưởng</h4>
                                         <p className="text-sm text-gray-600 mt-1">Nội dung liên quan đến công nghệ, tương lai. Kiểm tra tính logic trong các yếu tố khoa học được đề cập.</p>
                                     </div>
                                 </div>
@@ -705,7 +705,7 @@ const MoMainItem = () => {
                                         <HiOutlineClipboardList className="w-6 h-6 text-yellow-700" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Lịch Sử Hoang Tưởng (Alternate History)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Lịch Sử Hoang Tưởng</h4>
                                         <p className="text-sm text-gray-600 mt-1">Dựa trên lịch sử nhưng có yếu tố giả tưởng. Không xuyên tạc lịch sử quá mức gây phản cảm/phẫn nộ.</p>
                                     </div>
                                 </div>
@@ -739,7 +739,7 @@ const MoMainItem = () => {
                                         <HiOutlineUserGroup className="w-6 h-6 text-purple-700" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Truyện Tâm Lý (Psychological)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Truyện Tâm Lý</h4>
                                         <p className="text-sm text-gray-600 mt-1">Tập trung vào cảm xúc, tâm lý nhân vật và mâu thuẫn nội tâm. Cần có sự sâu sắc.</p>
                                     </div>
                                 </div>
@@ -755,7 +755,7 @@ const MoMainItem = () => {
                                         <HiOutlineCheckCircle className="w-6 h-6 text-green-700" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Truyện Trưởng Thành (Coming of Age)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Truyện Trưởng Thành</h4>
                                         <p className="text-sm text-gray-600 mt-1">Hành trình trưởng thành, học hỏi và phát triển cá nhân của nhân vật chính.</p>
                                     </div>
                                 </div>
@@ -771,7 +771,7 @@ const MoMainItem = () => {
                                         <svg className="w-6 h-6 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.5l-4 4-4-4"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 17.5l-6-6-6 6"></path></svg>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-lg text-gray-800">Truyện Truyền Kỳ (Legend)</h4>
+                                        <h4 className="font-bold text-lg text-gray-800">Truyện Truyền Kỳ</h4>
                                         <p className="text-sm text-gray-600 mt-1">Câu chuyện kỳ bí, huyền thoại, hoặc các sự kiện siêu nhiên. Yếu tố văn hóa, lịch sử.</p>
                                     </div>
                                 </div>
