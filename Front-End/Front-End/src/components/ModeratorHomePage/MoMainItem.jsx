@@ -40,7 +40,7 @@ const MoMainItem = () => {
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
                     className="p-3 rounded-full bg-white shadow-lg border border-gray-100 
-                           hover:shadow-indigo-300/50 hover:border-indigo-300 transition duration-300"
+                           hover:shadow-indigo-300/50 hover:border-indigo-500 transition duration-300 scale-100 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
 
                     <LuSquareMenu size={24} className="text-indigo-600 w-6 h-6" />
@@ -58,7 +58,7 @@ const MoMainItem = () => {
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
                                 // Thêm gap-2 và làm cho button rõ ràng hơn
                                 className="flex items-center justify-between w-full px-3 py-2 rounded-lg 
-                                           hover:bg-indigo-50/70 text-base font-semibold transition"
+                                           hover:bg-indigo-200 text-base font-semibold transition"
                             >
                                 Kiểm duyệt nội dung
                                 <FaChevronDown
@@ -96,13 +96,13 @@ const MoMainItem = () => {
                         {/* Các mục khác */}
                         <a
                             href="#overview"
-                            className="block px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-gray-700"
+                            className="block px-3 py-2 rounded-lg hover:bg-green-300 font-medium text-gray-700"
                         >
                             Dashboard thống kê
                         </a>
                         <a
                             href="/logout"
-                            className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-50"
+                            className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300"
                         >
                             Đăng xuất
                         </a>

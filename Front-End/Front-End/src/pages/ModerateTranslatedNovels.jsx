@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // Giả định bạn đã import các icon này từ thư viện (ví dụ: react-icons)
-import { HiOutlineMenu, HiOutlinePencilAlt, HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineClock, HiOutlineEye } from 'react-icons/hi';
+import { HiOutlineMenu, HiOutlinePencilAlt, HiOutlineCheckCircle,  HiOutlineExclamationCircle, HiOutlineBan , HiOutlineXCircle, HiOutlineClock, HiOutlineEye } from 'react-icons/hi';
 import { HiOutlineSparkles } from 'react-icons/hi';
 import MoHeader from '../components/ModeratorHomePage/MoHeader';
 import Footer from '../components/Footer';
@@ -294,6 +294,312 @@ const ModerateTranslatedNovels = () => {
                     </div>
                 </div>
             </div>
+
+               <div className="max-w-7xl mx-auto px-6 py-16">
+                            {/* Role & Workflow */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+                                {/* Vai trò */}
+                                <div className="p-6 bg-orange-50 rounded-xl shadow-sm">
+                                    <p className="text-base text-gray-700 leading-relaxed mb-6">
+                                        <strong className="font-medium italic">Moderator (Kiểm duyệt viên)</strong> đóng vai trò là cổng kiểm soát nội dung cho toàn bộ hệ thống InkRealm.
+                                        Bạn chịu trách nhiệm xem xét các tác phẩm,
+                                        đảm bảo chúng phù hợp với chính sách cộng đồng và tiêu chuẩn chất lượng của nền tảng đã được đề ra.
+                                    </p>
+            
+                                    <h4 className="font-bold text-lg text-yellow-800 mb-3">Các Trách Nhiệm Chính:</h4>
+                                    <ul className="grid grid-cols-1 md:grid-cols-1 gap-4 text-sm text-gray-700">
+                                        <li className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 flex-shrink-0 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                            <div>
+                                                <strong className="font-medium text-gray-900">Tuân thủ Pháp luật & Quy định</strong>
+                                                <p className="text-xs text-gray-500">Ngăn chặn tuyệt đối nội dung vi phạm pháp luật và các quy định cộng đồng nghiêm cấm.</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 flex-shrink-0 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3 .895-3 2.5 1.343 2 3 2 3 .895 3 2"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6a3 3 0 016 0v13"></path></svg>
+                                            <div>
+                                                <strong className="font-medium text-gray-900">Xác thực Nguồn gốc & Bản quyền</strong>
+                                                <p className="text-xs text-gray-500">Kiểm tra tính hợp pháp, đặc biệt với tác phẩm dịch thuật/fanfic để bảo vệ quyền sở hữu.</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 flex-shrink-0 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.276a1.996 1.996 0 011.094 2.846l-2.072 6.216a1 1 0 01-.192.308l-4 4a1 1 0 01-.707.293H7.5a1 1 0 01-.707-.293l-4-4a1 1 0 01-.192-.308l-2.072-6.216a1.996 1.996 0 011.094-2.846 1.996 1.996 0 012.846 1.094L7.5 7.5l-.293-.293a1 1 0 010-1.414l2-2a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-.293.293 1.094-2.846a1.996 1.996 0 012.846-1.094z"></path></svg>
+                                            <div>
+                                                <strong className="font-medium text-gray-900">Đảm bảo Trải nghiệm Đọc</strong>
+                                                <p className="text-xs text-gray-500">Giữ môi trường đọc an toàn, lành mạnh, không có nội dung gây khó chịu hoặc xúc phạm.</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 flex-shrink-0 text-amber-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-4a2 2 0 012-2h2a2 2 0 012 2v4"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11V3m0 0l-4 4m4-4l4 4"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            <div>
+                                                <strong className="font-medium text-gray-900">Ghi Log & Minh bạch</strong>
+                                                <p className="text-xs text-gray-500">Ghi log chi tiết mọi quyết định từ chối hoặc yêu cầu chỉnh sửa để tối đa hóa sự minh bạch.</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 flex-shrink-0 text-purple-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.848 5.232a2 2 0 002.304 0L21 8m-7 11V11a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z"></path></svg>
+                                            <div>
+                                                <strong className="font-medium text-gray-900">Phản hồi & Hỗ trợ Tác giả</strong>
+                                                <p className="text-xs text-gray-500">Cung cấp phản hồi mang tính xây dựng, giúp tác giả hiểu rõ lỗi và cải thiện chất lượng tác phẩm.</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 flex-shrink-0 text-teal-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2h2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v2M7 7h10"></path></svg>
+                                            <div>
+                                                <strong className="font-medium text-gray-900">Quản lý Thể loại & Tag</strong>
+                                                <p className="text-xs text-gray-500">Đảm bảo việc phân loại thể loại và gắn tag chính xác, giúp độc giả dễ dàng tìm kiếm.</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+            
+                                {/* Workflow */}
+                                <ol className="relative border-l border-gray-200 ml-4 space-y-6">
+                                    <li className="mb-4 ml-6">
+                                        <span className="absolute flex items-center justify-center w-6 h-6 bg-yellow-100 rounded-full -left-3 ring-4 ring-white">
+                                            <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                                        </span>
+                                        <div className="p-3 bg-yellow-50 rounded-lg shadow-sm">
+                                            <h4 className="font-medium text-md text-yellow-700">1. Pending (Chờ Xử Lý)</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Tác phẩm vừa được tác giả nộp lên. Bài viết nằm trong hàng đợi, chưa có Moderator nào tiếp nhận.
+                                            </p>
+                                        </div>
+                                    </li>
+            
+            
+                                    <li className="mb-4 ml-6">
+                                        <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-4 ring-white">
+                                            <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                                        </span>
+                                        <div className="p-3 bg-blue-50 rounded-lg shadow-sm">
+                                            <h4 className="font-medium text-md text-blue-700">2. Moderating (Đang Kiểm Tra)</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Bạn đã tiếp nhận tác phẩm và đang tiến hành kiểm tra chi tiết theo Checklist (Metadata, Nội dung cấm, Bản quyền, Ngôn ngữ...).
+                                            </p>
+                                        </div>
+                                    </li>
+            
+            
+                                    <li className="mb-4 ml-6">
+                                        <span className="absolute flex items-center justify-center w-6 h-6 bg-green-100 rounded-full -left-3 ring-4 ring-white">
+                                            <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 13.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                                        </span>
+                                        <div className="p-3 bg-green-50 rounded-lg shadow-sm">
+                                            <h4 className="font-medium text-md text-green-700">3. Approved (Đã Duyệt)</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Nội dung đạt chuẩn. Tác phẩm được chuyển sang bộ phận biên tập hoặc chờ hệ thống lên lịch xuất bản.
+                                            </p>
+                                        </div>
+                                    </li>
+            
+                                    <li className="mb-4 ml-6">
+                                        <span className="absolute flex items-center justify-center w-6 h-6 bg-red-100 rounded-full -left-3 ring-4 ring-white">
+                                            <svg className="w-3 h-3 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                        </span>
+                                        <div className="p-3 bg-red-50 rounded-lg shadow-sm">
+                                            <h4 className="font-medium text-md text-red-700">4. Rejected (Từ Chối)</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Tác phẩm vi phạm quy định. Bắt buộc phải kèm theo lý do rõ ràng và chi tiết để tác giả có thể chỉnh sửa.
+                                            </p>
+                                        </div>
+                                    </li>
+            
+                                    {/* Step 5: Published */}
+                                    <li className="ml-6">
+                                        <span className="absolute flex items-center justify-center w-6 h-6 bg-indigo-100 rounded-full -left-3 ring-4 ring-white">
+                                            <svg className="w-3 h-3 text-indigo-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path></svg>
+                                        </span>
+                                        <div className="p-3 bg-indigo-50 rounded-lg shadow-sm">
+                                            <h4 className="font-medium text-md text-indigo-700">5. Published (Xuất Bản)</h4>
+                                            <p className="text-sm text-gray-600">
+                                                Truyện đã chính thức được đăng tải và có thể tiếp cận độc giả trên toàn hệ thống.
+                                            </p>
+                                        </div>
+                                    </li>
+            
+                                    <div className="mt-6 p-3 border-t border-gray-100">
+                                        <p className="text-xs text-blue-500 flex items-center gap-2">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            Tip: Luôn theo dõi timeline trạng thái trong giao diện quản trị để nắm bắt chính xác tiến trình của từng tác phẩm.
+                                        </p>
+                                    </div>
+            
+                                </ol>
+            
+            
+            
+                                {/* Ưu tiên */}
+                                <div className="p-6 bg-green-50 rounded-xl shadow-sm font-medium">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <HiOutlineExclamationCircle className="w-7 h-7 text-green-600" />
+                                        <h3 className="text-lg font-bold text-green-700">Ưu tiên xử lý</h3>
+                                    </div>
+                                    <p className="text-base text-gray-700 leading-relaxed mb-6">
+                                        Moderator cần phân loại mức độ khẩn cấp để đảm bảo các nội dung tiềm ẩn rủi ro hoặc quan trọng về mặt cộng đồng được xử lý trước, tránh ảnh hưởng đến trải nghiệm chung.
+                                    </p>
+            
+                                    <div className="flex flex-col gap-3 text-sm">
+                                        {/* Priority 1: Reported (Highest Priority) */}
+                                        <div className="flex justify-between items-center p-3 bg-red-100 rounded-lg border border-red-300">
+                                            <span className="font-medium text-red-800 flex items-center gap-2">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.368 17c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                                Mức 01 (Khẩn Cấp): Bài Bị Báo Cáo Vi Phạm Nghiêm Trọng
+                                            </span>
+                                        </div>
+            
+                                        {/* Priority 2: System Flagged */}
+                                        <div className="flex justify-between items-center p-3 bg-orange-100 rounded-lg border border-orange-300">
+                                            <span className="font-medium text-orange-800 flex items-center gap-2">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                                Mức 02 (Hệ Thống): Nội dung bị AI/Hệ thống Flag
+                                            </span>
+                                        </div>
+            
+                                        {/* Priority 3: Financial/Premium */}
+                                        <div className="flex justify-between items-center p-3 bg-purple-100 rounded-lg border border-purple-300">
+                                            <span className="font-medium text-purple-800 flex items-center gap-2">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2v-4a2 2 0 10-4 0v4m4 0a2 2 0 10-4 0v4m4-4a2 2 0 10-4 0"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                Mức 03 (Tài Chính): Bài dành cho Tác giả trả phí / Truyện Premium
+                                            </span>
+                                        </div>
+            
+                                        {/* Priority 4: Long Pending */}
+                                        <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                                            <span className="font-medium text-indigo-800 flex items-center gap-2">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                Mức 04 (Thời Gian): Bài Pending Lâu Ngày (Quá 48 giờ)
+                                            </span>
+                                        </div>
+            
+                                        {/* Priority 5: Author History */}
+                                        <div className="flex justify-between items-center p-3 bg-amber-50 rounded-lg border border-amber-200">
+                                            <span className="font-medium text-amber-800 flex items-center gap-2">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.866-2.91 7-6.5 7H6a2 2 0 01-2-2V7a2 2 0 012-2h1.5C8.823 5 10 6.177 10 7.5c0 1.323-1.177 2.5-2.5 2.5H6.5c-1.323 0-2.5 1.177-2.5 2.5s1.177 2.5 2.5 2.5H12"></path></svg>
+                                                Mức 05 (Cảnh Báo): Tác Giả Có Lịch Sử Vi Phạm
+                                            </span>
+                                        </div>
+            
+                                        {/* Priority 6: Trending */}
+                                        <div className="flex justify-between items-center p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                                            <span className="font-medium text-emerald-800 flex items-center gap-2">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                                Mức 06 (Thị Trường): Truyện Trending cần tốc độ duyệt
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            {/* Checklist & Common Rejects */}
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                                <div className="lg:col-span-2 bg-white rounded-xl p-8 shadow-2xl border border-gray-100">
+                                    <h4 className="text-xl font-bold mb-6 flex items-center gap-3 text-green-700">
+                                        <HiOutlineCheckCircle className="w-7 h-7 text-teal-600" />
+                                        6 Yếu Tố Bắt Buộc Cần Kiểm Tra
+                                    </h4>
+                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 text-sm text-gray-700">
+                                        {/* Check 1: Metadata */}
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center
+                                                             bg-green-100 text-green-600 rounded-full border border-green-300">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-md">1. Metadata Chính Xác</div>
+                                                <p className="text-xs text-gray-500">Kiểm tra Tiêu đề, Tác giả, Tag, Nguồn gốc phải rõ ràng, trung thực và không bị sai lệch thông tin cơ bản.</p>
+                                            </div>
+                                        </li>
+            
+                                        {/* Check 2: Cấm */}
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center
+                                                             bg-red-100 text-red-600 rounded-full border border-red-300">
+                                                <HiOutlineBan className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-md text-gray-900">2. Loại Trừ Nội Dung Cấm</div>
+                                                <p className="text-xs text-gray-500">Tuyệt đối không có nội dung bạo lực cực đoan, ấu dâm, hoặc nội dung khuyến khích tự hại/phạm pháp.</p>
+                                            </div>
+                                        </li>
+            
+                                        {/* Check 3: Ngôn ngữ */}
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-full border border-indigo-300">
+                                                <HiOutlineSparkles className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-md text-gray-900">3. Ngôn Ngữ Chất Lượng</div>
+                                                <p className="text-xs text-gray-500">Đảm bảo không mắc lỗi chính tả nghiêm trọng, không sử dụng ngôn từ thù ghét hoặc xúc phạm.</p>
+                                            </div>
+                                        </li>
+            
+                                        {/* Check 4: Báo cáo */}
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-amber-100 text-amber-600 rounded-full border border-amber-300">
+                                                <HiOutlineExclamationCircle className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-md text-gray-900">4. Ưu Tiên Kiểm Tra Báo Cáo</div>
+                                                <p className="text-xs text-gray-500">Luôn xem xét và xử lý các bài viết đã bị báo cáo từ người dùng một cách ưu tiên và cẩn trọng.</p>
+                                            </div>
+                                        </li>
+            
+                                        {/* Check 5: Thể loại */}
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-teal-100 text-teal-600 rounded-full border border-teal-300">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h10M7 11h10M7 15h7"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-md text-gray-900">5. Phân Loại Thể Loại Đúng</div>
+                                                <p className="text-xs text-gray-500">Bài viết phải được gắn đúng thể loại (Genre) và tag phù hợp, không gây hiểu lầm cho độc giả.</p>
+                                            </div>
+                                        </li>
+            
+                                        {/* Check 6: Nhất quán */}
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full border border-blue-300">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div className="font-medium text-md text-gray-900">6. Tính Nhất Quán Sơ Khai</div>
+                                                <p className="text-xs text-gray-500">Kiểm tra nội dung chương đầu/tóm tắt không bị mâu thuẫn hoặc thiếu logic cơ bản.</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+            
+                                {/* Lý do từ chối phổ biến */}
+                                <aside className="bg-white rounded-xl p-6 shadow-md">
+            
+                                    <h4 className="text-xl font-bold mb-6 flex items-center gap-3 text-red-600">
+                                        <HiOutlineCheckCircle className="w-7 h-7 text-red-600" />
+                                        Lý do từ chối phổ biến
+                                    </h4>
+                                    <div className="flex flex-wrap gap-3">
+                                        {[
+                                            "Nội dung nhạy cảm vượt mức cho phép",
+                                            "Vi phạm bản quyền / nguồn dịch không rõ",
+                                            "Spam / quảng cáo trá hình",
+                                            "Ngôn ngữ sơ sài, nhiều lỗi",
+                                            "Sai thể loại hoặc tag",
+                                            "Không tuân thủ quy định cộng đồng",
+                                            "Nội dung không phù hợp với đối tượng độc giả"
+                                        ].map((reason) => (
+                                            <span
+                                                key={reason}
+                                                className="px-3 py-1 text-xs bg-red-50 text-red-700 rounded-full shadow-sm"
+                                            >
+                                                {reason}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-4">
+                                        Khi từ chối, hãy cung cấp <strong className="text-bold">lý do rõ ràng</strong> và gợi ý chỉnh sửa để tác giả có thể cải thiện nội dung.
+                                    </p>
+                                </aside>
+                            </div>
+                        </div>
             <Footer />
         </div>
     );
