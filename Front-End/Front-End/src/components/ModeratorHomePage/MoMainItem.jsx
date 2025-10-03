@@ -213,7 +213,7 @@ const MoMainItem = () => {
                                     <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
                                 </span>
                                 <div className="p-3 bg-yellow-50 rounded-lg shadow-sm">
-                                    <h4 className="font-medium text-lg text-yellow-700">1. Pending (Chờ Xử Lý)</h4>
+                                    <h4 className="font-medium text-md text-yellow-700">1. Pending (Chờ Xử Lý)</h4>
                                     <p className="text-sm text-gray-600">
                                         Tác phẩm vừa được tác giả nộp lên. Bài viết nằm trong hàng đợi, chưa có Moderator nào tiếp nhận.
                                     </p>

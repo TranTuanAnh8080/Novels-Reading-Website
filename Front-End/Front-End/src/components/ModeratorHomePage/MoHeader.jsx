@@ -4,13 +4,13 @@ import inkrealmLogo from "../../assets/inkrealm_logo.png";
 const MoHeader = () => {
 
     return (
-        <header className="w-full flex items-center justify-between px-6 py-4 bg-white shadow-lg 
-        sticky top-0 z-30 border-b border-gray-100">
+        <header className="w-full flex items-center justify-between px-6 py-4 bg-white shadow-md 
+        sticky top-0 z-30 border-gray-50">
             <div className="flex items-center gap-3 flex-shrink-0">
                 <a
-                    href="/ModeratorHomePage" 
+                    href="/ModeratorHomePage"
                     title="Trở về Dashboard Quản trị"
-                    className="block" 
+                    className="block"
                 >
                     <img
                         src={inkrealmLogo}
@@ -30,14 +30,16 @@ const MoHeader = () => {
             {/* User Actions & Profile */}
             <div className="flex items-center gap-4 flex-shrink-0">
 
-                {/* Nút Đăng Bài (Call to Action)
-                    <button className="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <svg className="w-5 h-5 mr-1 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                        Đăng Truyện
-                    </button> */}
-
-                {/* Avatar/Profile - Thêm hiệu ứng hover */}
-                <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-lg cursor-pointer ring-2 ring-indigo-500 ring-offset-2 hover:bg-indigo-600 transition duration-200">
+                {/* Avatar/Profile - Thiết kế lại với Gradient nhẹ */}
+                <div
+                    className="w-10 h-10 rounded-full 
+                        bg-gradient-to-br from-indigo-500 to-purple-600 
+                        text-white flex items-center justify-center 
+                        font-extrabold text-lg cursor-pointer 
+                        shadow-lg shadow-indigo-500/50 
+                        transform hover:scale-[1.05] transition duration-300"
+                    title="Menu tài khoản"
+                >
                     M
                 </div>
             </div>

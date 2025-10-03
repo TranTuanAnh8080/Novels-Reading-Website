@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 
 import { LuSquareMenu } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
+import { Search, ChevronDown } from 'lucide-react';
 
 // --- Dữ liệu giả định và StatusTab Component (Giữ nguyên) ---
 const mockData = [
@@ -43,6 +44,12 @@ const StatusTab = ({ label, count, color, isActive, onClick }) => (
 );
 
 const ModerateOriginalNovels = () => {
+
+
+    // Khai báo state cho tìm kiếm và sắp xếp
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
+
     const [activeTab, setActiveTab] = useState('Pending');
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -72,7 +79,7 @@ const ModerateOriginalNovels = () => {
             {/* Header */}
             <MoHeader />
 
-            <div className="absolute left-6 top-27 z-40">
+            <div className="left-6 top-27 z-40 fixed">
                 <button
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
@@ -150,7 +157,9 @@ const ModerateOriginalNovels = () => {
             <div className="flex-grow p-6 sm:p-10">
                 {/* Thanh tiêu đề chính */}
                 <header className="flex items-center justify-center mb-8">
-                    <h2 className="text-4xl font-medium italic flex items-center gap-3 mr-4">
+                    <h2 className="text-4xl font-medium italic flex items-center gap-3 mr-4 bg-gradient-to-r 
+                       from-indigo-600 via-purple-600 to-pink-500 
+                       text-transparent bg-clip-text">
                         <p className="w-8 h-8 text-indigo-600" />
                         Trạm Phát Hành Truyện Sáng Tác
                     </h2>
@@ -195,11 +204,51 @@ const ModerateOriginalNovels = () => {
                     />
                 </div>
 
+                {/* --- BỘ LỌC VÀ TÌM KIẾM MỚI --- */}
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 p-4">
+
+                    {/* 1. Thanh Tìm Kiếm (Search Input) */}
+                    <div className="relative w-full sm:w-2/5 md:w-1/3 flex items-center">
+                        <Search className="absolute left-3 w-4 h-5 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo Tên truyện hoặc Tác giả..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-sm"
+                        />
+                    </div>
+
+                    {/* 2. Bộ lọc Sắp xếp (Sort Dropdown) */}
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                        <label htmlFor="sort-by" className="text-sm font-bold text-gray-700 whitespace-nowrap">
+                            Sắp xếp theo:
+                        </label>
+                        <div className="relative">
+                            <select
+                                id="sort-by"
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="appearance-none block w-full bg-white border border-gray-300 
+                                rounded-xl shadow-sm pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer transition duration-150"
+                            >
+                                <option value="latest">Ngày tạo (Mới nhất)</option>
+                                <option value="oldest">Ngày tạo (Cũ nhất)</option>
+                                <option value="chapter-count">Số chương (Nhiều nhất)</option>
+                                <option value="writer">Tác giả</option>
+                                <option value="last-activity">Hoạt động gần nhất</option>
+                            </select>
+                            {/* Icon mũi tên tùy chỉnh để thay thế appearance-none */}
+                            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Bảng Dữ liệu Chính */}
-                <div className="bg-white rounded-xl shadow-xl overflow-x-auto">
+                <div className="bg-white rounded-xs shadow-md overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
 
-                        <thead className="bg-gray-50">
+                        <thead className="bg-gray-100">
                             <tr>
                                 {['ID', 'NỘI DUNG', 'TÁC GIẢ', 'NGÀY TẠO', 'MÔ TẢ', 'TRẠNG THÁI', 'HÀNH ĐỘNG'].map((header) => (
                                     <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-bold
