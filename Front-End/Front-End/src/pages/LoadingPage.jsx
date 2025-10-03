@@ -17,7 +17,7 @@ const LoadingPage = () => {
                 <div class='h-3 w-2 bg-rose-300 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
                 <div class='h-3 w-2 bg-sky-200 rounded-full animate-bounce'></div>
             </div>
-            <p className="text-lg font-bold font-mono animate-pulse text-sky-800">
+            <p className="text-xl font-medium animate-pulse text-sky-800">
                 "⭐Nơi cảm xúc vỡ òa trong từng chương chữ🌸"
             </p>
         </div>
