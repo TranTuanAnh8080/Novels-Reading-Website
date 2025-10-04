@@ -36,14 +36,14 @@ const paymentMethods = [
 function Footer() {
   return (
     <footer className="w-full bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 
-    text-gray-300 mt-16">
+    text-gray-300 mt-16 dark:bg-gray-900 ">
       <div className="max-w-7xl mx-auto px-10 py-10 grid grid-cols-1 md:grid-cols-5 gap-10">
         {/* Logo + desc */}
         <div className="md:col-span-2">
           <div className="flex items-center space-x-2 mb-4">
             <img src={logo} alt="InkRealm" className="h-10 w-auto" />
           </div>
-          <p className="text-sm leading-relaxed text-gray-400">
+          <p className="text-sm leading-relaxed text-gray-400 dark:text-white">
             Nền tảng đọc truyện chất lượng cao ✨ <br />
             Khám phá hàng ngàn tác phẩm từ nhiều nền văn hoá, mọi lúc, mọi nơi. <br />
             InkRealm không chỉ là nơi để đọc truyện, mà còn là cầu nối giữa độc giả và tác giả,
@@ -92,7 +92,7 @@ function Footer() {
         {/* Về InkRealm + Thanh toán */}
         <div>
           <h3 className="font-semibold text-white mb-4">Về InkRealm</h3>
-          <p className="text-sm text-gray-400 leading-relaxed mb-4">
+          <p className="text-sm text-gray-400 leading-relaxed mb-4 dark:text-white">
             InkRealm cam kết mang lại trải nghiệm đọc truyện nhanh chóng, mượt
             mà và hiện đại, dành cho mọi độc giả yêu thích văn học trực tuyến.
           </p>

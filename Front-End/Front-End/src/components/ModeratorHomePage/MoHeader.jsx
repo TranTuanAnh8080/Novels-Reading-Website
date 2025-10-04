@@ -1,5 +1,4 @@
 import React from "react";
-import inkrealmLogo from "../../assets/inkrealm_logo.png";
 
 const MoHeader = () => {
 
@@ -22,7 +21,7 @@ const MoHeader = () => {
                     </span>
                 </a>
             </div>
-            <nav className="hidden lg:flex items-center gap-10 text-gray-800 font-medium flex-grow justify-center mr-20 text-md">
+            <nav className="hidden lg:flex items-center gap-10 text-gray-800 font-medium flex-grow justify-center mr-20 text-md dark:text-white">
                 <a href="#" className="hover:text-indigo-700 transition duration-150 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all after:duration-300 hover:after:w-full">Về chúng tôi</a>
                 <a href="#" className="hover:text-indigo-700 transition duration-150 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all after:duration-300 hover:after:w-full">Chính sách</a>
                 <a href="#" className="hover:text-indigo-700 transition duration-150 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all after:duration-300 hover:after:w-full">Quy định</a>
