@@ -113,19 +113,19 @@ const MoMainItem = () => {
             <main
                 className="flex-1 flex items-center justify-center relative text-center px-6 min-h-screen"
                 style={{
-                    backgroundImage: `url(${currentBackground})`, // Hình ảnh HD
-                    backgroundSize: "cover", // Đảm bảo hình ảnh bao phủ toàn bộ màn hình
-                    backgroundPosition: "center", // Căn giữa hình ảnh
-                    backgroundRepeat: "no-repeat", // Không lặp lại hình ảnh
-                    imageRendering: "auto", // Hiển thị hình ảnh sắc nét
+                    backgroundImage: `url(${currentBackground})`,
+                    backgroundSize: "cover", 
+                    backgroundPosition: "center", 
+                    backgroundRepeat: "no-repeat", 
+                    imageRendering: "auto",
                 }}
             >
                 <div className="absolute inset-0 bg-black/55"></div>
 
                 <div className="relative z-10 max-w-4xl text-gray-100 py-20">
-                    <h1 className="text-5xl md:text-5xl font-extrabold mb-4">Trạm Quản Trị Nội Dung <span className="text-blue-700 font-bold">InkRealm</span></h1>
+                    <h1 className="text-5xl md:text-5xl font-extrabold mb-4">Trạm Quản Trị Nội Dung <span className="text-blue-700 font-extrabold">InkRealm</span></h1>
                     <p className="text-lg md:text-xl leading-relaxed mb-8">
-                        Chào mừng bạn — moderator! <br /> Tại đây bạn có thể <span className="font-bold text-yellow-400">phê duyệt, đánh giá, theo dõi và xử lý báo cáo kịp thời</span> nhằm đảm bảo nội dung đến với độc giả là an toàn & chất lượng.
+                        Chào mừng bạn — moderator! <br /> Tại đây bạn có thể <span className="font-bold text-yellow-400 italic">phê duyệt, đánh giá, theo dõi và xử lý báo cáo kịp thời</span> nhằm đảm bảo nội dung đến với độc giả là an toàn & chất lượng nhé.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

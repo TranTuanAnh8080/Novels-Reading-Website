@@ -135,7 +135,6 @@ const ModerateTranslatedNovels = () => {
                             )}
                         </div>
 
-                        {/* Thêm đường phân cách tinh tế */}
                         <div className="border-t border-gray-100 my-2"></div>
 
                         {/* Các mục khác */}
@@ -156,7 +155,7 @@ const ModerateTranslatedNovels = () => {
             </div>
 
             {/* Nội dung chính: Áp dụng padding tại đây */}
-            <div className="flex-grow p-6 sm:p-10">
+            <div className="flex-grow p-6 sm:p-10 mt-20">
                 {/* Thanh tiêu đề chính */}
                 <header className="flex items-center justify-center mb-8">
                     <h2 className="text-4xl font-medium italic flex items-center gap-3 mr-4
