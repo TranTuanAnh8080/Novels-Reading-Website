@@ -70,10 +70,16 @@ const ModerateOriginalNovels = () => {
 
     const renderActionButton = (status, id) => {
         switch (status) {
-            case 'Pending': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1"><HiOutlinePencilAlt className="w-4 h-4" /> Bắt đầu duyệt</button>);
-            case 'Moderating': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition flex items-center gap-1"><HiOutlineEye className="w-4 h-4" /> Tiếp tục duyệt</button>);
-            case 'Rejected': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1"><HiOutlineXCircle className="w-4 h-4" /> Xem Lý do</button>);
-            case 'Approved': case 'Published': return (<span className="text-green-600 font-medium">Hoàn tất</span>);
+            case 'Pending': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1">
+                <HiOutlinePencilAlt className="w-4 h-4" /> Bắt đầu duyệt</button>);
+            case 'Moderating': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition flex items-center gap-1">
+                <HiOutlineEye className="w-4 h-4" /> Tiếp tục duyệt</button>);
+            case 'Approved': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1">
+                <HiOutlineCheckCircle className="w-4 h-4" /> Chuẩn bị xuất bản</button>);
+            case 'Rejected': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1">
+                <HiOutlineXCircle className="w-4 h-4" /> Xem Lý do</button>);
+            case 'Published': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-blue-500 text-white hover:bg-blue-600 transition flex items-center gap-1">
+                <HiOutlineCheckCircle className="w-4 h-4" />Đã hoàn thành</button>);
             default: return null;
         }
     };
@@ -102,7 +108,7 @@ const ModerateOriginalNovels = () => {
                 <button
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="p-3 rounded-full bg-white shadow-lg border border-gray-100 
+                    className="p-3 rounded-xl bg-white shadow-lg border border-gray-100 
                                        hover:shadow-indigo-300/50
                                         hover:border-indigo-500 transition duration-300 scale-100 
                                         hover:scale-105 fixed focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400"
@@ -232,7 +238,11 @@ const ModerateOriginalNovels = () => {
                     <div className="relative w-full sm:w-2/5 md:w-1/3 flex items-center dark:text-white ">
                         <Search className="absolute left-3 w-4 h-5 dark:text-white text-gray-400" />
                         <input
-                            className="w-80 pl-10 dark:text-white pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-sm"
+                            className="w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-lg 
+                                  focus:ring-indigo-500 focus:border-indigo-500 
+                                    transition duration-150 text-sm
+                                    text-gray-900 dark:text-white 
+                                    placeholder-gray-400 dark:placeholder-gray-300"
                             type="text"
                             placeholder="Tìm kiếm theo Tên truyện hoặc Tác giả..."
                             value={searchTerm}
@@ -293,7 +303,7 @@ const ModerateOriginalNovels = () => {
                                             <span className={`px-3 inline-flex text-xs leading-5 font-semibold rounded-full ${statusInfo.bg} ${statusInfo.text} flex items-center gap-1`}>
                                                 <span className={`w-2 h-2 rounded-full ${statusInfo.dot}`}></span>
                                                 {item.status === 'Pending' ? 'Chờ duyệt' : item.status === 'Moderating' ? 'Đang duyệt' : item.status === 'Approved' ? 'Đã duyệt' : item.status === 'Rejected' ? 'Từ chối' : 'Xuất bản'}</span></td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{renderActionButton(item.status, item.id)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{renderActionButton(item.status)}</td>
 
                                     </tr>);
                                 })

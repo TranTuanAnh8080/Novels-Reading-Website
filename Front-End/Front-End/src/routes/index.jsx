@@ -22,7 +22,6 @@ import ModeratorHomePage from "../pages/ModeratorHomePage";
 import ModerateOriginalNovels from "../pages/ModerateOriginalNovels";
 import ModerateTranslatedNovels from "../pages/ModerateTranslatedNovels";
 
-
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
