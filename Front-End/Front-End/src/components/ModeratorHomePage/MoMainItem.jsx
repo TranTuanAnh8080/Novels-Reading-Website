@@ -125,7 +125,7 @@ const MoMainItem = () => {
                 <div className="absolute inset-0 bg-black/55"></div>
 
                 <div className="relative z-10 max-w-4xl text-gray-100 py-20">
-                    <h1 className="text-5xl md:text-5xl font-extrabold mb-4">Trạm Quản Trị Nội Dung <span className="text-blue-700 font-extrabold">InkRealm</span></h1>
+                    <h1 className="text-5xl md:text-5xl font-extrabold mb-4">Trạm Quản Trị Nội Dung <span className="text-indigo-600 font-extrabold">InkRealm</span></h1>
                     <p className="text-lg md:text-xl leading-relaxed mb-8">
                         Chào mừng bạn — moderator! <br /> Tại đây bạn có thể <span className="font-bold text-yellow-400 italic">phê duyệt, đánh giá, theo dõi và xử lý báo cáo kịp thời</span> nhằm đảm bảo nội dung đến với độc giả là an toàn & chất lượng nhé.
                     </p>
@@ -133,7 +133,7 @@ const MoMainItem = () => {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <a
                             href="/ModerateOriginalNovels"
-                            className="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition"
+                            className="px-6 py-3 bg-indigo-700 text-white rounded-lg shadow hover:bg-indigo-600 transition"
                         >
                             Bắt đầu duyệt nội dung
                         </a>
