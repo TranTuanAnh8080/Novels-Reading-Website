@@ -108,13 +108,13 @@ const ModerateTranslatedNovels = () => {
                 <button
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="p-3 rounded-xl bg-white shadow-lg border border-gray-100 
-                                       hover:shadow-indigo-300/50
-                                        hover:border-indigo-500 transition duration-300 scale-100 
-                                        hover:scale-105 fixed focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400"
+                    className="p-3 rounded-2xl bg-white shadow-lg border border-gray-100 
+                                          hover:shadow-indigo-300/50
+                                           hover:border-indigo-500 transition duration-300 scale-100 
+                                           hover:scale-105 fixed focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-blue-800 dark:border-blue-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400"
                 >
 
-                    <LuSquareMenu size={24} className="text-indigo-600 w-6 h-6" />
+                    <LuSquareMenu size={24} className="text-indigo-600 w-6 h-6 dark:text-white " />
                 </button>
 
                 {menuOpen && (

@@ -61,14 +61,14 @@ const Popups = () => {
       )}
 
       {/* Nội dung popup */}
-      <div className="relative bg-gradient-to-br from-transparent via-sky-100 to-transparent 
+      <div className="relative bg-gradient-to-br from-cyan-200 via-sky-100 to-rose-100 
         rounded-4xl p-8 text-center w-11/12 max-w-md shadow-2xl
         transform scale-100 hover:scale-105 transition-transform duration-300 z-10">
 
         <img
           src={vietnamFlag}
           alt="Vietnam Flag"
-          className="absolute top-3 left-4 w-12 h-auto 
+          className="absolute top-3 left-4 w-15 h-auto 
             contrast-125 brightness-150 saturate-150 scale-75 hover:scale-100 transition-transform duration-300"
         />
 
@@ -77,7 +77,7 @@ const Popups = () => {
           alt="Inkrealm Logo"
           className="ml-27 mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
         />
-        <h1 className="text-3xl mb-7 text-sky-800 font-medium">
+        <h1 className="text-3xl mb-7 text-blue-800 font-medium">
           Chào mừng bạn đã đến!
         </h1>
         <h2 className="text-sky-800 mb-4 text-md font-base">

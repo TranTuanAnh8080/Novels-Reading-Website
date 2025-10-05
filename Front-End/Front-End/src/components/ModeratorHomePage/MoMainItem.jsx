@@ -39,13 +39,13 @@ const MoMainItem = () => {
                 <button
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="p-3 rounded-xl bg-white shadow-lg border border-gray-100 
+                    className="p-3 rounded-2xl bg-white shadow-lg border border-gray-100 
                            hover:shadow-indigo-300/50
                             hover:border-indigo-500 transition duration-300 scale-100 
-                            hover:scale-105 fixed focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400"
+                            hover:scale-105 fixed focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-blue-800 dark:border-blue-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400"
                 >
 
-                    <LuSquareMenu size={24} className="text-indigo-600 w-6 h-6" />
+                    <LuSquareMenu size={24} className="text-indigo-600 w-6 h-6 dark:text-white " />
                 </button>
 
                 {menuOpen && (
@@ -125,7 +125,7 @@ const MoMainItem = () => {
                 <div className="absolute inset-0 bg-black/55"></div>
 
                 <div className="relative z-10 max-w-4xl text-gray-100 py-20">
-                    <h1 className="text-5xl md:text-5xl font-extrabold mb-4">Trạm Quản Trị Nội Dung <span className="text-indigo-600 font-extrabold">InkRealm</span></h1>
+                    <h1 className="text-5xl md:text-5xl font-extrabold mb-4">Trạm Quản Trị Nội Dung <span className="text-blue-700 font-extrabold">InkRealm</span></h1>
                     <p className="text-lg md:text-xl leading-relaxed mb-8">
                         Chào mừng bạn — moderator! <br /> Tại đây bạn có thể <span className="font-bold text-yellow-400 italic">phê duyệt, đánh giá, theo dõi và xử lý báo cáo kịp thời</span> nhằm đảm bảo nội dung đến với độc giả là an toàn & chất lượng nhé.
                     </p>

@@ -9,7 +9,7 @@ const MoHeader = () => {
     const contentMap = {
         about: {
             title: "Về Chúng Tôi",
-            body: "InkRealm là nền tảng đọc truyện SaaS tiên phong, nơi công nghệ gặp gỡ nghệ thuật kể chuyện. Chúng tôi cung cấp một trải nghiệm đọc cá nhân hóa, không gián đoạn, tối ưu hóa trên mọi thiết bị. Sứ mệnh của chúng tôi là tạo ra một không gian minh bạch, tôn trọng bản quyền, và là bệ phóng cho các tác giả Việt Nam.",
+            body: "InkRealm là nền tảng đọc truyện SaaS, nơi công nghệ gặp gỡ nghệ thuật kể chuyện. Chúng tôi cung cấp một trải nghiệm đọc cá nhân hóa, không gián đoạn, tối ưu hóa trên mọi thiết bị. Sứ mệnh của chúng tôi là tạo ra một không gian minh bạch, tôn trọng bản quyền, và là bệ phóng cho các tác giả Việt Nam.",
         },
         policy: {
             title: "Chính Sách",
@@ -62,7 +62,7 @@ const MoHeader = () => {
                     <span
                         className="text-2xl font-black tracking-widest uppercase 
                           text-transparent bg-clip-text 
-                          bg-gradient-to-r from-violet-800 via-violet-600 to-violet-800 
+                          bg-gradient-to-r from-blue-800 via-blue-700 to-blue-800 
                           drop-shadow-md transition-all duration-300 hover:scale-[1.02]"
                     >
                         INKREALM
@@ -113,7 +113,7 @@ const MoHeader = () => {
             >
                 <div
                     className="w-10 h-10 rounded-full 
-                        bg-gradient-to-br from-violet-500 to-violet-600
+                        bg-gradient-to-br from-blue-800 via-blue-700 to-blue-800 
                         text-white flex items-center justify-center 
                         font-extrabold text-lg cursor-pointer 
                         shadow-lg shadow-violet-500/50 
