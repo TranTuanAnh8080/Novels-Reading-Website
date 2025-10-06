@@ -63,7 +63,7 @@ const ModerateOriginalNovels = () => {
 
     // ... (logic statusCounts, filteredData, renderActionButton, statusColors, pages giữ nguyên) ...
     const statusCounts = { Pending: 1, Moderating: 2, Approved: 3, Rejected: 4, Published: 5 };
-    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' || item.status === 'Moderating' : item.status === activeTab);
+    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending'  : item.status === activeTab);
     const statusColors = { Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" }, Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" }, Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" }, Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" }, Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" }, };
     const totalPages = 5;
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
