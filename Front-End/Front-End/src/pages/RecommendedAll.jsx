@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import HeaderLoggedIn from "../components/HomeLoggedInPage/HeaderLoggedIn";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 export default function RecommendedAll() {
   // ref cho custom navigation

@@ -3,7 +3,7 @@ import HeaderProfile from "../components/ProfilePage/HeaderProfile";
 import SidebarLibrary from "../components/LibraryPage/SidebarLibrary";
 import UploadBookCard from "../components/UploadPage/UploadBookCard";
 import { Link } from "react-router-dom";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 function UploadPage() {
   const books = [

@@ -4,7 +4,7 @@ import HeroSection from "../components/HomePage/HeroSection";
 import WelcomeSection from "../components/HomePage/WelcomeSection";
 import FeaturesSection from "../components/HomePage/FeaturesSection";
 import GenresSection from "../components/HomePage/GenresSection";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 function HomePage() {
   return (

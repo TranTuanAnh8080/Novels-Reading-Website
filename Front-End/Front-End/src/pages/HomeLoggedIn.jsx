@@ -4,7 +4,7 @@ import HeroBanner from "../components/HomeLoggedInPage/HeroBanner";
 import HeroSection from "../components/HomePage/HeroSection";
 import ReadingSection from "../components/HomeLoggedInPage/ReadingSection";
 import RecommendedSection from "../components/HomeLoggedInPage/RecommendedSection";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 function HomeLoggedIn() {
   return (

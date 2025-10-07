@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import UploadItem from '../components/UploadNovelPage/UploadItem';
 import HeaderUpload from "../components/UploadNovelPage/HeaderUpload";
-import Footer from "../components/Footer"
+import Footer from "../components/SharedComponents/Footer"
 
 const SkeletonUpload = () => {
   return (

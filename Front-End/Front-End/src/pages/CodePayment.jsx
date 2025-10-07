@@ -1,7 +1,7 @@
 import React from "react";
 import HeaderPayment from "../components/PaymentItemPage/HeaderPayment";
 import CodePaymentItem from "../components/QRPayment/CodePaymentItem";
-import Footer from "../components/Footer.jsx"
+import Footer from "../components/SharedComponents/Footer"
 const CodePayment = () => {
     return (
         <div className="min-h-screen flex flex-col max-

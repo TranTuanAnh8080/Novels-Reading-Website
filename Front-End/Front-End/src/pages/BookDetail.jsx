@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HeaderBook from "../components/BookDetailPage/HeaderBook";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 import BookInfo from "../components/BookDetailPage/BookInfo";
 import CommentSection from "../components/BookDetailPage/CommentSection";
 import SimilarBooks from "../components/BookDetailPage/SimilarBooks";

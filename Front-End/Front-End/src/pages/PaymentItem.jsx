@@ -1,7 +1,7 @@
 
 import HeaderPayment from "../components/PaymentItemPage/HeaderPayment";
 import MainItem from "../components/PaymentItemPage/MainItem";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 const PaymentItem = () => {
     return (

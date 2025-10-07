@@ -8,13 +8,13 @@ import
   Book, 
   ChevronLeft, 
   ChevronRight, 
-  MessageCircle, 
   X, 
   Filter } 
   from 'lucide-react';
-import Footer from '../components/Footer';
+import Footer from '../components/SharedComponents/Footer';
 import logo from "../assets/inkrealm_logo.png";
 import { Link } from "react-router-dom";
+import ChatBot from '../components/SharedComponents/ChatBot';
 
 export default function SoloLevelingSearch() {
   const [selectedGenres, setSelectedGenres] = useState(['Manhwa']);
@@ -580,12 +580,9 @@ export default function SoloLevelingSearch() {
         </div>
         </div>
 
-      {/* Chat Button */}
-      <button className="fixed bottom-8 left-8 w-16 h-16 bg-[#2E5BFF] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-2xl hover:rotate-12 animate-bounce-slow group">
-        <MessageCircle size={28} className="group-hover:scale-110 transition-transform" />
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
-      </button>
-
+      {/* ChatBot */}
+        <ChatBot />
+        
       {/* Footer */}
         <Footer />
 
