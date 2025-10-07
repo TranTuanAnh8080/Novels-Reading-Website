@@ -22,6 +22,7 @@ import ModeratorHomePage from "../pages/ModeratorHomePage";
 import ModerateOriginalNovels from "../pages/ModerateOriginalNovels";
 import ModerateTranslatedNovels from "../pages/ModerateTranslatedNovels";
 import ModeratorProfile from "../pages/ModeratorProfile";
+import AddChapterPage from "../pages/AddChapterPage";  
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
@@ -46,8 +47,8 @@ const AppRouter = createBrowserRouter([
     { path: "/ModeratorHomePage", element: <ModeratorHomePage /> },
     { path: "/ModerateOriginalNovels", element: <ModerateOriginalNovels /> },
     { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> },
-    { path: "/ModeratorProfile", element: <ModeratorProfile /> }
-
+    { path: "/ModeratorProfile", element: <ModeratorProfile /> },
+    { path: "/AddChapterPage", element: <AddChapterPage /> }
 ]);
 
 export default AppRouter;
