@@ -1,5 +1,5 @@
 import React from "react";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 import MoHeader from "../components/ModeratorHomePage/MoHeader";
 import MoMainItem from "../components/ModeratorHomePage/MoMainItem";
 import { useDarkMode } from "../pages/DarkModeContext";

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { HiOutlineMenu, HiOutlinePencilAlt, HiOutlineCheckCircle, HiOutlineExclamationCircle, HiOutlineBan, HiOutlineXCircle, HiOutlineClock, HiOutlineEye } from 'react-icons/hi';
 import { HiOutlineSparkles } from 'react-icons/hi';
 import MoHeader from '../components/ModeratorHomePage/MoHeader';
-import Footer from '../components/Footer';
+import Footer from '../components/SharedComponents/Footer';
 import { LuSquareMenu } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
 import { Search, ChevronDown } from 'lucide-react';

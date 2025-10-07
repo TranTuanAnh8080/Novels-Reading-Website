@@ -1,6 +1,6 @@
 import React from "react";
 import HeaderProfile from "../components/ProfilePage/HeaderProfile";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 import { User, Book, Upload, Clock, Camera, LogOut, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 

@@ -2,7 +2,7 @@ import React from "react";
 import HeaderProfile from "../components/ProfilePage/HeaderProfile";
 import SidebarLibrary from "../components/LibraryPage/SidebarLibrary";
 import BookCard from "../components/LibraryPage/BookCard";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 function LibraryPage() {
   const books = [

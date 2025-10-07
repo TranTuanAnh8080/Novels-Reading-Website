@@ -1,6 +1,6 @@
 import MoHeader from "../components/ModeratorHomePage/MoHeader";
 import React from "react";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 import Profile from "../components/ModeratorProfile/ModeratorProfile"
 const ModeratorProfile = () => {
   return (

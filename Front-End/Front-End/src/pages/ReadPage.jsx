@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/inkrealm_logo.png";
-import Footer from "../components/Footer";
+import Footer from "../components/SharedComponents/Footer";
 
 const sampleChapters = [
   {
