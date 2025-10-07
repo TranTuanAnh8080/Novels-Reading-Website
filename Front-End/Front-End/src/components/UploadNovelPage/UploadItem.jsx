@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, PenTool, BookOpen, ImagePlus, RefreshCw, ArrowLeft } from "lucide-react";
+import { Upload, PenTool, BookOpen, RefreshCw, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const UploadItem = () => {
@@ -101,11 +101,11 @@ const UploadItem = () => {
                     </div>
 
                     {/* Nút nằm trong card */}
-                    <button className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
+                    <Link to="/AddChapterPage" className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
                  text-white font-semibold shadow 
                  flex justify-center items-center gap-2 text-md transition">
                         <PenTool size={20} /> Đăng truyện sáng tác
-                    </button>
+                    </Link>
                 </motion.div>
 
                 {/* Card 2 - Dịch */}
@@ -139,11 +139,11 @@ const UploadItem = () => {
                     </div>
 
                     {/* Nút nằm trong card */}
-                    <button className="mt-6 w-full py-4 rounded-xl
+                    <Link to="/AddChapterPage" className="mt-6 w-full py-4 rounded-xl
                      bg-sky-600 hover:bg-sky-700 text-white font-semibold
                       shadow flex justify-center items-center gap-2 text-md transition">
                         <BookOpen size={20} /> Đăng truyện dịch
-                    </button>
+                    </Link>
                 </motion.div>
             </div>
 
