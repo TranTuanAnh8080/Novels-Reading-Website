@@ -17,7 +17,7 @@ const mockData = [
     // ... dữ liệu của bạn ...
     { id: 2001, content: "Chương 1: Khởi đầu mới tại học viện", author: "Tác giả ẩn danh", date: "2025-10-02", description: "Truyện sáng tác, phong cách ngôn tình. Cần kiểm tra lỗi chính tả/văn phong.", status: "Pending" },
     { id: 2002, content: "Chương 15: Bí mật của Long Thần", author: "Bắc Phong", date: "2025-10-01", description: "Truyện bị nghi ngờ đạo văn (plagiarism). Đang trong quá trình so sánh.", status: "Rejected" },
-    { id: 2003, content: "Chương 3: Hành trình tu tiên", author: "Vũ Thiên", date: "2025-09-28", description: "Văn phong sơ sài, quá nhiều lỗi ngữ pháp. Đã từ chối và gửi gợi ý chỉnh sửa.", status: "Rejected" },
+    { id: 2003, content: "Chương 3: Hành trình tu tiên", author: "Vũ Thiên", date: "2025-09-28", description: "Văn phong sơ sài, quá nhiều lỗi ngữ pháp. Đã từ chối và gửi gợi ý chỉnh sửa.", status: "Moderating" },
     { id: 2004, content: "Chương 50: Hôn lễ thế kỷ", author: "Hạ Du", date: "2025-09-25", description: "Truyện đạt chất lượng tốt, đã xuất bản. Theo dõi tương tác độc giả.", status: "Published" },
     { id: 2005, content: "Chương 2: Lời nguyền cổ xưa", author: "Tác giả ẩn danh", date: "2025-10-03", description: "Chương mới, cần check nội dung nhạy cảm theo quy định cộng đồng.", status: "Approved" },
 ];
@@ -63,7 +63,7 @@ const ModerateTranslatedNovels = () => {
 
     // ... (logic statusCounts, filteredData, renderActionButton, statusColors, pages giữ nguyên) ...
     const statusCounts = { Pending: 10, Moderating: 2, Approved: 3, Rejected: 4, Published: 5 };
-    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' || item.status === 'Moderating' : item.status === activeTab);
+    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' : item.status === activeTab);
     const statusColors = { Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" }, Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" }, Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" }, Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" }, Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" }, };
     const totalPages = 5;
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
