@@ -83,7 +83,7 @@ const MoHeader = () => {
                     >
                         <button
                             onClick={() => openModal(key)}
-                            className="hover:text-violet-600 dark:hover:text-violet-400 transition duration-150 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-violet-500 after:transition-all after:duration-300 hover:after:w-full"
+                            className="hover:text-indigo-600 dark:hover:text-indigo-600 transition duration-150 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-indigo-500 after:transition-all after:duration-300 hover:after:w-full"
                         >
                             {contentMap[key].title}
                         </button>
@@ -91,7 +91,7 @@ const MoHeader = () => {
                         {/* Tooltip/Popover */}
                         {isHovering(key) && (
                             <div className="absolute top-full mt-4 w-96 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-2xl z-40 transition-opacity duration-300 opacity-100 left-1/2 transform -translate-x-1/2 max-h-60 overflow-y-auto text-left">
-                                <h4 className="text-lg font-bold text-violet-600 dark:text-violet-400 mb-2">
+                                <h4 className="text-lg font-bold text-indigo-600 dark:text-indigo-600 mb-2">
                                     {hoverContent.title}
                                 </h4>
                                 <p className="text-sm font-normal text-gray-700 dark:text-gray-200 leading-relaxed">
@@ -132,7 +132,7 @@ const MoHeader = () => {
                         className="bg-white dark:bg-gray-900 dark:text-gray-200
                         rounded-2xl shadow-2xl w-[95%] sm:w-[600px] max-h-[90vh] overflow-y-auto p-8 relative transition-all duration-300 transform scale-100 opacity-100"
                     >
-                        <h2 className="text-2xl  font-bold text-violet-600 dark:text-violet-400 mb-4 text-center">
+                        <h2 className="text-2xl  font-bold text-indigo-600 dark:text-indigo-600 mb-4 text-center">
                             {modalContent.title}
                         </h2>
                         <p className="text-gray-700 italic dark:text-gray-300 leading-relaxed text-left space-y-3">
@@ -142,7 +142,7 @@ const MoHeader = () => {
                         {/* Close Button */}
                         <button
                             onClick={closeModal}
-                            className="absolute top-3 right-3 text-gray-500 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 text-2xl font-bold transition p-1"
+                            className="absolute top-3 right-3 text-gray-500 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-600 text-2xl font-bold transition p-1"
                         >
                             ×
                         </button>
