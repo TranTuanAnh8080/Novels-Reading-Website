@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function UploadBookCard({ title, status, cover }) {
   return (
@@ -29,9 +30,10 @@ function UploadBookCard({ title, status, cover }) {
       </p>
 
       {/* Action */}
-      <button className="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium hover:bg-gray-100">
+      <Link to="/ModerationStatusPage" 
+      className="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium hover:bg-gray-100 flex-grow text-center">
         Xem chi tiết
-      </button>
+      </Link>
     </div>
   );
 }
