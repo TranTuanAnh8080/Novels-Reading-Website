@@ -49,28 +49,43 @@ function UploadPage() {
 
         {/* Main */}
         <main className="flex-1 p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-bold">Truyện đã đăng</h1>
+          {/* Title */}
+          <h1 className="text-xl font-bold mb-3">Truyện đã đăng</h1>
 
-            <Link to= "/UploadNovel" className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700">
-              + Đăng truyện mới
-            </Link>
-          </div>
+          {/* Filters + Buttons */}
+          <div className="flex justify-between items-center mb-6">
+            {/* Filters */}
+            <div className="flex items-center gap-4">
+              <select className="border rounded-md px-3 py-2 text-sm">
+                <option>Tất cả trạng thái</option>
+                <option>Đã hoàn thành</option>
+                <option>Đang đăng</option>
+                <option>Đang xét duyệt</option>
+              </select>
+              <select className="border rounded-md px-3 py-2 text-sm">
+                <option>Mới đăng nhất</option>
+                <option>Cũ nhất</option>
+                <option>Tên A-Z</option>
+                <option>Tên Z-A</option>
+              </select>
+            </div>
 
-          {/* Filters */}
-          <div className="flex space-x-4 mb-6">
-            <select className="border rounded-md px-3 py-2 text-sm">
-              <option>Tất cả trạng thái</option>
-              <option>Đã hoàn thành</option>
-              <option>Đang đăng</option>
-              <option>Đang xét duyệt</option>
-            </select>
-            <select className="border rounded-md px-3 py-2 text-sm">
-              <option>Mới đăng nhất</option>
-              <option>Cũ nhất</option>
-              <option>Tên A-Z</option>
-              <option>Tên Z-A</option>
-            </select>
+            {/* Buttons */}
+            <div className="flex items-center gap-3">
+              <Link
+                to="/AddChapterPage"
+                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700"
+              >
+                + Thêm chương mới
+              </Link>
+
+              <Link
+                to="/UploadNovel"
+                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700"
+              >
+                + Đăng truyện mới
+              </Link>
+            </div>
           </div>
 
           {/* Book grid */}
