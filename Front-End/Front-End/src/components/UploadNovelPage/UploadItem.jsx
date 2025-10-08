@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, PenTool, BookOpen, RefreshCw, ArrowLeft } from "lucide-react";
+import { Upload, PenTool, BookOpen, RefreshCw, ArrowLeft, Info, Headset } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const UploadItem = () => {
@@ -101,11 +101,11 @@ const UploadItem = () => {
                     </div>
 
                     {/* Nút nằm trong card */}
-                    <Link to="/AddChapterPage" className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
+                    <button className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
                  text-white font-semibold shadow 
                  flex justify-center items-center gap-2 text-md transition">
                         <PenTool size={20} /> Đăng truyện sáng tác
-                    </Link>
+                    </button>
                 </motion.div>
 
                 {/* Card 2 - Dịch */}
@@ -139,11 +139,11 @@ const UploadItem = () => {
                     </div>
 
                     {/* Nút nằm trong card */}
-                    <Link to="/AddChapterPage" className="mt-6 w-full py-4 rounded-xl
+                    <button className="mt-6 w-full py-4 rounded-xl
                      bg-sky-600 hover:bg-sky-700 text-white font-semibold
                       shadow flex justify-center items-center gap-2 text-md transition">
                         <BookOpen size={20} /> Đăng truyện dịch
-                    </Link>
+                    </button>
                 </motion.div>
             </div>
 
@@ -173,10 +173,12 @@ const UploadItem = () => {
                     {/* CTA Buttons */}
                     <div className="flex justify-center gap-4 flex-wrap">
                         <button className="px-6 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition shadow-sm flex items-center gap-2 text-gray-700 font-medium text-sm">
-                            📘 Hướng dẫn
+                        <Info size={18} />
+                            Hướng dẫn
                         </button>
                         <button className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-90 text-white shadow-md transition flex items-center gap-2 font-medium text-sm">
-                            💬 Liên hệ hỗ trợ
+                        <Headset size={18} />
+                            Liên hệ hỗ trợ
                         </button>
                     </div>
                 </div>
