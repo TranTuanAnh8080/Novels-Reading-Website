@@ -95,11 +95,13 @@ export default function AddChapterPage() {
           {/* User */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-gray-700">Tác giả</span>
+            <Link to="/Profile" className="flex items-center">
             <img
               src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="User Avatar"
               className="w-9 h-9 rounded-full border border-gray-200"
             />
+            </Link>
           </div>
         </div>
       </header>
