@@ -64,14 +64,14 @@ const RegisterPage = () => {
                     </div>
 
                     {/* Số Điện Thoại */}
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2">Số Điện Thoại <strong className="text-red-500">*</strong></label>
                         <input
                             type="tel"
                             placeholder="Nhập số điện thoại của bạn"
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                    </div>
+                    </div> */}
 
                     {/* Mật khẩu */}
                     <div className="mb-4">
@@ -120,13 +120,14 @@ const RegisterPage = () => {
                     </div>
 
                     {/* Ngày sinh */}
-                    <div className="mb-7">
+
+                    {/* <div className="mb-7">
                         <label className="block text-gray-700 font-medium mb-2">Ngày sinh <strong className="text-red-500">*</strong></label>
                         <div className="flex space-x-2">
                             <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none
                              focus:ring-2 focus:ring-blue-500">
                                 <option>Ngày</option>
-                                {/* Thêm các ngày */}
+                           
                                 {[...Array(31)].map((_, i) => (
                                     <option key={i} value={i + 1}>
                                         {i + 1}
@@ -135,7 +136,7 @@ const RegisterPage = () => {
                             </select>
                             <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option>Tháng</option>
-                                {/* Thêm các tháng */}
+                             
                                 {[...Array(12)].map((_, i) => (
                                     <option key={i} value={i + 1}>
                                         {i + 1}
@@ -144,7 +145,7 @@ const RegisterPage = () => {
                             </select>
                             <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option>Năm</option>
-                                {/* độ tuổi bắt đầu từ 30 tuổi */}
+                                // độ tuổi bắt đầu là 30 tuổi, tức là năm 2025 - 30 = 1995
                                 {[...Array(36)].map((_, i) => (
                                     <option key={i} value={2025 - i}>
                                         {2025 - i}
@@ -152,7 +153,7 @@ const RegisterPage = () => {
                                 ))}
                             </select>
                         </div>
-                    </div>
+                    </div> */}
                     {/* Nút đăng ký */}
                     <Link to="/LoginPage">
                         <button
