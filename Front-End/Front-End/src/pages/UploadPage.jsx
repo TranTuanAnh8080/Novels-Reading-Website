@@ -74,7 +74,7 @@ function UploadPage() {
             <div className="flex items-center gap-3">
               <Link
                 to="/AddChapterPage"
-                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700"
+                className="px-4 py-2 bg-[#14b263] text-white rounded-md text-sm hover:bg-green-600"
               >
                 + Thêm chương mới
               </Link>
