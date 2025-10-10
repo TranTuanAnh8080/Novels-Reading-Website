@@ -12,6 +12,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [showConfetti, setShowConfetti] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
+    const [toast, setToast] = useState({ type: "", message: "", visible: false });
 
     // tắt confetti sau 5 giây
     useEffect(() => {
@@ -62,59 +63,46 @@ const LoginPage = () => {
                 // 🎯 Cài đặt header mặc định cho axios
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-                // 🔔 Hiển thị thông báo thành công
-                alert(`Chào mừng ${user.fullName}! 🎉`);
+                // ✅ Toast thành công
+                setToast({ type: "success", message: `Chào mừng ${user.fullName}! 🎉`, visible: true });
+                setTimeout(() => setToast({ ...toast, visible: false }), 2000);
 
-                // 🚀 Chuyển hướng đến trang ModeratorHomePage
-                navigate("/HomeLoggedIn", {
-                    replace: true, // Không cho phép quay lại trang đăng nhập
-                    state: { user }, // Truyền thông tin người dùng sang trang tiếp theo
-                });
+                setTimeout(() => {
+                    navigate("/HomeLoggedIn", { replace: true, state: { user } });
+                }, 1500);
             }
         } catch (error) {
-            console.error("❌ Lỗi đăng nhập:", error);
-
+            let message = "";
             if (error.response) {
-                // Xử lý lỗi từ server
                 const status = error.response.status;
-                const errorMsg = error.response.data?.message;
-
-                switch (status) {
-                    case 400:
-                        alert("⚠️ Thông tin đăng nhập không hợp lệ!");
-                        break;
-                    case 401:
-                        alert("❌ Sai tên đăng nhập hoặc mật khẩu!");
-                        break;
-                    case 403:
-                        alert("🚫 Tài khoản bị khóa hoặc không có quyền truy cập!");
-                        break;
-                    case 500:
-                        alert("💥 Lỗi server! Vui lòng thử lại sau.");
-                        break;
-                    default:
-                        alert(errorMsg || "Đăng nhập thất bại!");
-                }
+                if (status === 400) message = "❌ Sai tên đăng nhập hoặc mật khẩu!";
+                else if (status === 403) message = "🚫 Tài khoản bị khóa!";
+                else if (status === 500) message = "💥 Lỗi server!";
             } else if (error.request) {
-                // Xử lý lỗi kết nối mạng hoặc timeout
-                console.log("❌ Lỗi request:", error.request);
-
-                alert("❌ Không thể kết nối đến server!\n" +
-                    "Vui lòng kiểm tra:\n" +
-                    "- Kết nối mạng\n" +
-                    "- Backend có đang chạy không ?\n");
-
-                console.log("🌐 Network Error:", error.message);
-            } else {
-                // Xử lý lỗi khác
-                alert("⚠️ Có lỗi xảy ra: " + error.message);
+                message = "❌ Không thể kết nối đến server!";
             }
+
+            setToast({ type: "error", message, visible: true });
+            setTimeout(() => setToast({ ...toast, visible: false }), 3000);
         }
     };
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 
         flex-row">
+
+            {/* ✅ Toast Notification */}
+            {toast.visible && (
+                <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+                    <div
+                        className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down ${toast.type === "success" ? "bg-green-500" : "bg-red-500"
+                            }`}
+                    >
+                        <span className="font-medium">{toast.message}</span>
+                    </div>
+                </div>
+            )}
+
             <FancyImages />
 
             {/* Hiệu ứng pháo giấy */}
@@ -167,7 +155,7 @@ const LoginPage = () => {
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
-                                placeholder="Nhập mật khẩu"
+                                placeholder="Nhập mật khẩu của bạn"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
