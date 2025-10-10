@@ -13,8 +13,9 @@ const LoginPage = () => {
     const [showConfetti, setShowConfetti] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [toast, setToast] = useState({ type: "", message: "", visible: false });
+    const [showSuccess, setShowSuccess] = useState(false); // Thêm state cho toast
+    const [isLoading, setIsLoading] = useState(false);
 
-    // tắt confetti sau 5 giây
     useEffect(() => {
         const timer = setTimeout(() => setShowConfetti(false), 5000);
         return () => clearTimeout(timer);
@@ -24,11 +25,7 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Kiểm tra đầu vào
-        if (!username.trim() || !password.trim()) {
-            alert("Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
+        setIsLoading(true); // Bắt đầu đăng nhập
 
         console.log("🔄 Đang gửi request đăng nhập...");
 
@@ -63,8 +60,11 @@ const LoginPage = () => {
                 // 🎯 Cài đặt header mặc định cho axios
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 3000);
+
                 // ✅ Toast thành công
-                setToast({ type: "success", message: `Chào mừng ${user.fullName}! 🎉`, visible: true });
+                setToast({ type: "success", message: `⭐ Chào mừng bạn, ${user.fullName}! 🎉`, visible: true });
                 setTimeout(() => setToast({ ...toast, visible: false }), 2000);
 
                 setTimeout(() => {
@@ -84,8 +84,11 @@ const LoginPage = () => {
 
             setToast({ type: "error", message, visible: true });
             setTimeout(() => setToast({ ...toast, visible: false }), 3000);
+        } finally {
+            setIsLoading(false);
         }
     };
+
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 
@@ -94,14 +97,33 @@ const LoginPage = () => {
             {/* ✅ Toast Notification */}
             {toast.visible && (
                 <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-                    <div
-                        className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down ${toast.type === "success" ? "bg-green-500" : "bg-red-500"
-                            }`}
-                    >
-                        <span className="font-medium">{toast.message}</span>
+                    <div className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down ${toast.type === "success" ? "bg-green-400" : "bg-red-400"
+                        }`}>
+                        <span className="text-medium">{toast.message}</span>
+
+                        {/* Close button */}
+                        <button
+                            onClick={() => setToast({ ...toast, visible: false })}
+                            disabled={isLoading}
+                            className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors duration-200"
+                            aria-label="Close notification"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             )}
+
 
             <FancyImages />
 
@@ -175,10 +197,31 @@ const LoginPage = () => {
                     {/* Nút đăng nhập */}
                     <button
                         type="submit"
-                        className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500 text-white py-2 rounded-3xl hover:bg-blue-600
-            transition duration-300 justify-center flex items-center mx-auto mb-4 font-bold hover:scale-105 transform mt-7"
+                        disabled={isLoading || showSuccess}
+                        className={`w-65 bg-gradient-to-br ${isLoading || showSuccess
+                            ? 'from-blue-200 via-rose-300 to-purple-300 cursor-not-allowed'
+                            : 'from-blue-100 via-red-300 to-purple-500 hover:bg-blue-600 hover:scale-105'
+                            } text-white py-2 rounded-3xl transition duration-300 justify-center flex items-center mx-auto mb-4 font-bold transform mt-7`}
                     >
-                        Đăng Nhập
+                        {isLoading ? (
+                            <div className="flex items-center justify-center">
+                                <svg className="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                                Đang đăng nhập...
+                            </div>
+                        ) : showSuccess ? (
+                            <div className="flex items-center justify-center">
+                                <svg className="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                                Đang điều hướng...
+                            </div>
+                        ) : (
+                            'Đăng Nhập'
+                        )}
                     </button>
                 </form>
 
