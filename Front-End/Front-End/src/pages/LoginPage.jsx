@@ -20,7 +20,6 @@ const LoginPage = () => {
     }, []);
 
     // Xử lý đăng nhập
-    // Xử lý đăng nhập
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -67,7 +66,7 @@ const LoginPage = () => {
                 alert(`Chào mừng ${user.fullName}! 🎉`);
 
                 // 🚀 Chuyển hướng đến trang ModeratorHomePage
-                navigate("/ModeratorHomePage", {
+                navigate("/HomeLoggedIn", {
                     replace: true, // Không cho phép quay lại trang đăng nhập
                     state: { user }, // Truyền thông tin người dùng sang trang tiếp theo
                 });
