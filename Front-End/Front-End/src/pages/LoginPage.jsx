@@ -4,6 +4,8 @@ import vietnamFlag from "../assets/vietnam_flag.png";
 import Confetti from "react-confetti";
 import FancyImages from "./FancyImages";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, Mail, AlertCircle  } from "lucide-react";
 import axios from "axios";
 
 const LoginPage = () => {
@@ -21,12 +23,25 @@ const LoginPage = () => {
         return () => clearTimeout(timer);
     }, []);
 
+    // Show toast helper function
+    const showToast = (type, message, duration = 3000) => {
+        setToast({ visible: true, type, message });
+        setTimeout(() => {
+            setToast(prev => ({ ...prev, visible: false }));
+        }, duration);
+    };
+
     // Xử lý đăng nhập
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true); // Bắt đầu đăng nhập
+        // Validate input
+        if (!username.trim() || !password) {
+            showToast('error', '❌ Vui lòng nhập đầy đủ thông tin!');
+            return;
+        }
 
+        setIsLoading(true);
         console.log("🔄 Đang gửi request đăng nhập...");
 
         try {
@@ -40,50 +55,65 @@ const LoginPage = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    timeout: 5000, // Timeout sau 5 giây
+                    timeout: 10000, // 10 giây
                 }
             );
 
             if (response.status === 200) {
-                // ✅ Xử lý response thành công
                 const { message, token, user } = response.data;
 
                 console.log("✅ Đăng nhập thành công:", message);
                 console.log("👤 Thông tin người dùng:", user);
 
-                // 🔐 Lưu thông tin đăng nhập vào sessionStorage
+                // Lưu thông tin đăng nhập
                 sessionStorage.setItem("token", token);
                 sessionStorage.setItem("user", JSON.stringify(user));
                 sessionStorage.setItem("isLoggedIn", "true");
                 sessionStorage.setItem("accountId", user.accountId);
 
-                // 🎯 Cài đặt header mặc định cho axios
+                // Set axios default header
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
+                // Show success animation
                 setShowSuccess(true);
                 setTimeout(() => setShowSuccess(false), 3000);
 
-                // ✅ Toast thành công
-                setToast({ type: "success", message: `⭐ Chào mừng đã đến với Inkrealm, ${user.fullName}! 🎉`, visible: true });
-                setTimeout(() => setToast({ ...toast, visible: false }), 2000);
+                // Show success toast
+                showToast('success', `Chào mừng ${user.fullName} đến với InkRealm⭐!`, 2000);
 
+                // Redirect after 1.5s
                 setTimeout(() => {
                     navigate("/HomeLoggedIn", { replace: true, state: { user } });
                 }, 1500);
             }
         } catch (error) {
+            console.error("❌ Lỗi đăng nhập:", error);
+
             let message = "";
+            
             if (error.response) {
                 const status = error.response.status;
-                if (status === 400) message = "❌ Sai tên đăng nhập hoặc mật khẩu!";
-                else if (status === 403) message = "🚫 Tài khoản bị khóa!";
-                else if (status === 500) message = "💥 Lỗi server!";
+                switch (status) {
+                    case 400:
+                    case 401:
+                        message = "❌ Sai tên đăng nhập hoặc mật khẩu!";
+                        break;
+                    case 403:
+                        message = "🚫 Tài khoản bị khóa hoặc không có quyền truy cập!";
+                        break;
+                    case 500:
+                        message = "💥 Lỗi server! Vui lòng thử lại sau.";
+                        break;
+                    default:
+                        message = error.response.data?.message || "❌ Đăng nhập thất bại!";
+                }
             } else if (error.request) {
-                message = "❌ Không thể kết nối đến server!";
+                message = "❌ Không thể kết nối đến server! Vui lòng kiểm tra kết nối mạng.";
+            } else {
+                message = "⚠️ Có lỗi xảy ra: " + error.message;
             }
 
-            setToast({ type: "error", message, visible: true });
-            setTimeout(() => setToast({ ...toast, visible: false }), 3000);
+            showToast('error', message);
         } finally {
             setIsLoading(false);
         }
@@ -94,36 +124,48 @@ const LoginPage = () => {
         <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 
         flex-row">
 
-            {/* ✅ Toast Notification */}
-            {toast.visible && (
-                <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-                    <div className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down
-                     ${toast.type === "success" ? "bg-green-500" : "bg-red-500"
-                        }`}>
-                        <span className="text-medium">{toast.message}</span>
+             {/* Toast Notification với Animation */}
+            <AnimatePresence>
+                {toast.visible && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        className={`fixed top-6 left-1/2 transform -translate-x-1/2 
+                       bg-white text-gray-800 
+                       border-2 ${toast.type === 'success' ? 'border-green-300' : 'border-red-300'}
+                       font-sans font-semibold 
+                       px-5 py-3 rounded-xl
+                       shadow-xl 
+                       flex items-center gap-3 z-50 
+                       min-w-[300px] max-w-[500px]`}
+                    >
+                        {/* Icon */}
+                        {toast.type === 'success' ? (
+                            <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                        ) : (
+                            <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0" />
+                        )}
+
+                        {/* Nội dung thông báo */}
+                        <p className="text-sm text-gray-700 flex-1">
+                            {toast.message}
+                        </p>
 
                         {/* Close button */}
                         <button
-                            onClick={() => setToast({ ...toast, visible: false })}
+                            onClick={() => setToast(prev => ({ ...prev, visible: false }))}
+                            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
                             disabled={isLoading}
-                            className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors duration-200"
-                            aria-label="Close notification"
                         >
-                            <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
+                            <svg className="w-4 h-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
-                    </div>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
 
             <FancyImages />
@@ -153,8 +195,8 @@ const LoginPage = () => {
                     alt="Inkrealm Logo"
                     className="mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
                 />
-                <p className="text-gray-600 mb-3 text-2xl font-medium">
-                    Khám phá thế giới truyện <br /> cùng chúng tôi ❤️
+                <p className="text-gray-600 mb-3 text-2xl font-medium ">
+                    Khám phá thế giới truyện <br/> đa sắc màu cùng chúng tôi ❤️
                 </p>
 
                 {/* Form đăng nhập */}
@@ -254,17 +296,17 @@ const LoginPage = () => {
 
 
                 {/* Quên mật khẩu */}
-                <div className="text-center mt-2">
+                <div className="text-center mb-2">
                     <a
                         href="/ForgotPasswordModal"
-                        className="text-blue-500 font-medium"
+                        className="text-blue-600 font-bold"
                     >
                         Quên mật khẩu?
                     </a>
                 </div>
 
                 {/* Đăng nhập với Google */}
-                <div className="mt-6 rounded-4xl flex justify-center items-center">
+                <div className="mt-4 rounded-4xl flex justify-center items-center">
                     <button
                         type="button"
                         className="w-100 h-auto flex items-center justify-center bg-white border
@@ -287,9 +329,9 @@ const LoginPage = () => {
                     </p>
                     <a
                         href="/RegisterPage"
-                        className="text-blue-500 font-medium"
+                        className="text-blue-600 font-bold"
                     >
-                        Tạo tài khoản
+                        Đăng Ký Ngay
                     </a>
                 </div>
 

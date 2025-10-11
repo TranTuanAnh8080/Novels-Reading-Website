@@ -5,6 +5,8 @@ import vietnamFlag from "../assets/vietnam_flag.png";
 import Confetti from "react-confetti";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, Mail, AlertCircle } from "lucide-react";
 import axios from "axios";
 const RegisterPage = () => {
     const [showConfetti, setShowConfetti] = useState(true);
@@ -81,8 +83,20 @@ const RegisterPage = () => {
 
     // Validate form
     const validateForm = () => {
+
+        if (!formData.username.trim() && !formData.password && !formData.fullName.trim() && !formData.email.trim()) {
+            setToast({
+                type: 'error',
+                message: '❌ Vui lòng điền đầy đủ thông tin Đăng ký!',
+                visible: true
+            });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+
         if (!formData.username.trim()) {
-            setToast({ type: 'error', message: '❌ Vui lòng nhập tên đăng nhập!', visible: true });
+            setToast({ type: 'error', message: '❌ Vui lòng nhập Tên đăng nhập!', visible: true });
             setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
             return false;
         }
@@ -94,7 +108,7 @@ const RegisterPage = () => {
         }
 
         if (!formData.password) {
-            setToast({ type: 'error', message: '❌ Vui lòng nhập mật khẩu!', visible: true });
+            setToast({ type: 'error', message: '❌ Vui lòng nhập Mật khẩu!', visible: true });
             setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
             return false;
         }
@@ -106,21 +120,21 @@ const RegisterPage = () => {
         }
 
         if (!formData.fullName.trim()) {
-            setToast({ type: 'error', message: '❌ Vui lòng nhập họ và tên!', visible: true });
+            setToast({ type: 'error', message: '❌ Vui lòng nhập Họ và Tên!', visible: true });
             setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
             return false;
         }
 
         if (!formData.email.trim()) {
-            setToast({ type: 'error', message: '❌ Vui lòng nhập email!', visible: true });
+            setToast({ type: 'error', message: '❌ Vui lòng nhập Email!', visible: true });
             setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
             return false;
         }
 
         // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(formData.email)) {
-            setToast({ type: 'error', message: '❌ Email không hợp lệ!', visible: true });
+            setToast({ type: 'error', message: '❌ Email không hợp lệ, vui lòng kiểm tra lại!', visible: true });
             setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
             return false;
         }
@@ -228,33 +242,47 @@ const RegisterPage = () => {
     return (
         <div className="flex h-screen bg-gradient-to-br from-rose-50 via-sky-100 to-red-100">
 
-            {toast.visible && (
-                <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-                    <div className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down
-                     ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
-                        <span className="text-medium">{toast.message}</span>
+            <AnimatePresence>
+                {toast.visible && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        className={`fixed top-6 left-1/2 transform -translate-x-1/2 
+                       bg-white text-gray-800 
+                       border-2 ${toast.type === 'success' ? 'border-green-300' : 'border-red-300'}
+                       font-sans font-semibold 
+                       px-5 py-3 rounded-xl
+                       shadow-xl 
+                       flex items-center gap-3 z-50 
+                       min-w-[300px] max-w-[500px]`}
+                    >
+                        {/* Icon */}
+                        {toast.type === 'success' ? (
+                            <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                        ) : (
+                            <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0" />
+                        )}
 
+                        {/* Nội dung thông báo */}
+                        <p className="text-sm text-gray-700 flex-1">
+                            {toast.message}
+                        </p>
+
+                        {/* Close button */}
                         <button
-                            onClick={() => setToast({ ...toast, visible: false })}
+                            onClick={() => setToast(prev => ({ ...prev, visible: false }))}
+                            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
                             disabled={isLoading}
-                            className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors duration-200"
-                            aria-label="Close notification"
                         >
-                            <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
+                            <svg className="w-4 h-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                                 <path d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
-                    </div>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Hiệu ứng pháo giấy */}
             {showConfetti && (
@@ -281,7 +309,7 @@ const RegisterPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mt-2 w-35 h-14 contrast-125 brightness-90 saturate-200 mx-auto"
+                    className="mt-2 w-34 h-15 contrast-125 brightness-90 saturate-200 mx-auto"
                 />
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -297,7 +325,8 @@ const RegisterPage = () => {
                                     />
                                 ) : (
                                     <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                         clipRule="evenodd" />
                                     </svg>
                                 )}
                             </div>
@@ -319,7 +348,7 @@ const RegisterPage = () => {
                                 disabled={isLoading}
                             />
                         </div>
-                        <p className="text-md font-medium text-gray-700">Ảnh đại diện</p>
+                        <p className="text-md font-bold text-gray-700">Ảnh đại diện</p>
                         <p className="text-xs text-gray-500">JPG, PNG, JPEG, WEBP (Max 5MB)</p>
                     </div>
 
@@ -448,10 +477,10 @@ const RegisterPage = () => {
                     </button>
 
                     {/* Đã có tài khoản */}
-                    <div className="text-center mt-2">
+                    <div className="text-center mb-2">
                         <p className="text-gray-600 font-medium">Bạn đã có tài khoản?</p>
-                        <Link to="/LoginPage" className="text-blue-500 font-medium hover:underline">
-                            Đăng nhập
+                        <Link to="/LoginPage" className="text-blue-600 font-bold">
+                            Đăng Nhập
                         </Link>
                     </div>
                 </form>
