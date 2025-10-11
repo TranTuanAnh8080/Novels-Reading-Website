@@ -79,7 +79,7 @@ const LoginPage = () => {
                 setTimeout(() => setShowSuccess(false), 3000);
 
                 // Show success toast
-                showToast('success', `Chào mừng ${user.fullName} đến với InkRealm⭐!`, 2000);
+                showToast('success', `Chào mừng ${user.fullName} đến với InkRealm! ⭐`, 2000);
 
                 // Redirect after 1.5s
                 setTimeout(() => {
