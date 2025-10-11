@@ -77,7 +77,7 @@ const Popups = () => {
           alt="Inkrealm Logo"
           className="ml-27 mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
         />
-        <h1 className="text-3xl mb-7 text-blue-700 font-medium italic">
+        <h1 className="text-3xl mb-7 text-blue-600 font-medium">
           Chào mừng bạn đã đến!
         </h1>
         <h2 className="text-sky-800 mb-4 text-md font-base">

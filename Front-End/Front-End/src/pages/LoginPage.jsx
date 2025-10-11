@@ -97,7 +97,8 @@ const LoginPage = () => {
             {/* ✅ Toast Notification */}
             {toast.visible && (
                 <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-                    <div className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down ${toast.type === "success" ? "bg-green-400" : "bg-red-400"
+                    <div className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down
+                     ${toast.type === "success" ? "bg-green-500" : "bg-red-500"
                         }`}>
                         <span className="text-medium">{toast.message}</span>
 
@@ -150,7 +151,7 @@ const LoginPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-3 w-42 h-17 contrast-125 brightness-90 saturate-200"
+                    className="mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
                 />
                 <p className="text-gray-600 mb-3 text-2xl font-medium">
                     Khám phá thế giới truyện <br /> cùng chúng tôi ❤️
@@ -160,7 +161,7 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                     {/* Username */}
                     <div className="mb-3">
-                        <label className="block text-gray-700 font-bold text-xl">✉️</label>
+                        <label className="block text-gray-700 font-medium text-md">👤</label>
                         <input
                             type="text"
                             placeholder="Nhập tên đăng nhập của bạn"
@@ -226,7 +227,7 @@ const LoginPage = () => {
                 </form>
 
                 {/* Nút Test DB */}
-                <button
+                {/* <button
                     type="button"
                     onClick={async () => {
                         try {
@@ -249,11 +250,11 @@ const LoginPage = () => {
     transition duration-300 justify-center flex items-center mx-auto mb-4 font-bold hover:scale-105 transform mt-3"
                 >
                     Test DB
-                </button>
+                </button> */}
 
 
                 {/* Quên mật khẩu */}
-                <div className="text-center mt-6">
+                <div className="text-center mt-2">
                     <a
                         href="/ForgotPasswordModal"
                         className="text-blue-500 font-medium"
