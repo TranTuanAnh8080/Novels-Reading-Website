@@ -8,7 +8,7 @@ const LoadingPage = () => {
             <img
                 src={image}
                 alt="Inkrealm Logo"
-                className="h-18 w-auto mb-3 animate-pulse contrast-125 saturate-150 brightness-90 mr-5"
+                className="h-20 w-auto mb-3 animate-pulse contrast-125 saturate-150 brightness-90 mr-5"
             />
             {/* Spinner */}
             <div class='flex space-x-2 justify-center items-center mb-5'>
