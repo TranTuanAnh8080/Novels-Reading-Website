@@ -64,7 +64,7 @@ const LoginPage = () => {
                 setTimeout(() => setShowSuccess(false), 3000);
 
                 // ✅ Toast thành công
-                setToast({ type: "success", message: `⭐ Chào mừng bạn, ${user.fullName}! 🎉`, visible: true });
+                setToast({ type: "success", message: `⭐ Chào mừng đã đến với Inkrealm, ${user.fullName}! 🎉`, visible: true });
                 setTimeout(() => setToast({ ...toast, visible: false }), 2000);
 
                 setTimeout(() => {

@@ -75,9 +75,9 @@ const Popups = () => {
         <img
           src={image}
           alt="Inkrealm Logo"
-          className="ml-27 mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
+          className="ml-27 mb-3 w-40 h-16 contrast-125 brightness-90 saturate-200"
         />
-        <h1 className="text-3xl mb-7 text-blue-600 font-medium">
+        <h1 className="text-3xl mb-7 text-blue-800 text-medium">
           Chào mừng bạn đã đến!
         </h1>
         <h2 className="text-sky-800 mb-4 text-md font-base">
@@ -96,7 +96,7 @@ const Popups = () => {
         <button
           onClick={() => handleNavigateWithLoading("/HomePage")}
           className=" animate-pulse bg-gradient-to-r from-cyan-200 via-sky-100 to-red-200
-           px-8 py-3 rounded-full text-lg font-medium text-sky-800 
+           px-8 py-3 rounded-full text-lg text-medium text-sky-800 
            shadow-lg hover:shadow-xl hover:brightness-110 transition-all duration-300"
         >
           🚀Khám phá ngay⭐

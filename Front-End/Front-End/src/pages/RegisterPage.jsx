@@ -4,18 +4,257 @@ import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";
 import Confetti from "react-confetti";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const RegisterPage = () => {
     const [showConfetti, setShowConfetti] = useState(true);
+    const [avatarPreview, setAvatarPreview] = useState(null); // Preview ảnh
     const [showPassword, setShowPassword] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [toast, setToast] = useState({ type: '', message: '', visible: false });
+    const navigate = useNavigate();
+    // States cho form
+    const [formData, setFormData] = useState({
+        username: '',
+        password: '',
+        fullName: '',
+        email: '',
+        avatar: null, // File avatar
+    });
     // tắt confetti sau 8 giây
     useEffect(() => {
         const timer = setTimeout(() => setShowConfetti(false), 5000);
         return () => clearTimeout(timer);
     }, []);
 
+
+    // Xử lý thay đổi input
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            // Kiểm tra file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                setToast({
+                    type: 'error',
+                    message: '❌ Ảnh không được vượt quá 5MB!',
+                    visible: true
+                });
+                setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+                return;
+            }
+
+            // Kiểm tra định dạng file
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                setToast({
+                    type: 'error',
+                    message: '❌ Chỉ chấp nhận file JPG, PNG, WEBP!',
+                    visible: true
+                });
+                setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+                return;
+            }
+
+            setFormData(prev => ({
+                ...prev,
+                avatar: file
+            }));
+
+            // Tạo preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAvatarPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Validate form
+    const validateForm = () => {
+        if (!formData.username.trim()) {
+            setToast({ type: 'error', message: '❌ Vui lòng nhập tên đăng nhập!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        if (formData.username.length < 4) {
+            setToast({ type: 'error', message: '❌ Tên đăng nhập phải có ít nhất 4 ký tự!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        if (!formData.password) {
+            setToast({ type: 'error', message: '❌ Vui lòng nhập mật khẩu!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        if (formData.password.length < 6) {
+            setToast({ type: 'error', message: '❌ Mật khẩu phải có ít nhất 6 ký tự!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        if (!formData.fullName.trim()) {
+            setToast({ type: 'error', message: '❌ Vui lòng nhập họ và tên!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        if (!formData.email.trim()) {
+            setToast({ type: 'error', message: '❌ Vui lòng nhập email!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            setToast({ type: 'error', message: '❌ Email không hợp lệ!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        return true;
+    };
+
+    // Xử lý đăng ký
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validate form
+        if (!validateForm()) return;
+
+        setIsLoading(true);
+        console.log("🔄 Đang gửi request đăng ký...");
+
+        try {
+            // Tạo FormData để gửi file
+            const formDataToSend = new FormData();
+            formDataToSend.append('username', formData.username.trim());
+            formDataToSend.append('password', formData.password);
+            formDataToSend.append('fullName', formData.fullName.trim());
+            formDataToSend.append('email', formData.email.trim());
+
+            // Nếu có avatar thì thêm vào
+            if (formData.avatar) {
+                formDataToSend.append('avatar', formData.avatar);
+            }
+
+            const response = await axios.post(
+                "https://be-ink-realm-c7jk.vercel.app/auth/register",
+                formDataToSend,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    timeout: 5000, // 5 giây
+                }
+            );
+
+            if (response.status === 201 || response.status === 200) {
+                const { message, token, user } = response.data;
+
+                console.log("✅ Đăng ký thành công:", message);
+                console.log("👤 Thông tin người dùng:", user);
+
+                // 🔐 Lưu thông tin vào sessionStorage
+                sessionStorage.setItem("token", token);
+                sessionStorage.setItem("user", JSON.stringify(user));
+                sessionStorage.setItem("isLoggedIn", "true");
+                sessionStorage.setItem("accountId", user.accountId);
+
+                // 🎯 Cài đặt header mặc định cho axios
+                axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 3000);
+
+                // ✅ Toast thành công
+                setToast({ type: "success", message: response.data.message, visible: true });
+                setTimeout(() => setToast({ ...toast, visible: false }), 2000);
+
+
+                setTimeout(() => {
+                    navigate("/LoginPage", {
+                        replace: true,
+                        state: { user }
+                    });
+                }, 2000);
+            }
+
+        } catch (error) {
+            console.error("❌ Lỗi đăng ký:", error);
+
+            let message = "";
+            if (error.response) {
+                const status = error.response.status;
+                const errorData = error.response.data;
+
+                switch (status) {
+                    case 400:
+                        message = errorData?.message || "❌ Thông tin đăng ký không hợp lệ!";
+                        break;
+                    case 500:
+                        message = "💥 Lỗi server! Vui lòng thử lại sau.";
+                        break;
+                    default:
+                        message = errorData?.message || "❌ Đăng ký thất bại!";
+                }
+            } else if (error.request) {
+                message = "❌ Không thể kết nối đến server!\nVui lòng kiểm tra kết nối mạng.";
+            } else {
+                message = "⚠️ Có lỗi xảy ra: " + error.message;
+            }
+            setToast({ type: "error", message, visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <div className="flex h-full bg-gradient-to-br from-rose-50 via-sky-100 to-red-100 flex-row">
+        <div className="flex h-screen bg-gradient-to-br from-rose-50 via-sky-100 to-red-100">
+
+            {toast.visible && (
+                <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+                    <div className={`flex items-center px-6 py-3 rounded-md shadow-lg text-white animate-fade-in-down
+                     ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
+                        <span className="text-medium">{toast.message}</span>
+
+                        <button
+                            onClick={() => setToast({ ...toast, visible: false })}
+                            disabled={isLoading}
+                            className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors duration-200"
+                            aria-label="Close notification"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Hiệu ứng pháo giấy */}
             {showConfetti && (
@@ -23,12 +262,13 @@ const RegisterPage = () => {
                     width={window.innerWidth}
                     height={window.innerHeight}
                     numberOfPieces={300}
-                    recycle={false} // chỉ rơi 1 lần
+                    recycle={false}
                 />
             )}
 
-            {/* Form đăng ký */}
-            <div className="w-1/2 h-full flex flex-col justify-center px-16 mt-5">
+            {/* left side - Form đăng ký */}
+            <div className="w-1/2 h-full flex flex-col justify-center px-16">
+                {/* Vietnam Flag */}
                 <img
                     src={vietnamFlag}
                     alt="Vietnam Flag"
@@ -36,56 +276,121 @@ const RegisterPage = () => {
                             contrast-125 brightness-150 saturate-150
                             scale-75 hover:scale-100 transition-transform duration-300"
                 />
+
                 {/* Logo Inkrealm */}
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-5 w-38 h-15 contrast-125 brightness-90 saturate-200 ml-31"
+                    className="mt-2 w-35 h-14 contrast-125 brightness-90 saturate-200 mx-auto"
                 />
-                <form>
-                    {/* Họ và Tên */}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Avatar Upload - Căn giữa và đẹp hơn */}
+                    <div className="mb-6 flex flex-col items-center">
+                        <div className="relative mt-2">
+                            <div className="w-24 h-24 rounded-full border-4 border-blue-400 overflow-hidden bg-gray-100 flex items-center justify-center shadow-lg">
+                                {avatarPreview ? (
+                                    <img
+                                        src={avatarPreview}
+                                        alt="Preview"
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                    </svg>
+                                )}
+                            </div>
+                            <label
+                                htmlFor="avatar-upload"
+                                className="absolute bottom-0 right-0 bg-blue-700 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600 transition shadow-md"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </label>
+                            <input
+                                id="avatar-upload"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleAvatarChange}
+                                className="hidden"
+                                disabled={isLoading}
+                            />
+                        </div>
+                        <p className="text-md font-medium text-gray-700">Ảnh đại diện</p>
+                        <p className="text-xs text-gray-500">JPG, PNG, JPEG, WEBP (Max 5MB)</p>
+                    </div>
+
+                    {/* Tên đăng nhập */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 font-medium mb-2">Họ và Tên <strong className="text-red-500">*</strong></label>
+                        <label className="block text-gray-700 font-medium mb-2 text-md">
+                            Tên Đăng Nhập <strong className="text-red-500">*</strong>
+                        </label>
                         <input
                             type="text"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleInputChange}
+                            placeholder="Nhập tên đăng nhập"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={isLoading}
+                        />
+                    </div>
+
+                    {/* Họ và Tên */}
+                    <div className="mb-4">
+                        <label className="block text-gray-700 font-medium mb-2">
+                            Họ và Tên <strong className="text-red-500">*</strong>
+                        </label>
+                        <input
+                            type="text"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
                             placeholder="Nhập họ và tên của bạn"
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-mono mt-2"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={isLoading}
                         />
                     </div>
 
                     {/* Email */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 font-medium mb-2">Email <strong className="text-red-500">*</strong></label>
+                        <label className="block text-gray-700 font-medium mb-2">
+                            Email <strong className="text-red-500">*</strong>
+                        </label>
                         <input
                             type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
                             placeholder="Nhập địa chỉ email"
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={isLoading}
                         />
                     </div>
 
-                    {/* Số Điện Thoại */}
-                    {/* <div className="mb-4">
-                        <label className="block text-gray-700 font-medium mb-2">Số Điện Thoại <strong className="text-red-500">*</strong></label>
-                        <input
-                            type="tel"
-                            placeholder="Nhập số điện thoại của bạn"
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div> */}
-
                     {/* Mật khẩu */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 font-medium mb-2">Mật khẩu <strong className="text-red-500">*</strong></label>
+                        <label className="block text-gray-700 font-medium mb-2">
+                            Mật khẩu <strong className="text-red-500">*</strong>
+                        </label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
                                 placeholder="Nhập mật khẩu"
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                disabled={isLoading}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                                disabled={isLoading}
                             >
                                 {showPassword ? (
                                     <svg
@@ -119,66 +424,44 @@ const RegisterPage = () => {
                         </div>
                     </div>
 
-                    {/* Ngày sinh */}
-
-                    {/* <div className="mb-7">
-                        <label className="block text-gray-700 font-medium mb-2">Ngày sinh <strong className="text-red-500">*</strong></label>
-                        <div className="flex space-x-2">
-                            <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none
-                             focus:ring-2 focus:ring-blue-500">
-                                <option>Ngày</option>
-                           
-                                {[...Array(31)].map((_, i) => (
-                                    <option key={i} value={i + 1}>
-                                        {i + 1}
-                                    </option>
-                                ))}
-                            </select>
-                            <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option>Tháng</option>
-                             
-                                {[...Array(12)].map((_, i) => (
-                                    <option key={i} value={i + 1}>
-                                        {i + 1}
-                                    </option>
-                                ))}
-                            </select>
-                            <select className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option>Năm</option>
-                                // độ tuổi bắt đầu là 30 tuổi, tức là năm 2025 - 30 = 1995
-                                {[...Array(36)].map((_, i) => (
-                                    <option key={i} value={2025 - i}>
-                                        {2025 - i}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div> */}
                     {/* Nút đăng ký */}
-                    <Link to="/LoginPage">
-                        <button
-                            type="submit"
-                            className="w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className={`w-65 bg-gradient-to-br from-blue-100 via-red-300 to-purple-500
                          text-white py-2 rounded-3xl hover:bg-blue-600
                          transition duration-300 justify-center
-                          flex items-center mx-auto mb-4 font-bold hover:scale-105 transform"
-                        >
-                            Đăng Ký
-                        </button>
+                         flex items-center mx-auto mb-4 font-bold hover:scale-105 transform ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                    >
+                        {isLoading ? (
+                            <span className="flex items-center">
+                                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                                Đang xử lý...
+                            </span>
+                        ) : (
+                            'Đăng Ký'
+                        )}
+                    </button>
 
-                    </Link>
                     {/* Đã có tài khoản */}
                     <div className="text-center mt-2">
                         <p className="text-gray-600 font-medium">Bạn đã có tài khoản?</p>
-                        <a href="/LoginPage" className="text-blue-500 font-medium">
+                        <Link to="/LoginPage" className="text-blue-500 font-medium hover:underline">
                             Đăng nhập
-                        </a>
+                        </Link>
                     </div>
                 </form>
             </div>
+            {/* Right side - FancyImages2 */}
             <FancyImages2 />
+
         </div>
     );
+
 };
 
 export default RegisterPage;
