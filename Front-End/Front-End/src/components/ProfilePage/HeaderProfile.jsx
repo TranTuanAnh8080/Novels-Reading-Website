@@ -31,6 +31,10 @@ function HeaderProfile({ userData }) {
               src={user.avatar || defaultAvatar}
               alt="avatar"
               className="w-9 h-9 rounded-full border object-cover"
+              onError={(e) => {
+                e.target.onerror = null; // Prevent infinite loop
+                e.target.src = defaultAvatar; // Fallback to default image on error
+              }}
             />
           </Link>
         </div>

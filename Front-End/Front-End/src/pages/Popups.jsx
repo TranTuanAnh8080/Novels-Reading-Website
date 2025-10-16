@@ -5,7 +5,7 @@ import Confetti from "react-confetti";
 import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";
 import LoadingPage from "./LoadingPage";
-
+import sun from "../assets/sun.jpg"
 const Popups = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const Popups = () => {
   // preload background image
   useEffect(() => {
     const img = new Image();
-    img.src = landscapeImage;
+    img.src = sun;
     img.onload = () => {
       setBgLoaded(true);
       setShowConfetti(true); // chỉ bật confetti khi ảnh nền sẵn sàng
@@ -35,11 +35,15 @@ const Popups = () => {
       className="fixed inset-0 flex justify-center items-center z-50 
       overflow-hidden transition-all duration-700"
       style={{
-        backgroundImage: bgLoaded ? `url(${landscapeImage})` : "none",
+        backgroundImage: bgLoaded ? `url(${sun})` : "none",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
+        filter: "contrast(1.1) brightness(1.05)", // Enhance image quality
+        WebkitBackfaceVisibility: "hidden", // Improve performance
+        MozBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden"
       }}
     >
       {/* Fallback blur background trong lúc ảnh chưa tải */}
@@ -61,8 +65,8 @@ const Popups = () => {
       )}
 
       {/* Nội dung popup */}
-      <div className="relative bg-gradient-to-br from-cyan-200 via-sky-100 to-rose-100 
-        rounded-4xl p-8 text-center w-11/12 max-w-md shadow-2xl
+      <div className="relative bg-gradient-to-br from-sky-100 via-white to-rose-100 
+        rounded-4xl p-8 text-center w-11/12 max-w-md shadow-md
         transform scale-100 hover:scale-105 transition-transform duration-300 z-10">
 
         <img
@@ -75,7 +79,7 @@ const Popups = () => {
         <img
           src={image}
           alt="Inkrealm Logo"
-          className="ml-27 mb-3 w-40 h-16 contrast-125 brightness-90 saturate-200"
+          className="ml-27 mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
         />
         <h1 className="text-3xl mb-7 text-blue-800 font-medium">
           Chào mừng bạn đã đến!

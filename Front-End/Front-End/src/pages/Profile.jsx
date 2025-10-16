@@ -4,11 +4,13 @@ import Footer from "../components/SharedComponents/Footer";
 import { User, Book, Upload, Clock, Camera, LogOut, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-
+import image from "../assets/profile.png"
 
 function Profile() {
+
+  const defaultAvatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +35,7 @@ function Profile() {
     avatar: null,
   });
 
-  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState();
 
   // 📡 Lấy thông tin profile từ API
   const fetchProfile = async () => {
@@ -70,7 +72,7 @@ function Profile() {
           username: userData.username,
           fullName: userData.fullName,
           email: userData.email,
-          avatar: userData.avatar,
+          avatar: userData.avatar || image,
           coin: userData.coin,
         });
 
@@ -78,7 +80,7 @@ function Profile() {
           fullName: userData.fullName,
           nickname: userData.username,
           email: userData.email,
-          avatar:  userData.avatar,
+          avatar: userData.avatar || image,
           coin: userData.coin,
         });
 
@@ -115,7 +117,7 @@ function Profile() {
     }
   };
 
-  
+
   // ✅ Fetch profile data khi component mount
   useEffect(() => {
     fetchProfile();
@@ -254,7 +256,7 @@ function Profile() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
           </svg>
-          <p className="text-gray-600 text-lg ml-4">Đang tải thông tin...</p>
+          <p className="text-gray-600 text-xl ml-4">Đang tải thông tin...</p>
         </div>
       </div>
     );
@@ -330,9 +332,13 @@ function Profile() {
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <img
-                  src={avatarPreview || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
+                  src={avatarPreview || defaultAvatar}
                   alt="avatar"
                   className="w-20 h-20 rounded-full border object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null; // Prevent infinite loop
+                    e.target.src = defaultAvatar; // Fallback to default image on error
+                  }}
                 />
                 <label
                   htmlFor="avatar-upload"
