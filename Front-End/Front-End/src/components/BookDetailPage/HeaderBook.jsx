@@ -5,18 +5,24 @@ import { Link } from "react-router-dom";
 
 function HeaderBook() {
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
+    sessionStorage.getItem("isLoggedIn") === "true"
   );
 
   useEffect(() => {
     const checkLogin = () => {
-      setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+      setIsLoggedIn(sessionStorage.getItem("isLoggedIn") === "true");
     };
 
+    // Lắng nghe sự kiện loginStateChanged (từ LoginPage)
+    window.addEventListener("loginStateChanged", checkLogin);
+
+    // Lắng nghe thay đổi sessionStorage (dành cho logout)
     window.addEventListener("storage", checkLogin);
-    const interval = setInterval(checkLogin, 500);
+
+    const interval = setInterval(checkLogin, 500); // dự phòng nếu người dùng mở tab song song
 
     return () => {
+      window.removeEventListener("loginStateChanged", checkLogin);
       window.removeEventListener("storage", checkLogin);
       clearInterval(interval);
     };
@@ -73,14 +79,25 @@ function HeaderBook() {
 
           {/* User / Login */}
           {!isLoggedIn ? (
+          <div className="flex items-center space-x-3">
             <Link
               to="/LoginPage"
               className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
-                         text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
+                        text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
             >
               <i className="fas fa-sign-in-alt mr-2"></i>
               Đăng nhập
             </Link>
+
+            <Link
+              to="/RegisterPage"
+              className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
+                        text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
+            >
+              <i className="fas fa-user-plus mr-2"></i>
+              Đăng ký
+            </Link>
+          </div>  
           ) : (
             <div className="flex items-center space-x-6">
               <Link to="/Profile">
@@ -92,8 +109,9 @@ function HeaderBook() {
               </Link> 
               <button
                 onClick={() => {
-                  localStorage.removeItem("isLoggedIn"); // clear login
-                  window.location.href = "/HomePage";    // reload lại
+                  sessionStorage.clear();
+                  window.dispatchEvent(new Event("loginStateChanged")); // 👈 phát tín hiệu logout
+                  window.location.href = "/HomePage";
                 }}
                 className="flex items-center space-x-1 text-red-600 hover:text-red-700 text-sm font-medium"
               >

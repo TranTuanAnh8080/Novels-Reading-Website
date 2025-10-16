@@ -71,6 +71,8 @@ const LoginPage = () => {
                 sessionStorage.setItem("isLoggedIn", "true");
                 sessionStorage.setItem("accountId", user.accountId);
 
+                window.dispatchEvent(new Event("loginStateChanged"));
+
                 // Set axios default header
                 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 

@@ -4,27 +4,29 @@ import Footer from "../components/SharedComponents/Footer";
 import BookInfo from "../components/BookDetailPage/BookInfo";
 import CommentSection from "../components/BookDetailPage/CommentSection";
 import SimilarBooks from "../components/BookDetailPage/SimilarBooks";
+import defaultCover from "../assets/book-cover-blank.jpg";
 import { useParams } from "react-router-dom";
-import { sampleNovels } from "../components/HomePage/HeroSection";
+import axios from "axios";
 
 export default function BookDetail() {
   const { id } = useParams();
-  const book = sampleNovels.find((b) => b.id === parseInt(id));
+  const [book, setBook] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // state login
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
 
-  // lắng nghe thay đổi localStorage (kể cả khi login/logout cùng tab)
+  // lắng nghe thay đổi localStorage
   useEffect(() => {
     const checkLogin = () => {
       setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
     };
 
     window.addEventListener("storage", checkLogin);
-    // trick: chạy interval check trong cùng tab
     const interval = setInterval(checkLogin, 500);
 
     return () => {
@@ -33,31 +35,85 @@ export default function BookDetail() {
     };
   }, []);
 
+  // 🔹 Gọi API lấy chi tiết truyện
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const res = await fetch("https://be-ink-realm-c7jk.vercel.app/novel/novelId", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ storyId: id }), // id lấy từ useParams
+        });
+
+        if (!res.ok) {
+          throw new Error("Không thể tải dữ liệu truyện");
+        }
+
+        const data = await res.json();
+        setBook(data);
+      } catch (error) {
+        console.error("Error fetching novel:", error);
+        setError("Lỗi khi tải dữ liệu truyện!");
+      } finally {
+        setLoading(false); // 🔹 Dù lỗi hay thành công đều thoát trạng thái loading
+      }
+    };
+
+    fetchBook();
+  }, [id]);
+
   const similarBooks = [
     { id: 1, title: "Đấu Phá Thương Khung", author: "Thiên Tàm Thổ Đậu", cover: "https://truyenaudio.org/upload/pro/Dau-pha-thuong-khung2.png?quality=100&mode=crop&anchor=topleft&width=450&height=675" },
     { id: 2, title: "Tiên Nghịch", author: "Nhĩ Căn", cover: "https://photo2.tinhte.vn/data/attachment-files/2024/07/8406860_watermark-f33a7772d8593ea458c203104b4dbb41-7.jpeg" },
     { id: 3, title: "Phàm Nhân Tu Tiên", author: "Vong Ngữ", cover: "https://dtv-ebook.com.vn/images/files_2/2025/062025/pham-nhan-tu-tien.jpg" },
-    { id: 4, title: "Ngã Dục Phong Thiên", author: "Nhĩ Căn", cover: "https://www.nae.vn/ttv/ttv/public/images/story/9ed1b2e3f120d2dc3e84b3a2ed3cbb141f88ae7772542b2825f756adbcead4e6.jpg" },
-    { id: 5, title: "Thần Đạo Đan Tôn", author: "Cổ Đơn Địa Phi", cover: "https://www.nae.vn/ttv/ttv/public/images/story/3ec1c27d66a1706bdf278b07637d332eb77906c7b4312326491c22c38dd9cfbb.jpg" },
-    { id: 6, title: "Vũ Động Càn Khôn", author: "Thiên Tàm Thổ Đậu", cover: "https://thegioidienanh.vn/stores/news_dataimages/thanhtan/082018/07/12/3237_poster-ngo-ton.jpg" },
   ];
 
-  if (!book) {
-    return <div className="p-6">❌ Không tìm thấy truyện</div>;
+    if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="flex items-center space-x-3">
+          {/* Spinner SVG */}
+          <svg
+            className="animate-spin h-6 w-6 text-blue-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span className="text-xl font-semibold text-gray-700">
+            Đang tải dữ liệu...
+          </span>
+        </div>
+      </div>
+    );
   }
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
+  if (!book) return <div className="p-6">❌ Không tìm thấy truyện</div>;
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <HeaderBook isLoggedIn={isLoggedIn} />
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        <BookInfo
-          title={book.title}
-          desc={book.desc}
-          img={book.img}
-          rating={4.7}
-          isFollowing={isFollowing}
-          setIsFollowing={setIsFollowing}
-        />
+      <BookInfo
+        book={book}
+        isFollowing={isFollowing}
+        setIsFollowing={setIsFollowing}
+        defaultCover={defaultCover}/>
         <CommentSection />
         <SimilarBooks books={similarBooks} />
       </div>
