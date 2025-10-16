@@ -40,6 +40,10 @@ const Popups = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
+        filter: "contrast(1.1) brightness(1.05)", // Enhance image quality
+        WebkitBackfaceVisibility: "hidden", // Improve performance
+        MozBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden"
       }}
     >
       {/* Fallback blur background trong lúc ảnh chưa tải */}
@@ -62,7 +66,7 @@ const Popups = () => {
 
       {/* Nội dung popup */}
       <div className="relative bg-gradient-to-br from-sky-100 via-white to-rose-100 
-        rounded-4xl p-8 text-center w-11/12 max-w-md shadow-2xl
+        rounded-4xl p-8 text-center w-11/12 max-w-md shadow-md
         transform scale-100 hover:scale-105 transition-transform duration-300 z-10">
 
         <img
