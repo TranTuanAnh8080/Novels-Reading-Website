@@ -5,7 +5,7 @@ import Confetti from "react-confetti";
 import FancyImages from "./FancyImages";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, Mail, AlertCircle  } from "lucide-react";
+import { CheckCircle, Mail, AlertCircle } from "lucide-react";
 import axios from "axios";
 
 const LoginPage = () => {
@@ -92,7 +92,7 @@ const LoginPage = () => {
             console.error("❌ Lỗi đăng nhập:", error);
 
             let message = "";
-            
+
             if (error.response) {
                 const status = error.response.status;
                 switch (status) {
@@ -126,7 +126,7 @@ const LoginPage = () => {
         <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 
         flex-row">
 
-             {/* Toast Notification với Animation */}
+            {/* Toast Notification với Animation */}
             <AnimatePresence>
                 {toast.visible && (
                     <motion.div
@@ -198,27 +198,32 @@ const LoginPage = () => {
                     className="mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
                 />
                 <p className="text-gray-600 mb-3 text-2xl font-medium ">
-                    Khám phá thế giới truyện <br/> đa sắc màu cùng chúng tôi ❤️
+                    Khám phá thế giới truyện <br /> đa sắc màu cùng chúng tôi ❤️
                 </p>
 
                 {/* Form đăng nhập */}
                 <form onSubmit={handleSubmit}>
                     {/* Username */}
-                    <div className="mb-3">
-                        <label className="block text-gray-700 font-medium text-md">👤</label>
-                        <input
-                            type="text"
-                            placeholder="Nhập tên đăng nhập của bạn"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            required
-                        />
+                    <div className="mb-3 mt-5">
+                        <label className="block text-gray-600 font-medium text-md mb-2">Tên Đăng Nhập<strong className="text-red-600">*</strong></label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Nhập tên đăng nhập của bạn"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                required
+                            />
+                            <span className="absolute right-3 top-2 text-gray-500 text-md">
+                                ⭐
+                            </span>
+                        </div>
                     </div>
 
                     {/* Password */}
                     <div className="mb-5">
-                        <label className="block text-gray-700 font-bold text-xl">🔒</label>
+                        <label className="block text-gray-600 font-medium text-md mb-2">Mật Khẩu<strong className="text-red-600">*</strong></label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -232,9 +237,9 @@ const LoginPage = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                                className="absolute right-3 top-2 text-gray-500 text-md hover:text-gray-700"
                             >
-                                {showPassword ? "🙈" : "👁️"}
+                                {showPassword ? "🙈" : "👀"}
                             </button>
                         </div>
                     </div>

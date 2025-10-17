@@ -107,6 +107,26 @@ const RegisterPage = () => {
             return false;
         }
 
+        if (!/^[AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+ [AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+(?: [AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+)*$/.test(formData.fullName.trim())) {
+            setToast({ type: 'error', message: '❌ Vui lòng nhập đúng format Họ và Tên ( Nguyễn Văn A ) !', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        if (!formData.email.trim()) {
+            setToast({ type: 'error', message: '❌ Vui lòng nhập đúng Email!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
+        // Validate email format
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(formData.email)) {
+            setToast({ type: 'error', message: '❌ Email không hợp lệ, vui lòng kiểm tra lại!', visible: true });
+            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+            return false;
+        }
+
         if (!formData.password) {
             setToast({ type: 'error', message: '❌ Vui lòng nhập Mật khẩu!', visible: true });
             setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
@@ -119,25 +139,7 @@ const RegisterPage = () => {
             return false;
         }
 
-        if (!formData.fullName.trim()) {
-            setToast({ type: 'error', message: '❌ Vui lòng nhập Họ và Tên!', visible: true });
-            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
-            return false;
-        }
 
-        if (!formData.email.trim()) {
-            setToast({ type: 'error', message: '❌ Vui lòng nhập Email!', visible: true });
-            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
-            return false;
-        }
-
-        // Validate email format
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(formData.email)) {
-            setToast({ type: 'error', message: '❌ Email không hợp lệ, vui lòng kiểm tra lại!', visible: true });
-            setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
-            return false;
-        }
 
         return true;
     };
@@ -326,7 +328,7 @@ const RegisterPage = () => {
                                 ) : (
                                     <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                         clipRule="evenodd" />
+                                            clipRule="evenodd" />
                                     </svg>
                                 )}
                             </div>
@@ -355,7 +357,7 @@ const RegisterPage = () => {
                     {/* Tên đăng nhập */}
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2 text-md">
-                            Tên Đăng Nhập <strong className="text-red-500">*</strong>
+                            Tên Đăng Nhập<strong className="text-red-500">*</strong>
                         </label>
                         <input
                             type="text"
@@ -371,7 +373,7 @@ const RegisterPage = () => {
                     {/* Họ và Tên */}
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2">
-                            Họ và Tên <strong className="text-red-500">*</strong>
+                            Họ và Tên<strong className="text-red-500">*</strong>
                         </label>
                         <input
                             type="text"
@@ -387,7 +389,7 @@ const RegisterPage = () => {
                     {/* Email */}
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2">
-                            Email <strong className="text-red-500">*</strong>
+                            Email<strong className="text-red-500">*</strong>
                         </label>
                         <input
                             type="email"
@@ -403,7 +405,7 @@ const RegisterPage = () => {
                     {/* Mật khẩu */}
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-2">
-                            Mật khẩu <strong className="text-red-500">*</strong>
+                            Mật khẩu<strong className="text-red-500">*</strong>
                         </label>
                         <div className="relative">
                             <input
