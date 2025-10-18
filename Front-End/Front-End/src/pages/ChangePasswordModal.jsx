@@ -191,8 +191,8 @@ const ChangePasswordModal = () => {
                         alt="Inkrealm Logo"
                         className="mb-2 w-40 mr-38 h-15 mx-auto contrast-150 brightness-105 saturate-150"
                     />
-                    <h2 className="text-2xl text-medium text-gray-800 mb-2">Đổi mật khẩu?</h2>
-                    <p className="text-gray-600 mt-2 font-medium">
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">Đổi mật khẩu?</h2>
+                    <p className="text-gray-600 mt-2">
                         Vui lòng nhập đầy đủ thông tin để thực hiện yêu cầu này.
                     </p>
                 </div>
@@ -304,8 +304,8 @@ const ChangePasswordModal = () => {
                 </div>
 
                 {/* Thông tin bổ sung */}
-                <div className="mt-6 text-center text-sm text-gray-500 italic font-medium">
-                    <Lock className="inline w-4 h-4 mr-1 mb-0.5 text-indigo-400" />
+                <div className="mt-6 text-center text-sm text-gray-600 font-bold">
+                    <Lock className="inline w-4 h-4 mr-1 mb-0.5 text-blue-500" />
                     Thay đổi này sẽ có hiệu lực ngay lập tức.
                 </div>
             </motion.div>

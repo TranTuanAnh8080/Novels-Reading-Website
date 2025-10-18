@@ -133,8 +133,8 @@ const ForgotPasswordModal = () => {
                         alt="Inkrealm Logo"
                         className="mb-2 w-40 mr-29 h-15 mx-auto contrast-150 brightness-105 saturate-150"
                     />
-                    <h2 className="text-xl font-medium text-gray-800 mb-2">Quên mật khẩu?</h2>
-                    <p className="text-gray-600 mt-2 font-medium">
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">Quên mật khẩu?</h2>
+                    <p className="text-gray-600 mt-2">
                         Vui lòng nhập Email để khôi phục mật khẩu.
                     </p>
                 </div>
@@ -156,7 +156,7 @@ const ForgotPasswordModal = () => {
                             disabled={isLoading}
                         />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-700 mt-1">
                         Mật khẩu mới sẽ được gửi đến email này
                     </p>
                 </div>
