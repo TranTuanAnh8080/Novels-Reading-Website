@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Info, AlertTriangle, ArrowLeft, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -72,11 +72,38 @@ const MainItem = () => {
     const [showDetail, setShowDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [cancelNotification, setCancelNotification] = useState(false);
 
     const handleSelect = (pkg) => {
         setSelected(pkg.id);
         setErrorMessage('');
     };
+
+    // Xử lý khi quay lại từ PayOS
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const cancel = urlParams.get('cancel');
+
+        // Nếu URL hiện tại là /MainItem (lỗi từ backend), redirect về /PaymentItem
+        if (window.location.pathname === '/MainItem') {
+            const newUrl = window.location.href.replace('/MainItem', '/PaymentItem');
+            window.location.href = newUrl;
+            return;
+        }
+
+        if (cancel === 'true' || status === 'CANCELLED') {
+            setCancelNotification(true);
+
+            // Xóa query params khỏi URL
+            window.history.replaceState({}, '', window.location.pathname);
+
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                setCancelNotification(false);
+            }, 3000);
+        }
+    }, []);
 
     // Xử lý tạo link thanh toán PayOS
     const handlePaymentRequest = async () => {
@@ -121,7 +148,7 @@ const MainItem = () => {
                     amount: chosenPackage.price,
                     description: `uid${userId} ${chosenPackage.price}`,
                     returnUrl: window.location.origin + '/Profile',
-                    cancelUrl: window.location.origin + '/MainItem'
+                    cancelUrl: window.location.origin + '/PaymentItem'
                 },
                 {
                     headers: {

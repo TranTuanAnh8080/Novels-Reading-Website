@@ -25,6 +25,7 @@ import ModeratorProfile from "../pages/ModeratorProfile";
 import AddChapterPage from "../pages/AddChapterPage";
 import ModerationStatusPage from "../pages/ModerationStatusPage";
 import ChangePasswordModal from "../pages/ChangePasswordModal";
+import MainItem from "../components/PaymentItemPage/MainItem";
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
@@ -53,6 +54,7 @@ const AppRouter = createBrowserRouter([
     { path: "/AddChapterPage", element: <AddChapterPage /> },
     { path: "/ModerationStatusPage", element: <ModerationStatusPage /> },
     { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
+    { path: "/MainItem", element: <PaymentItem /> },
 ]);
 
 export default AppRouter;
