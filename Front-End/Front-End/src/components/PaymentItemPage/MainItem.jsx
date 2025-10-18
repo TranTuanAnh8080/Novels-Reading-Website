@@ -119,7 +119,7 @@ const MainItem = () => {
                 'https://be-ink-realm-c7jk.vercel.app/payment/create-payment-link',
                 {
                     amount: chosenPackage.price,
-                    description: `uid${userId} Nap ${chosenPackage.price}`,
+                    description: `uid${userId} ${chosenPackage.price}`,
                     returnUrl: window.location.origin + '/Profile',
                     cancelUrl: window.location.origin + '/MainItem'
                 },
