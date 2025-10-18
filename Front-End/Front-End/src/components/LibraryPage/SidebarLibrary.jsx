@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BookOpen, User, Upload, Clock, LogOut, CreditCard } from "lucide-react";
+import { PiPassword } from "react-icons/pi";
 
 function SidebarLibrary() {
   const location = useLocation();
@@ -11,6 +12,8 @@ function SidebarLibrary() {
     { path: "/UploadPage", label: "Đăng truyện", icon: Upload },
     { path: "/PaymentItem", label: "Nạp xu", icon: CreditCard },
     { path: "/TransactionPayment", label: "Lịch sử giao dịch", icon: Clock },
+    { path: "/ChangePasswordModal", label: "Đổi mật khẩu", icon: PiPassword },
+
   ];
 
   return (
@@ -26,11 +29,10 @@ function SidebarLibrary() {
             <Link
               key={path}
               to={path}
-              className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors ${
-                active
+              className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors ${active
                   ? "bg-blue-50 text-[#2E5BFF] font-medium"
                   : "text-gray-700 hover:text-[#2E5BFF]"
-              }`}
+                }`}
             >
               <Icon className="h-5 w-5" />
               <span>{label}</span>

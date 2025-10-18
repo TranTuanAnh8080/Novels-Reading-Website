@@ -8,7 +8,7 @@ const TransactionPayment = () => {
     return (
         <div>
             <HeaderProfile />
-            <div className="flex ml-5">
+            <div className="flex">
                 <SidebarProfile />
                 <main className="flex-1 p-6">
                     <TransactionPaymentItem />

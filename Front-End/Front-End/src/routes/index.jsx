@@ -24,6 +24,7 @@ import ModerateTranslatedNovels from "../pages/ModerateTranslatedNovels";
 import ModeratorProfile from "../pages/ModeratorProfile";
 import AddChapterPage from "../pages/AddChapterPage";
 import ModerationStatusPage from "../pages/ModerationStatusPage";
+import ChangePasswordModal from "../pages/ChangePasswordModal";
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
@@ -50,7 +51,8 @@ const AppRouter = createBrowserRouter([
     { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> },
     { path: "/ModeratorProfile", element: <ModeratorProfile /> },
     { path: "/AddChapterPage", element: <AddChapterPage /> },
-    { path: "/ModerationStatusPage", element: <ModerationStatusPage /> }
+    { path: "/ModerationStatusPage", element: <ModerationStatusPage /> },
+    { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
 ]);
 
 export default AppRouter;

@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import image from "../assets/profile.png"
+import { PiPassword } from "react-icons/pi";
+import { MdPassword } from "react-icons/md";
 
 function Profile() {
 
@@ -252,11 +254,11 @@ function Profile() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <svg className="animate-spin h-12 w-12 text-blue-700 mx-auto mb-4" viewBox="0 0 24 24">
+          <svg className="animate-spin h-10 w-10 text-blue-700 mx-auto mb-4" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
           </svg>
-          <p className="text-gray-600 text-xl ml-4">Đang tải thông tin...</p>
+          <p className="text-gray-600 text-lg ml-4">Đang tải thông tin...</p>
         </div>
       </div>
     );
@@ -310,6 +312,10 @@ function Profile() {
             <Link to="/TransactionPayment" className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
               <Clock className="h-4 w-4" />
               <span>Lịch sử giao dịch</span>
+            </Link>
+             <Link to="/ChangePasswordModal" className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
+              <MdPassword className="h-4 w-4" />
+              <span>Đổi mật khẩu</span>
             </Link>
           </nav>
         </aside>

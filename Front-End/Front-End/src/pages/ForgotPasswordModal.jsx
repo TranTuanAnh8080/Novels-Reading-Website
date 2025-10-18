@@ -59,7 +59,7 @@ const ForgotPasswordModal = () => {
                 console.log('✅ Reset password thành công:', response.data);
                 
                 setMessageType('success');
-                setMessageText('✅ Link khôi phục đã được gửi thành công! Vui lòng kiểm tra email của bạn.');
+                setMessageText('Link khôi phục đã được gửi thành công! Vui lòng kiểm tra email của bạn.');
                 setShowMessage(true);
 
                 // Chuyển về trang login sau 2.5 giây
@@ -226,8 +226,8 @@ const ForgotPasswordModal = () => {
                             <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0" />
                         )}
 
-                        {/* Nội dung thông báo */}
-                        <p className="text-sm text-gray-700">
+                         {/* Nội dung thông báo */}
+                        <p className="text-sm text-gray-700 font-medium text-center w-full break-words whitespace-normal">
                             {messageText}
                         </p>
 
