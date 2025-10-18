@@ -22,7 +22,7 @@ const ForgotPasswordModal = () => {
         // Validate email trước khi gửi
         if (!email.trim()) {
             setMessageType('error');
-            setMessageText('❌ Vui lòng nhập địa chỉ email!');
+            setMessageText('❌ Vui lòng nhập địa chỉ Email để khôi phục !');
             setShowMessage(true);
             setTimeout(() => setShowMessage(false), 3000);
             return;

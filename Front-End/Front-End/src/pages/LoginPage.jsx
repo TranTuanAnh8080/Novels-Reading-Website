@@ -37,7 +37,7 @@ const LoginPage = () => {
 
         // Validate input
         if (!username.trim() || !password) {
-            showToast('error', '❌ Vui lòng nhập đầy đủ thông tin!');
+            showToast('error', '❌ Vui lòng nhập đầy đủ thông tin Đăng nhập !');
             return;
         }
 
@@ -123,7 +123,7 @@ const LoginPage = () => {
 
 
     return (
-        <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-red-100 
+        <div className="flex h-screen bg-gradient-to-br from-white via-sky-100 to-rose-100 
         flex-row">
 
             {/* Toast Notification với Animation */}
@@ -213,7 +213,6 @@ const LoginPage = () => {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                                required
                             />
                             <span className="absolute right-3 top-2 text-gray-500 text-md">
                                 ⭐
@@ -231,7 +230,6 @@ const LoginPage = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-300"
-                                required
                             />
 
                             <button

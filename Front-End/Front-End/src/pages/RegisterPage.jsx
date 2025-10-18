@@ -311,14 +311,13 @@ const RegisterPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mt-2 mr-36 w-34 h-15 contrast-150 brightness-105 saturate-200 mx-auto"
+                    className="mt-2 mr-36 w-34 h-13 contrast-150 brightness-105 saturate-200 mx-auto"
                 />
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Avatar Upload - Căn giữa và đẹp hơn */}
                     <div className="mb-6 flex flex-col items-center">
                         <div className="relative mt-2">
-                            <div className="w-24 h-24 rounded-full border-4 border-blue-400 overflow-hidden bg-gray-100 flex items-center justify-center shadow-lg">
+                            <div className="w-20 h-20 rounded-full border-4 border-blue-400 overflow-hidden bg-gray-100 flex items-center justify-center shadow-lg">
                                 {avatarPreview ? (
                                     <img
                                         src={avatarPreview}
@@ -326,7 +325,7 @@ const RegisterPage = () => {
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
-                                    <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                             clipRule="evenodd" />
                                     </svg>
@@ -334,7 +333,7 @@ const RegisterPage = () => {
                             </div>
                             <label
                                 htmlFor="avatar-upload"
-                                className="absolute bottom-0 right-0 bg-blue-700 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600 transition shadow-md"
+                                className="absolute bottom-0 right-0 ml-2 bg-blue-700 text-white p-2 rounded-xl cursor-pointer hover:bg-blue-600 transition shadow-md"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -350,12 +349,12 @@ const RegisterPage = () => {
                                 disabled={isLoading}
                             />
                         </div>
-                        <p className="text-md font-bold text-gray-700">Ảnh đại diện</p>
-                        <p className="text-xs text-gray-500">JPG, PNG, JPEG, WEBP (Max 5MB)</p>
+                        <p className="text-md font-medium text-gray-700">Ảnh đại diện</p>
+                        <p className="text-xs text-gray-600">JPG, PNG, JPEG, WEBP (Max 5MB)</p>
                     </div>
 
                     {/* Tên đăng nhập */}
-                    <div className="mb-4">
+                    <div className="mb-3">
                         <label className="block text-gray-700 font-medium mb-2 text-md">
                             Tên Đăng Nhập<strong className="text-red-500">*</strong>
                         </label>
@@ -413,7 +412,7 @@ const RegisterPage = () => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                placeholder="Nhập mật khẩu"
+                                placeholder="Nhập mật khẩu (Tối thiểu 6 ký tự)"
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 disabled={isLoading}
                             />
