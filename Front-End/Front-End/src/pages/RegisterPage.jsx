@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, Mail, AlertCircle } from "lucide-react";
+import identify from "../assets/identify.png"
+import email from "../assets/email.png"
 import axios from "axios";
 const RegisterPage = () => {
     const [showConfetti, setShowConfetti] = useState(true);
@@ -358,15 +360,21 @@ const RegisterPage = () => {
                         <label className="block text-gray-700 font-medium mb-2 text-md">
                             Tên Đăng Nhập<strong className="text-red-500">*</strong>
                         </label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            placeholder="Nhập tên đăng nhập"
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            disabled={isLoading}
-                        />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                placeholder="Nhập tên đăng nhập"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                disabled={isLoading}
+                            />
+                            <span className="absolute right-3 top-2 text-gray-500 text-md">
+                                ⭐
+                            </span>
+
+                        </div>
                     </div>
 
                     {/* Họ và Tên */}
@@ -374,15 +382,23 @@ const RegisterPage = () => {
                         <label className="block text-gray-700 font-medium mb-2">
                             Họ và Tên<strong className="text-red-500">*</strong>
                         </label>
-                        <input
-                            type="text"
-                            name="fullName"
-                            value={formData.fullName}
-                            onChange={handleInputChange}
-                            placeholder="Nhập họ và tên của bạn"
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            disabled={isLoading}
-                        />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                name="fullName"
+                                value={formData.fullName}
+                                onChange={handleInputChange}
+                                placeholder="Nhập họ và tên của bạn"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                disabled={isLoading}
+                            />
+                            <img
+                                src={identify}
+                                alt="identify"
+                                className="absolute right-3 top-2 w-5 h-5 object-contain"
+                            />
+
+                        </div>
                     </div>
 
                     {/* Email */}
@@ -390,15 +406,24 @@ const RegisterPage = () => {
                         <label className="block text-gray-700 font-medium mb-2">
                             Email<strong className="text-red-500">*</strong>
                         </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Nhập địa chỉ email"
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            disabled={isLoading}
-                        />
+                        <div className="relative">
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                placeholder="Nhập địa chỉ email"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                disabled={isLoading}
+                            />
+
+                            <img
+                                src={email}
+                                alt="email"
+                                className="absolute right-3 top-2 w-5 h-5 object-contain"
+                            />
+                        </div>
+
                     </div>
 
                     {/* Mật khẩu */}
@@ -419,37 +444,9 @@ const RegisterPage = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
-                                disabled={isLoading}
+                                className="absolute right-3 top-2 text-gray-500 text-md hover:text-gray-700"
                             >
-                                {showPassword ? (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M17.94 17.94A10.94 10.94 0 0112 19c-5.52 0-10-4.48-10-10 0-2.39.84-4.58 2.24-6.34M12 5c5.52 0 10 4.48 10 10 0 2.39-.84 4.58-2.24 6.34M12 12v0M12 12l-3.5 3.5M12 12l3.5 3.5" />
-                                    </svg>
-                                ) : (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
-                                )}
+                                {showPassword ? "🙈" : "👀"}
                             </button>
                         </div>
                     </div>
