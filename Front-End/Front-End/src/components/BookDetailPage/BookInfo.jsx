@@ -4,9 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import defaultCover from "../../assets/book-cover-blank.jpg";
 import axios from "axios";
 
-export default function BookInfo({ book, isFollowing, setIsFollowing }) {
+export default function BookInfo({ book }) {
   const navigate = useNavigate();
   const [latestChapters, setLatestChapters] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    sessionStorage.getItem("isLoggedIn") === "true"
+  );
+  const [isFollowing, setIsFollowing] = useState(false);
 
   if (!book) return null;
 
@@ -15,7 +19,41 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
     author,
     novelDescription: description,
     createDate,
+    coverImage,
   } = book || {};
+
+  // 🔹 Check xem truyện này có đang được theo dõi không
+  useEffect(() => {
+    const followed = JSON.parse(localStorage.getItem("followedBooks") || "[]");
+    const exists = followed.some((b) => b.id === book.novelId);
+    setIsFollowing(exists);
+  }, [book]);
+
+  // 🔹 Toggle theo dõi / bỏ theo dõi
+  const handleFollowToggle = () => {
+    const saved = JSON.parse(localStorage.getItem("followedBooks") || "[]");
+    let updated;
+
+    if (isFollowing) {
+      // Bỏ theo dõi
+      updated = saved.filter((b) => b.id !== book.novelId);
+    } else {
+      // Theo dõi
+      updated = [
+        ...saved,
+        {
+          id: book.novelId,
+          title: title,
+          image: coverImage || defaultCover,
+          status: "Chưa đọc",
+        },
+      ];
+    }
+
+    localStorage.setItem("followedBooks", JSON.stringify(updated));
+    setIsFollowing(!isFollowing);
+    window.dispatchEvent(new Event("storage")); // 🔄 Cập nhật LibraryPage realtime
+  };
 
   // 🔹 Gọi API lấy 3 chương mới nhất
   useEffect(() => {
@@ -31,7 +69,7 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
         if (Array.isArray(res.data)) {
           const sorted = res.data
             .sort((a, b) => new Date(b.createDate) - new Date(a.createDate))
-            .slice(0, 3); // chỉ lấy 3 chương mới nhất
+            .slice(0, 3);
           setLatestChapters(sorted);
         }
       } catch (err) {
@@ -46,7 +84,10 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-6">
-        <Link to="/HomePage" className="hover:underline text-gray-900">
+        <Link
+          to={isLoggedIn ? "/HomeLoggedIn" : "/HomePage"}
+          className="hover:underline text-gray-900"
+        >
           Trang chủ
         </Link>{" "}
         / Truyện dịch /{" "}
@@ -59,12 +100,8 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
         <div className="col-span-4">
           <div className="w-full aspect-[3/4] bg-gray-100 rounded-lg shadow-md mb-4 flex items-center justify-center text-gray-400 text-sm">
             <img
-              src={
-                book.coverImage && book.coverImage.trim() !== ""
-                  ? book.coverImage
-                  : defaultCover
-              }
-              alt={book.novelTitle || "Bìa truyện"}
+              src={coverImage && coverImage.trim() !== "" ? coverImage : defaultCover}
+              alt={title || "Bìa truyện"}
               className="w-48 h-64 object-cover rounded-md shadow"
             />
           </div>
@@ -100,8 +137,8 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
             </Link>
 
             <button
-              onClick={() => setIsFollowing(!isFollowing)}
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border ${
+              onClick={handleFollowToggle}
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg border transition ${
                 isFollowing
                   ? "bg-blue-50 text-[#2E5BFF] border-blue-400"
                   : "text-[#2E5BFF] border-[#2E5BFF] hover:bg-gray-50"
@@ -129,7 +166,6 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
                 {author || "Đang cập nhật"}
               </span>
             </div>
-
             <div className="text-sm font-medium text-gray-500">
               Ngày đăng: {new Date(createDate).toLocaleDateString("vi-VN")}
             </div>
@@ -148,9 +184,7 @@ export default function BookInfo({ book, isFollowing, setIsFollowing }) {
           {/* 🔹 Chương mới nhất */}
           <div className="mt-37">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-800">
-                Chương mới nhất
-              </h2>
+              <h2 className="text-lg font-bold text-gray-800">Chương mới nhất</h2>
               <Link
                 to={`/ChapterList/${book.novelId}`}
                 className="text-sm text-[#2E5BFF] hover:underline flex items-center gap-1"
