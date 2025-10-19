@@ -62,16 +62,15 @@ export default function BookInfo({ book }) {
     const fetchChapters = async () => {
       try {
         const res = await axios.get(
-          "https://be-ink-realm-c7jk.vercel.app/chapter/list",
-          { params: { novelId: book.novelId } }
+          `https://be-ink-realm-c7jk.vercel.app/chapter/list/${book.novelId}`
         );
 
-        if (Array.isArray(res.data)) {
-          const sorted = res.data
-            .sort((a, b) => new Date(b.createDate) - new Date(a.createDate))
-            .slice(0, 3);
-          setLatestChapters(sorted);
-        }
+      if (Array.isArray(res.data.chapters)) {
+        const sorted = res.data.chapters
+          .sort((a, b) => new Date(b.createDate) - new Date(a.createDate))
+          .slice(0, 3);
+        setLatestChapters(sorted);
+      }
       } catch (err) {
         console.error("Lỗi khi tải danh sách chương:", err);
       }
@@ -113,17 +112,16 @@ export default function BookInfo({ book }) {
                 e.preventDefault();
                 try {
                   const res = await axios.get(
-                    "https://be-ink-realm-c7jk.vercel.app/chapter/list",
-                    { params: { novelId: book.novelId } }
+                    `https://be-ink-realm-c7jk.vercel.app/chapter/list/${book.novelId}`
                   );
-                  if (res.data && res.data.length > 0) {
-                    const firstChapterId = res.data[0].chapterId;
-                    navigate(`/ReadPage/${firstChapterId}`, {
-                      state: { storyId: book.novelId },
-                    });
-                  } else {
-                    alert("Truyện này chưa có chương nào!");
-                  }
+                if (res.data && Array.isArray(res.data.chapters) && res.data.chapters.length > 0) {
+                  const firstChapterId = res.data.chapters[0].chapterId;
+                  navigate(`/ReadPage/${firstChapterId}`, {
+                    state: { storyId: book.novelId },
+                  });
+                } else {
+                  alert("Truyện này chưa có chương nào!");
+                }
                 } catch (err) {
                   console.error("Lỗi khi lấy chương đầu tiên:", err);
                   alert("Không thể tải chương đầu tiên.");
