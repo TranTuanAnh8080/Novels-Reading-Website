@@ -40,12 +40,11 @@ export default function ChapterList() {
 
         // ✅ Lấy danh sách chương
         const chapterRes = await axios.get(
-          "https://be-ink-realm-c7jk.vercel.app/chapter/list",
-          { params: { novelId: Number(id) } }
+          `https://be-ink-realm-c7jk.vercel.app/chapter/list/${Number(id)}`
         );
 
         setNovel(novelRes.data);
-        setChapters(chapterRes.data);
+        setChapters(chapterRes.data.chapters || []);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Lỗi khi tải danh sách chương!");
@@ -145,7 +144,7 @@ export default function ChapterList() {
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4 text-[#2E5BFF]" />
                     <span className="font-medium text-gray-500">
-                      Cập nhật: {novel.updatedAt || "Không rõ"}
+                      Cập nhật: {novel.createDate || "Không rõ"}
                     </span>
                   </div>
                 </div>
@@ -200,7 +199,7 @@ export default function ChapterList() {
                     <tr key={chapter.id || index} className="hover:bg-gray-50
                     cursor-pointer" onClick={() => navigate(`/ReadPage/${chapter.chapterId}`, { state: { storyId: novel?.novelId } })}>
                       <td className="px-4 py-3 text-[#2E5BFF] font-medium">
-                        {chapter.chapterNumber || index + 1}
+                        {chapter.chapterIndex || index + 1}
                       </td>
                       <td className="px-4 py-3 text-gray-800 font-semibold">
                         {chapter.chapterTitle || "Chưa có tiêu đề"}
@@ -209,8 +208,8 @@ export default function ChapterList() {
                         {chapter.uploader || "TransTeam"}
                       </td>
                       <td className="px-4 py-3 text-gray-600">
-                        {chapter.createdAt
-                          ? new Date(chapter.createdAt).toLocaleDateString()
+                        {chapter.createDate
+                          ? new Date(chapter.createDate).toLocaleDateString()
                           : "Không rõ"}
                       </td>
                     </tr>
