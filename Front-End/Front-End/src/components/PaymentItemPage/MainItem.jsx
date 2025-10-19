@@ -283,7 +283,7 @@ const MainItem = () => {
             {/* Nội dung chính */}
             <main className="flex-grow py-12 px-4">
                 {/* Nút Trở lại */}
-                <div className="max-w-7xl mx-auto w-full px-6 py-4">
+                <div className="max-w-7xl mx-auto w-full px-6 py-4 text-lg">
                     <Link to="/UploadPage" className="flex items-center gap-2 text-sky-800 font-bold">
                         <ArrowLeft size={18} /> Trở lại
                     </Link>
@@ -304,7 +304,7 @@ const MainItem = () => {
                     <div className="bg-gradient-to-r bg-violet-100 via-rose-50 to-yellow-100 border border-sky-200 text-sky-800 rounded-xl px-4 py-3 flex items-start gap-2 mb-10 shadow-sm">
                         <Info className="w-5 h-5 text-sky-800 mt-0.5" />
                         <p className="text-center w-full text-sky-800 font-normal">
-                            Thanh toán qua cổng <strong className="italic text-lg ">PayOS</strong> an toàn, nhanh chóng. <br />
+                            Thanh toán qua cổng <strong className="text-lg font-bold">PayOS</strong> an toàn, nhanh chóng. <br />
                             Xu sẽ được cộng tự động trong <b>1-5 phút</b> sau khi thanh toán thành công.
                         </p>
                     </div>
@@ -319,20 +319,20 @@ const MainItem = () => {
 
                     {/* Gói nạp xu */}
                     <div className="space-y-10 mb-12">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto cursor-grab">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-4xl mx-auto cursor-grab">
                             {packages.map((pkg, idx) => (
                                 <motion.div
                                     key={pkg.id}
-                                    className={`relative rounded-4xl p-10 text-center transition-all
+                                    className={`relative rounded-4xl p-8 text-center transition-all
                                             ? "bg-gradient-to-r from-violet-100 via-rose-100 to-yellow-100 shadow-xl"
-                                            : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
+                                            : "bg-white border border-gray-200 shadow-md hover:shadow-2xl hover:-translate-y-1"
                                         }`}
                                     whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.96 }}
                                 >
                                     {/* Badge cho từng gói */}
                                     {pkg.id === 1 && (
-                                        <span className="absolute top-3 right-3 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                        <span className="absolute top-3 right-3 bg-blue-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
                                             Trải nghiệm
                                         </span>
                                     )}
@@ -380,15 +380,15 @@ const MainItem = () => {
                                     {/* Nội dung gói */}
                                     <div className="text-3xl mb-3 mt-2">{pkg.icon}</div>
                                     <h3 className="text-2xl font-bold text-gray-800">{pkg.coins}</h3>
-                                    <p className="text-gray-900">
+                                    <p className="text-gray-800">
                                         {pkg.price.toLocaleString("vi-VN")}đ
                                     </p>
 
                                     {/* Button chọn gói */}
                                     <button
-                                        className={`relative mt-4 w-full py-3 rounded-2xl font-semibold tracking-wide cursor-pointer transition-all duration-300 shadow-md 
+                                        className={`relative mt-4 w-full py-3 rounded-2xl font-bold tracking-wide cursor-pointer transition-all duration-300 shadow-md 
                                                  ${selected === pkg.id
-                                                ? "bg-gradient-to-r from-sky-600 to-indigo-600 text-white ring-2  shadow-lg hover:shadow-sky-400/50 scale-[1.02]"
+                                                ? "bg-gradient-to-r from-sky-600 to-indigo-600 text-white ring-2 shadow-lg hover:shadow-sky-400/50 scale-[1.02]"
                                                 : "bg-gradient-to-r from-sky-400 to-indigo-400 text-white hover:shadow-lg hover:shadow-indigo-400/40 active:scale-[0.98]"
                                             }`}
                                         onClick={() => handleSelect(pkg)}
@@ -397,7 +397,7 @@ const MainItem = () => {
                                         <span className="flex items-center justify-center gap-2">
                                             {selected === pkg.id ? (
                                                 <>
-                                                    <span className="text-md">✅Đã chọn</span>
+                                                    <span className="text-md font-bold">Đã chọn</span>
                                                 </>
                                             ) : (
                                                 <>
@@ -427,12 +427,12 @@ const MainItem = () => {
                     </div>
 
                     {/* Button xác nhận thanh toán */}
-                    <div className="text-center mt-6 mb-6">
+                    <div className="text-center mt-3 mb-6">
                         <button
                             disabled={!selected || isLoading}
-                            className={`px-5 py-4 rounded-3xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2 mx-auto ${selected && !isLoading
-                                ? "bg-gradient-to-r from-violet-100 via-rose-200 to-yellow-200 text-gray-700 hover:brightness-105 hover:scale-105"
-                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            className={`px-5 py-4 rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2 mx-auto ${selected && !isLoading
+                                ? "bg-gradient-to-r from-sky-600 to-sky-600 text-white cursor-grab hover:brightness-110 hover:scale-105"
+                                : "bg-gray-300 text-gray-500 cursor-grab"
                                 }`}
                             onClick={() => {
                                 const chosenPackage = packages.find((p) => p.id === selected);
@@ -448,7 +448,7 @@ const MainItem = () => {
                                     <span>Đang xử lý...</span>
                                 </>
                             ) : (
-                                <>{selected ? "🏧 Thanh toán ngay" : "💵 Chọn gói để tiếp tục"}</>
+                                <>{selected ? "💰Thanh toán ngay💵" : "💵Chọn gói để tiếp tục"}</>
                             )}
                         </button>
                     </div>
@@ -456,9 +456,8 @@ const MainItem = () => {
                     <AnimatePresence>
                         {showConfirm && selectedPackage && (
                             <div className="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50">
-                                <div className="bg-white/95 rounded-xl shadow-2xl max-w-md w-full p-8 relative animate-scaleIn">
+                                <div className="bg-white/95 rounded-2xl shadow-3xl max-w-lg w-full p-4 relative animate-scaleIn">
 
-                                    {/* Nút đóng (góc trên phải) */}
                                     <button
                                         className="absolute top-4 right-4 text-blue-400 hover:text-blue-700 transition"
                                         onClick={() => setShowConfirm(false)}
@@ -467,9 +466,8 @@ const MainItem = () => {
                                     </button>
 
                                     {/* Icon gói */}
-                                    <div className="flex justify-center mb-6">
-                                        <div className="w-14 h-14 flex items-center justify-center rounded-full 
-                        bg-gradient-to-br from-yellow-400 to-orange-400 shadow-lg text-4xl">
+                                    <div className="flex justify-center mb-3">
+                                        <div className="w-16 h-16 flex items-center justify-center rounded-full text-4xl bg-transparent shadow-none">
                                             {selectedPackage.icon}
                                         </div>
                                     </div>
@@ -478,22 +476,22 @@ const MainItem = () => {
                                     <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
                                         {selectedPackage.coins}
                                     </h2>
-                                    <p className="text-center text-lg text-blue-700 font-bold mb-4">
+                                    <p className="text-center text-lg text-blue-800 font-bold mb-4">
                                         {selectedPackage.price.toLocaleString("vi-VN")}đ
                                     </p>
 
                                     {/* Mô tả gói */}
-                                    <p className="text-center text-gray-700 mb-6 leading-relaxed">
+                                    <p className="text-center text-gray-800 mb-6 leading-relaxed">
                                         Xác nhận thanh toán gói{" "}
-                                        <b className="text-gray-900">{selectedPackage.coins}</b> qua{" "}
-                                        <span className="text-sky-700 font-bold italic">PayOS</span>.<br />
+                                        qua{" "}
+                                        <span className="text-sky-800 font-bold">PayOS</span>.<br />
                                         {selectedPackage.description}<br />
                                         Giao dịch sẽ được xử lý tự động trong{" "}
                                         <b>1–5 phút</b>.
                                     </p>
 
                                     {/* Lợi ích */}
-                                    <ul className="space-y-3 text-gray-700 mb-8">
+                                    <ul className="space-y-3 text-gray-700 mb-8 justify-center items-center ml-22">
                                         {selectedPackage.perks.map((perk, idx) => (
                                             <li key={idx} className="flex items-center space-x-2">
                                                 <span className="text-violet-500">✔</span>
@@ -506,20 +504,20 @@ const MainItem = () => {
                                     <div className="flex flex-1 flex-col sm:flex-row gap-3 justify-center items-center">
                                         <button
                                             onClick={() => setShowConfirm(false)}
-                                            className="flex-1 sm:flex-none sm:w-36 py-2 rounded-3xl text-md font-bold text-gray-700 bg-red-200 hover:bg-red-300 shadow-sm transition-all"
+                                            className="flex-1 sm:flex-none sm:w-45 cursor-pointer py-3 rounded-xl text-md font-bold text-gray-800 bg-red-300 hover:bg-red-400 shadow-sm transition-all"
                                         >
                                             Hủy
                                         </button>
                                         <button
                                             onClick={() => handlePaymentRequest()}
                                             disabled={isLoading}
-                                            className={`flex-1 sm:flex-none sm:w-36 py-2 rounded-3xl text-md font-bold shadow-md text-white bg-gradient-to-r from-sky-600 to-sky-600 hover:scale-[1.02] transition-transform disabled:opacity-60`}
+                                            className={`flex-1 sm:flex-none sm:w-45 py-3 cursor-pointer rounded-xl text-md font-bold shadow-md text-white bg-gradient-to-r from-sky-500 to-sky-600 hover:scale-[1.02] transition-transform disabled:opacity-60`}
                                         >
                                             {isLoading ? "⏳ Đang xử lý..." : "Thanh toán"}
                                         </button>
                                     </div>
                                     {/* Ghi chú nhỏ */}
-                                    <p className="text-center text-xs text-gray-400 mt-5">
+                                    <p className="text-center text-xs text-gray-500 mt-5">
                                         Thanh toán an toàn qua PayOS – bảo mật, nhanh chóng và tiện lợi.
                                     </p>
                                 </div>
@@ -530,9 +528,9 @@ const MainItem = () => {
 
                     {/* Lưu ý */}
                     <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-5 flex items-start gap-3 shadow-sm mt-10">
-                        <AlertTriangle className="w-6 h-6 text-amber-500 mt-0.5" />
-                        <div className="text-md text-amber-800 space-y-1">
-                            <p><b>Lưu ý quan trọng</b></p>
+                        <AlertTriangle className="w-6 h-6 text-amber-600 mt-0.5" />
+                        <div className="text-md text-amber-700 space-y-1">
+                            <p><b className="text-lg font-bold">Lưu ý quan trọng !</b></p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>Mỗi chuyển khoản chỉ dùng 1 lần, xu sẽ không được cộng tự động nếu sai nội dung.</li>
                                 <li>Vui lòng chuyển khoản đúng số tiền theo gói đã chọn để tránh lỗi hệ thống.</li>
