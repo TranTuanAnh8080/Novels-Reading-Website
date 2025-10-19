@@ -27,6 +27,7 @@
     const [chapterText, setChapterText] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [totalChapters, setTotalChapters] = useState(0);
 
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
@@ -64,7 +65,7 @@
         );
         setChapterText(textRes.data.chapterText);
 
-        // ⚡️ 4. Gọi thêm API /novel/novelId để lấy tên truyện
+        // 4. Gọi thêm API /novel/novelId để lấy tên truyện
         if (storyId) {
           const novelRes = await axios.post(
             "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
@@ -73,7 +74,19 @@
           setNovel(novelRes.data);
         }
 
-        // 5. Lấy comments (tạm giả lập, có thể fetch API thật)
+        // 5. Lấy tổng số chương của truyện
+        try {
+          const listRes = await axios.get(`https://be-ink-realm-c7jk.vercel.app/chapter/list/${storyId}`);
+          if (Array.isArray(listRes.data)) {
+            setTotalChapters(listRes.data.length);
+          } else if (Array.isArray(listRes.data.chapters)) {
+            setTotalChapters(listRes.data.chapters.length);
+          }
+        } catch (err) {
+          console.warn("Không thể lấy danh sách chương:", err);
+        }
+
+        // 6. Lấy comments (tạm giả lập, có thể fetch API thật)
         setComments([
           { user: "NguyenReader", avatar: "https://randomuser.me/api/portraits/men/32.jpg", text: "Chương này hay quá!", time: "2 giờ trước" },
           { user: "TruyenFan", avatar: "https://randomuser.me/api/portraits/women/44.jpg", text: "Dịch mượt quá", time: "5 giờ trước" }
@@ -188,9 +201,9 @@
                 <div className="mt-4 flex items-center gap-6">
                   <span className="inline-flex items-center bg-emerald-100 text-emerald-700 text-xs font-medium px-2 py-1 rounded-full">Truyện dịch</span>
                   <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-2 text-slate-700"><BookOpen className="w-4 h-4 text-[#2E5BFF]" /><span className="text-slate-600">{chapter?.chapter || 0} chương</span></div>
-                    <div className="flex items-center gap-2 text-slate-700"><User className="w-4 h-4 text-[#2E5BFF]" /><span className="text-slate-600">{chapter?.author || ""}</span></div>
-                    <div className="flex items-center gap-2 text-slate-700"><Clock className="w-4 h-4 text-[#2E5BFF]" /><span className="text-slate-600">{chapter?.updatedAt || ""}</span></div>
+                    <div className="flex items-center gap-2 text-slate-700"><BookOpen className="w-4 h-4 text-[#2E5BFF]" /><span className="text-slate-600">{totalChapters || 0} chương</span></div>
+                    <div className="flex items-center gap-2 text-slate-700"><User className="w-4 h-4 text-[#2E5BFF]" /><span className="text-slate-600">{novel?.author || ""}</span></div>
+                    <div className="flex items-center gap-2 text-slate-700"><Clock className="w-4 h-4 text-[#2E5BFF]" /><span className="text-slate-600">{novel?.createDate || ""}</span></div>
                   </div>
                 </div>
               </div>
