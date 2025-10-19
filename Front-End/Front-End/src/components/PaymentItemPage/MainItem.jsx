@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Info, AlertTriangle, ArrowLeft, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
@@ -10,7 +10,7 @@ const MainItem = () => {
             id: 1,
             coins: "10.000 xu",
             price: 10000,
-            icon: "🌟",
+            icon: "😍",
             description: "Phù hợp cho người mới bắt đầu, đọc thử một số truyện và trải nghiệm cơ bản.",
             perks: [
                 "Truy cập truyện cơ bản",
@@ -34,7 +34,7 @@ const MainItem = () => {
             id: 3,
             coins: "60.000 xu",
             price: 55000,
-            icon: "🎉",
+            icon: "🧨",
             description: "Gói tiết kiệm với ưu đãi đặc biệt, dành cho người đọc trung thành.",
             perks: [
                 "Tiết kiệm 20% chi phí",
@@ -46,7 +46,7 @@ const MainItem = () => {
             id: 4,
             coins: "120.000 xu",
             price: 100000,
-            icon: "💎",
+            icon: "🧧",
             description: "Gói cao cấp, đáp ứng nhu cầu đọc lâu dài với mức giá hợp lý.",
             perks: [
                 "Nhiều ưu đãi dài hạn",
@@ -56,8 +56,56 @@ const MainItem = () => {
         },
         {
             id: 5,
-            coins: "250.000",
+            coins: "150.000 xu",
+            price: 135000,
+            icon: "🌻",
+            description: "Gói mở rộng giúp bạn duy trì trải nghiệm đọc liền mạch trong thời gian dài.",
+            perks: [
+                "Ưu đãi tốt hơn 15%",
+                "Thích hợp cho người đọc mỗi ngày",
+                "Nhận ưu tiên trong sự kiện tặng thưởng"
+            ]
+        },
+        {
+            id: 6,
+            coins: "180.000 xu",
+            price: 160000,
+            icon: "🌸",
+            description: "Gói dành cho người đam mê đọc, cung cấp nhiều xu với giá cực tốt.",
+            perks: [
+                "Giá trị cao, tiết kiệm 25%",
+                "Đọc thoải mái không gián đoạn",
+                "Ưu tiên hỗ trợ khách hàng"
+            ]
+        },
+        {
+            id: 7,
+            coins: "200.000 xu",
+            price: 185000,
+            icon: "🏮",
+            description: "Gói chuyên nghiệp – phù hợp cho người đọc thường xuyên và ủng hộ tác giả.",
+            perks: [
+                "Ưu đãi thành viên thân thiết",
+                "Nhận thông báo sớm truyện mới",
+                "Hỗ trợ đặc biệt cho tài khoản lâu năm"
+            ]
+        },
+        {
+            id: 8,
+            coins: "220.000 xu",
             price: 200000,
+            icon: "🌟",
+            description: "Gói siêu lợi ích, được thiết kế cho độc giả trung thành và yêu thích sưu tập.",
+            perks: [
+                "Tiết kiệm gần 30%",
+                "Nhận quà tặng định kỳ theo sự kiện",
+                "Tham gia group ưu tiên độc giả VIP"
+            ]
+        },
+        {
+            id: 9,
+            coins: "250.000 xu",
+            price: 235000,
             icon: "🔥",
             description: "Lựa chọn tối ưu nhất – nhiều xu, nhiều ưu đãi và tiết kiệm lớn.",
             perks: [
@@ -68,11 +116,14 @@ const MainItem = () => {
         },
     ];
 
+
     const [selected, setSelected] = useState(null);
     const [showDetail, setShowDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [cancelNotification, setCancelNotification] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [selectedPackage, setSelectedPackage] = useState(null);
 
     const handleSelect = (pkg) => {
         setSelected(pkg.id);
@@ -233,7 +284,7 @@ const MainItem = () => {
             <main className="flex-grow py-12 px-4">
                 {/* Nút Trở lại */}
                 <div className="max-w-7xl mx-auto w-full px-6 py-4">
-                    <Link to="/UploadPage" className="flex items-center gap-2 text-sky-700 font-bold">
+                    <Link to="/UploadPage" className="flex items-center gap-2 text-sky-800 font-bold">
                         <ArrowLeft size={18} /> Trở lại
                     </Link>
                 </div>
@@ -268,66 +319,104 @@ const MainItem = () => {
 
                     {/* Gói nạp xu */}
                     <div className="space-y-10 mb-12">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto cursor-pointer">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto cursor-grab">
                             {packages.map((pkg, idx) => (
                                 <motion.div
                                     key={pkg.id}
-                                    className={`relative rounded-4xl p-8 text-center transition-all ${idx === 4 ? "md:col-span-2" : ""
-                                        } ${selected === pkg.id
+                                    className={`relative rounded-4xl p-10 text-center transition-all
                                             ? "bg-gradient-to-r from-violet-100 via-rose-100 to-yellow-100 shadow-xl"
                                             : "bg-white border border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1"
                                         }`}
                                     whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.96 }}
                                 >
-                                    {/* Badges */}
+                                    {/* Badge cho từng gói */}
                                     {pkg.id === 1 && (
-                                        <span className="absolute top-3 right-3 bg-yellow-400 text-white text-xs px-3 py-1 rounded-full shadow-md">
-                                            💕 Gói phổ thông
+                                        <span className="absolute top-3 right-3 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                            Trải nghiệm
                                         </span>
                                     )}
                                     {pkg.id === 2 && (
                                         <span className="absolute top-3 right-3 bg-yellow-400 text-white text-xs px-3 py-1 rounded-full shadow-md">
-                                            💕 Gói phổ thông
+                                            Phổ thông
                                         </span>
                                     )}
                                     {pkg.id === 3 && (
                                         <span className="absolute top-3 right-3 bg-rose-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
-                                            🔥 Tiện ích
+                                            Tiện ích
                                         </span>
                                     )}
                                     {pkg.id === 4 && (
                                         <span className="absolute top-3 right-3 bg-pink-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
-                                            🔥 Tiết kiệm 20%
+                                            Tiết kiệm 20%
                                         </span>
                                     )}
                                     {pkg.id === 5 && (
                                         <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
-                                            💎 Lựa chọn hàng đầu
+                                            Lựa chọn mở rộng
+                                        </span>
+                                    )}
+                                    {pkg.id === 6 && (
+                                        <span className="absolute top-3 right-3 bg-emerald-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                            Cao cấp
+                                        </span>
+                                    )}
+                                    {pkg.id === 7 && (
+                                        <span className="absolute top-3 right-3 bg-blue-500 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                            Thân thiết
+                                        </span>
+                                    )}
+                                    {pkg.id === 8 && (
+                                        <span className="absolute top-3 right-3 bg-purple-600 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                            VIP Ưu đãi
+                                        </span>
+                                    )}
+                                    {pkg.id === 9 && (
+                                        <span className="absolute top-3 right-3 bg-red-600 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                            Best Choice
                                         </span>
                                     )}
 
-                                    <div className="text-5xl mb-4">{pkg.icon}</div>
+                                    {/* Nội dung gói */}
+                                    <div className="text-3xl mb-3 mt-2">{pkg.icon}</div>
                                     <h3 className="text-2xl font-bold text-gray-800">{pkg.coins}</h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-gray-900">
                                         {pkg.price.toLocaleString("vi-VN")}đ
                                     </p>
 
                                     {/* Button chọn gói */}
                                     <button
-                                        className={`mt-6 w-full py-3 rounded-xl font-bold shadow-md transition-all ${selected === pkg.id
-                                            ? "bg-sky-600 text-white hover:bg-sky-700"
-                                            : "bg-gradient-to-r from-sky-400 to-indigo-400 text-white hover:brightness-110"
+                                        className={`relative mt-4 w-full py-3 rounded-2xl font-semibold tracking-wide cursor-pointer transition-all duration-300 shadow-md 
+                                                 ${selected === pkg.id
+                                                ? "bg-gradient-to-r from-sky-600 to-indigo-600 text-white ring-2  shadow-lg hover:shadow-sky-400/50 scale-[1.02]"
+                                                : "bg-gradient-to-r from-sky-400 to-indigo-400 text-white hover:shadow-lg hover:shadow-indigo-400/40 active:scale-[0.98]"
                                             }`}
                                         onClick={() => handleSelect(pkg)}
                                         disabled={isLoading}
                                     >
-                                        {selected === pkg.id ? "✅ Đã chọn" : "⚡ Chọn gói 💵"}
+                                        <span className="flex items-center justify-center gap-2">
+                                            {selected === pkg.id ? (
+                                                <>
+                                                    <span className="text-md">✅Đã chọn</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className="text-lg animate-pulse">⚡</span>
+                                                    <span>Chọn gói</span>
+                                                    <span className="text-lg">💵</span>
+                                                </>
+                                            )}
+                                        </span>
+
+                                        {/* Hiệu ứng ánh sáng khi hover */}
+                                        {!selected && (
+                                            <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></span>
+                                        )}
                                     </button>
 
                                     {/* Xem chi tiết */}
                                     <button
-                                        className="mt-3 text-md font-medium text-sky-600 cursor-pointer"
+                                        className="mt-3 text-md font-medium text-sky-700 cursor-pointer"
                                         onClick={() => setShowDetail(pkg)}
                                     >
                                         Xem chi tiết
@@ -341,11 +430,17 @@ const MainItem = () => {
                     <div className="text-center mt-6 mb-6">
                         <button
                             disabled={!selected || isLoading}
-                            className={`px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2 mx-auto ${selected && !isLoading
-                                ? "bg-gradient-to-r bg-violet-100 via-rose-200 to-yellow-200 text-gray-700 hover:brightness-105 hover:scale-105"
+                            className={`px-5 py-4 rounded-3xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2 mx-auto ${selected && !isLoading
+                                ? "bg-gradient-to-r from-violet-100 via-rose-200 to-yellow-200 text-gray-700 hover:brightness-105 hover:scale-105"
                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                 }`}
-                            onClick={handlePaymentRequest}
+                            onClick={() => {
+                                const chosenPackage = packages.find((p) => p.id === selected);
+                                if (chosenPackage) {
+                                    setSelectedPackage(chosenPackage);
+                                    setShowConfirm(true);
+                                }
+                            }}
                         >
                             {isLoading ? (
                                 <>
@@ -353,17 +448,90 @@ const MainItem = () => {
                                     <span>Đang xử lý...</span>
                                 </>
                             ) : (
-                                <>
-                                    {selected ? "🏧 Thanh toán ngay" : "Chọn gói để tiếp tục"}
-                                </>
+                                <>{selected ? "🏧 Thanh toán ngay" : "💵 Chọn gói để tiếp tục"}</>
                             )}
                         </button>
                     </div>
 
+                    <AnimatePresence>
+                        {showConfirm && selectedPackage && (
+                            <div className="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50">
+                                <div className="bg-white/95 rounded-xl shadow-2xl max-w-md w-full p-8 relative animate-scaleIn">
+
+                                    {/* Nút đóng (góc trên phải) */}
+                                    <button
+                                        className="absolute top-4 right-4 text-blue-400 hover:text-blue-700 transition"
+                                        onClick={() => setShowConfirm(false)}
+                                    >
+                                        ✖
+                                    </button>
+
+                                    {/* Icon gói */}
+                                    <div className="flex justify-center mb-6">
+                                        <div className="w-14 h-14 flex items-center justify-center rounded-full 
+                        bg-gradient-to-br from-yellow-400 to-orange-400 shadow-lg text-4xl">
+                                            {selectedPackage.icon}
+                                        </div>
+                                    </div>
+
+                                    {/* Tên gói + giá */}
+                                    <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
+                                        {selectedPackage.coins}
+                                    </h2>
+                                    <p className="text-center text-lg text-blue-700 font-bold mb-4">
+                                        {selectedPackage.price.toLocaleString("vi-VN")}đ
+                                    </p>
+
+                                    {/* Mô tả gói */}
+                                    <p className="text-center text-gray-700 mb-6 leading-relaxed">
+                                        Xác nhận thanh toán gói{" "}
+                                        <b className="text-gray-900">{selectedPackage.coins}</b> qua{" "}
+                                        <span className="text-sky-700 font-bold italic">PayOS</span>.<br />
+                                        {selectedPackage.description}<br />
+                                        Giao dịch sẽ được xử lý tự động trong{" "}
+                                        <b>1–5 phút</b>.
+                                    </p>
+
+                                    {/* Lợi ích */}
+                                    <ul className="space-y-3 text-gray-700 mb-8">
+                                        {selectedPackage.perks.map((perk, idx) => (
+                                            <li key={idx} className="flex items-center space-x-2">
+                                                <span className="text-violet-500">✔</span>
+                                                <span>{perk}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    {/* Nút hành động */}
+                                    <div className="flex flex-1 flex-col sm:flex-row gap-3 justify-center items-center">
+                                        <button
+                                            onClick={() => setShowConfirm(false)}
+                                            className="flex-1 sm:flex-none sm:w-36 py-2 rounded-3xl text-md font-bold text-gray-700 bg-red-200 hover:bg-red-300 shadow-sm transition-all"
+                                        >
+                                            Hủy
+                                        </button>
+                                        <button
+                                            onClick={() => handlePaymentRequest()}
+                                            disabled={isLoading}
+                                            className={`flex-1 sm:flex-none sm:w-36 py-2 rounded-3xl text-md font-bold shadow-md text-white bg-gradient-to-r from-sky-600 to-sky-600 hover:scale-[1.02] transition-transform disabled:opacity-60`}
+                                        >
+                                            {isLoading ? "⏳ Đang xử lý..." : "Thanh toán"}
+                                        </button>
+                                    </div>
+                                    {/* Ghi chú nhỏ */}
+                                    <p className="text-center text-xs text-gray-400 mt-5">
+                                        Thanh toán an toàn qua PayOS – bảo mật, nhanh chóng và tiện lợi.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                    </AnimatePresence>
+
                     {/* Lưu ý */}
-                    <div className="bg-amber-50 border border-amber-200 rounded-3xl px-4 py-5 flex items-start gap-3 shadow-sm mt-10">
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-5 flex items-start gap-3 shadow-sm mt-10">
                         <AlertTriangle className="w-6 h-6 text-amber-500 mt-0.5" />
-                        <div className="text-sm text-amber-800 space-y-1">
+                        <div className="text-md text-amber-800 space-y-1">
                             <p><b>Lưu ý quan trọng</b></p>
                             <ul className="list-disc list-inside space-y-1">
                                 <li>Mỗi chuyển khoản chỉ dùng 1 lần, xu sẽ không được cộng tự động nếu sai nội dung.</li>

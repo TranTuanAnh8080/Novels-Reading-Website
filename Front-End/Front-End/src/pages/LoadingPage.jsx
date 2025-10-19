@@ -3,7 +3,7 @@ import image from "../assets/inkrealm_logo.png";
 const LoadingPage = () => {
     return (
         <div className="fixed inset-0 z-50 flex flex-col items-center text-center justify-center 
-        bg-gradient-to-br from-rose-200 via-rose-50 to-sky-200 animate-pulse"
+        bg-gradient-to-br from-rose-200 via-rose-100 to-sky-200"
         >
             <img
                 src={image}

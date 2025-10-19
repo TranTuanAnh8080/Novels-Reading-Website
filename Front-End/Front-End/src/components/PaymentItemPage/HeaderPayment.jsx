@@ -38,7 +38,7 @@ const HeaderPayment = () => {
           {/* Coin */}
           <div className="flex items-center space-x-2 bg-gray-100 px-4 py-1.5 rounded-full shadow-sm">
             <Coins className="text-yellow-500" size={20} />
-            <span className="text-gray-800 font-semibold">14,000 xu</span>
+            {/* <span className="text-gray-800 font-semibold">14,000 xu</span> */}
           </div>
 
           {/* Avatar */}
