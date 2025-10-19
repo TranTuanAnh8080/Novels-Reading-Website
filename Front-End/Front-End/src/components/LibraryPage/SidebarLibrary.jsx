@@ -1,10 +1,11 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BookOpen, User, Upload, Clock, LogOut, CreditCard } from "lucide-react";
 import { PiPassword } from "react-icons/pi";
 
 function SidebarLibrary() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     { path: "/Profile", label: "Thông tin cá nhân", icon: User },
@@ -15,6 +16,13 @@ function SidebarLibrary() {
     { path: "/ChangePasswordModal", label: "Đổi mật khẩu", icon: PiPassword },
 
   ];
+
+  // ✅ Xử lý đăng xuất
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("isLoggedIn");
+    navigate("/HomePage", { replace: true });
+  };
 
   return (
     <aside className="w-64 bg-white shadow-md rounded-md p-5 mt-6 flex flex-col self-start">
@@ -43,13 +51,13 @@ function SidebarLibrary() {
 
       {/* Logout */}
       <div className="mt-6">
-        <Link
-          to="/HomePage"
-          className="flex items-center space-x-3 px-3 py-2 rounded-md text-red-600 hover:text-red-700 transition-colors font-medium"
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-red-600 hover:text-red-700 transition-colors font-medium"
         >
           <LogOut className="h-5 w-5" />
           <span>Đăng xuất</span>
-        </Link>
+        </button>
       </div>
     </aside>
   );

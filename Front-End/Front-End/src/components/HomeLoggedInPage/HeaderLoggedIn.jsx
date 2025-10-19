@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Search, Bell, Bookmark, LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/inkrealm_logo.png";
 
-
 function HeaderLoggedIn() {
+  const navigate = useNavigate();
+
+  // ✅ Check trạng thái đăng nhập khi load trang
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+
+    if (!isLoggedIn) {
+      // Nếu chưa đăng nhập thì quay về HomePage
+      navigate("/HomePage", { replace: true });
+    }
+  }, [navigate]);
+
+  // ✅ Đăng xuất
   const handleLogout = () => {
-    // Nếu có dùng token/session thì xóa
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("token");
     localStorage.removeItem("token");
-  }; 
+
+    // Quay về trang HomePage
+    navigate("/HomePage", { replace: true });
+
+    // Reload lại trang để cập nhật toàn bộ giao diện
+    window.location.reload();
+  };
 
   return (
     <header className="bg-white shadow-sm">
@@ -34,14 +53,13 @@ function HeaderLoggedIn() {
         <div className="flex items-center space-x-4">
           {/* Avatar */}
           <Link to="/Profile">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            alt="user avatar"
-            className="w-9 h-9 rounded-full border cursor-pointer hover:opacity-80"
-          />
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              alt="user avatar"
+              className="w-9 h-9 rounded-full border cursor-pointer hover:opacity-80"
+            />
           </Link>
 
-          {/* Icons */}
           <button className="text-gray-600 hover:text-blue-600">
             <Bell className="h-5 w-5" />
           </button>
@@ -50,14 +68,13 @@ function HeaderLoggedIn() {
           </button>
 
           {/* Logout */}
-          <Link
-            to="/HomePage"
+          <button
             onClick={handleLogout}
             className="flex items-center space-x-1 text-red-600 hover:text-red-700 text-sm font-medium"
           >
             <LogOut className="h-4 w-4" />
             <span>Đăng xuất</span>
-          </Link>
+          </button>
         </div>
       </div>
     </header>
