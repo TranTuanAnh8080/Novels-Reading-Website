@@ -51,7 +51,7 @@ const AppRouter = createBrowserRouter([
     { path: "/ModerateOriginalNovels", element: <ModerateOriginalNovels /> },
     { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> },
     { path: "/ModeratorProfile", element: <ModeratorProfile /> },
-    { path: "/AddChapterPage", element: <AddChapterPage /> },
+    { path: "/AddChapterPage/:novelId", element: <AddChapterPage /> },
     { path: "/ModerationStatusPage", element: <ModerationStatusPage /> },
     { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
     { path: "/MainItem", element: <PaymentItem /> },

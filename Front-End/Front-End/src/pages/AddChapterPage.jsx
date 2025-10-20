@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import Footer from "../components/SharedComponents/Footer";
 import logo from "../assets/inkrealm_logo.png";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function AddChapterPage() {
   const [isTranslated, setIsTranslated] = useState(false);
@@ -21,6 +22,8 @@ export default function AddChapterPage() {
   const [releaseDate, setReleaseDate] = useState("");
   const [content, setContent] = useState("");
   const [translatedContent, setTranslatedContent] = useState("");
+  const { novelId } = useParams(); // Lấy novelId từ URL
+  const [novelTitle, setNovelTitle] = useState("");
 
   // 🔹 Load lại dữ liệu từ localStorage khi mở trang
   useEffect(() => {
@@ -36,6 +39,22 @@ export default function AddChapterPage() {
       setTranslatedContent(data.translatedContent || "");
     }
   }, []);
+
+  // Fetch thông tin truyện từ API dựa trên novelId
+  useEffect(() => {
+    const fetchNovel = async () => {
+      try {
+        const response = await axios.post(
+          "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
+          { storyId: Number(novelId) } // gửi storyId trong body
+        );
+        setNovelTitle(response.data.novelTitle);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin truyện:", error);
+      }
+    };
+    if (novelId) fetchNovel();
+  }, [novelId]);
 
   // 🔹 Lưu bản nháp
   const handleSaveDraft = () => {
@@ -68,18 +87,34 @@ export default function AddChapterPage() {
     }
   };
 
-  // 🔹 Gửi kiểm duyệt (tạm)
-  const handleSubmit = () => {
-    console.log("Dữ liệu gửi kiểm duyệt:", {
-      isTranslated,
-      chapterNumber,
-      chapterTitle,
-      chapterStatus,
-      releaseDate,
-      content,
-      translatedContent,
-    });
-    alert("🚀 Gửi kiểm duyệt (hiện tại chưa có API)");
+  const handleAddChapter = async () => {
+  if (!chapterNumber || !chapterTitle || !content) {
+    alert("⚠️ Vui lòng điền đầy đủ thông tin chương!");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      "https://be-ink-realm-c7jk.vercel.app/chapter/add",
+      {
+        novelId: Number(novelId),
+        chapterIndex: Number(chapterNumber),
+        chapterTitle: chapterTitle,
+        chapterText: content
+      }
+    );
+
+      if (response.status === 201) {
+        alert("✅ Chapter mới được tạo thành công!");
+        // Reset form
+        setChapterNumber("");
+        setChapterTitle("");
+        setContent("");
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm chapter:", error);
+      alert("❌ Lỗi khi thêm chapter. Vui lòng thử lại!");
+    }
   };
 
   return (
@@ -119,7 +154,7 @@ export default function AddChapterPage() {
         <div className="max-w-5xl mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-8 mb-16">
           <h1 className="text-2xl font-bold mb-2">Thêm chương mới</h1>
           <p className="text-gray-600 mb-8">
-            Thêm chương mới cho truyện <strong>“Quỷ Bí Chi Chủ”</strong>
+            Thêm chương mới cho truyện <strong>“{novelTitle || "..." }”</strong>
           </p>
 
           {/* --- Thông tin chương --- */}
@@ -272,7 +307,7 @@ export default function AddChapterPage() {
               Lưu bản nháp
             </button>
             <button
-              onClick={handleSubmit}
+              onClick={handleAddChapter}
               className="flex items-center gap-2 px-6 py-2.5 text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-medium"
             >
               <Send className="w-4 h-4" />

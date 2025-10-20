@@ -229,7 +229,7 @@
                 <>
                   {/* Nội dung còn lại của chương */}
                   <div className="whitespace-pre-line">
-                    {chapterText.split('\n').slice(2).join('\n')}
+                    {chapterText}
                   </div>
                 </>
               )
