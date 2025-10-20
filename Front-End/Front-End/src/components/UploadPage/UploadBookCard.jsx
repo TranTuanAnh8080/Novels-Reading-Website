@@ -1,41 +1,76 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { PlusCircle, BookOpen } from "lucide-react";
 
-function UploadBookCard({ title, status, cover }) {
-  return (
-    <div className="bg-white rounded-lg shadow p-3 flex flex-col">
-      {/* Cover */}
-      <div className="aspect-[3/2] w-full mb-3 overflow-hidden rounded-md bg-gray-200">
-        <img
-          src={cover}
-          alt={title}
-          className="w-full h-full object-cover"
-        />
-      </div>
+function UploadBookCard({
+  novelId,
+  novelTitle,
+  author,
+  novelDescription,
+  coverImage,
+}) {
+  return (
+    <div
+      className="relative bg-white rounded-xl shadow-lg overflow-hidden 
+                  flex flex-col transform transition-all duration-300
+                  hover:shadow-xl hover:scale-[1.02] hover:ring-2 hover:ring-blue-400/50"
+    >
+      {/* Overlay cho hiệu ứng hover trên ảnh bìa */}
+      <Link to={`/NovelDetail/${novelId}`} className="relative block group">
+        <div className="aspect-w-3 aspect-h-4">
+          <img
+            src={coverImage || "https://via.placeholder.com/300x400/e0e0e0/ffffff?text=No+Cover"}
+            alt={novelTitle}
+            className="object-cover w-full h-full transition-opacity duration-300 group-hover:opacity-85"
+          />
+          {/* Overlay khi hover vào ảnh bìa */}
+          <div
+            className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center
+                       opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <BookOpen className="text-white" size={32} />
+          </div>
+        </div>
+      </Link>
 
-      {/* Title */}
-      <h2 className="text-sm font-medium mb-1">{title}</h2>
+      <div className="p-4 flex-1 flex flex-col">
+        {/* Tiêu đề và tác giả */}
+        <div className="flex-1 mb-3">
+          <h3 className="text-xl font-bold text-gray-900 leading-tight line-clamp-2 mb-1">
+            {novelTitle}
+          </h3>
+          <p className="text-sm text-gray-600 font-medium mb-3">
+            của <span className="text-blue-600 hover:underline">{author}</span>
+          </p>
+          <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
+            {novelDescription}
+          </p>
+        </div>
 
-      {/* Status */}
-      <p
-        className={`text-xs font-medium mb-2 ${
-          status === "Đã hoàn thành"
-            ? "text-green-600"
-            : status === "Đang đăng"
-            ? "text-[#2E5BFF]"
-            : "text-orange-500"
-        }`}
-      >
-        ● {status}
-      </p>
-
-      {/* Action */}
-      <Link to="/ModerationStatusPage" 
-      className="px-3 py-1 border border-gray-300 rounded-md text-xs font-medium hover:bg-gray-100 flex-grow text-center">
-        Xem chi tiết
-      </Link>
-    </div>
-  );
+        {/* Các nút hành động */}
+        <div className="mt-auto pt-3 border-t border-gray-100 flex justify-between items-center gap-2">
+          <Link
+            to={`/NovelDetail/${novelId}`}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 
+                      text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg 
+                      transition duration-200 font-semibold text-sm"
+          >
+            <BookOpen size={18} />
+            Xem chi tiết
+          </Link>
+          <Link
+            to={`/AddChapterPage/${novelId}`}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 
+                      text-white bg-green-600 hover:bg-green-700 rounded-lg 
+                      transition duration-200 font-semibold text-sm"
+          >
+            <PlusCircle size={18} />
+            Thêm chương
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default UploadBookCard;

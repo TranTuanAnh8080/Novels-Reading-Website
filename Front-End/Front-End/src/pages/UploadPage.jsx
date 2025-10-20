@@ -1,105 +1,130 @@
-import React from "react";
+import { useEffect, useState, useMemo } from "react"; // Thêm useMemo
 import HeaderProfile from "../components/ProfilePage/HeaderProfile";
 import SidebarLibrary from "../components/LibraryPage/SidebarLibrary";
 import UploadBookCard from "../components/UploadPage/UploadBookCard";
 import { Link } from "react-router-dom";
 import Footer from "../components/SharedComponents/Footer";
+import axios from "axios";
 
 function UploadPage() {
-  const books = [
-    {
-      title: "Quỷ Bí Chi Chủ",
-      status: "Đã hoàn thành",
-      cover: "https://www.nae.vn/ttv/ttv/public/images/story/23b9f814404ee0a32d03f7d09d762075ef88b0730b0537c8f70ee36c1b37af5e.jpg",
-    },
-    {
-      title: "Chuyển Sinh Thành Slime",
-      status: "Đang đăng",
-      cover: "https://img4.thuthuatphanmem.vn/uploads/2020/11/10/chuyen-sinh-thanh-slime-tensei-shitara-slime-datta-ken_015456993.jpg",
-    },
-    {
-      title: "Solo Leveling",
-      status: "Đang xét duyệt",
-      cover: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2025/02/solo-leveling-sung-jin-woo-featured-image.jpg",
-    },
-    {
-      title: "Đấu Phá Thương Khung",
-      status: "Đang đăng",
-      cover: "https://i.ytimg.com/vi/9E1GHEleL2A/maxresdefault.jpg",
-    },
-    {
-      title: "Overlord",
-      status: "Đang xét duyệt",
-      cover: "https://m.media-amazon.com/images/S/pv-target-images/e755f8df130f1e1d2f8ac706e12dbe6273ab6db94df65303c9ce769639c99854.jpg",
-    },
-    {
-      title: "Hoàn Mỹ Thế Giới",
-      status: "Đã hoàn thành",
-      cover: "https://i.ytimg.com/vi/9-NLpjAr5qo/maxresdefault.jpg",
-    },
-  ];
+  const [books, setBooks] = useState([]);
+  // 1. State cho các bộ lọc
+  const [statusFilter, setStatusFilter] = useState("all"); // 'all', 'completed', 'ongoing', 'pending'
+  const [sortFilter, setSortFilter] = useState("newest"); // 'newest', 'oldest', 'name-az', 'name-za'
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <HeaderProfile />
+  // Gọi API lấy danh sách truyện
+  useEffect(() => {
+    const fetchNovels = async () => {
+      try {
+        const response = await axios.post(
+          "https://be-ink-realm-c7jk.vercel.app/novel/all"
+        );
+        setBooks(response.data);
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách truyện:", error);
+      }
+    };
+    fetchNovels();
+  }, []);
 
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <SidebarLibrary />
+  // 2. Dùng useMemo để xử lý lọc và sắp xếp
+  const processedBooks = useMemo(() => {
+    let filteredBooks = [...books];
 
-        {/* Main */}
-        <main className="flex-1 p-6">
-          {/* Title */}
-          <h1 className="text-xl font-bold mb-3">Truyện đã đăng</h1>
+    // --- Lọc theo trạng thái ---
+    // Giả sử object 'book' của bạn có thuộc tính 'status'
+    if (statusFilter !== "all") {
+      filteredBooks = filteredBooks.filter(
+        (book) => book.status === statusFilter
+      );
+    }
 
-          {/* Filters + Buttons */}
-          <div className="flex justify-between items-center mb-6">
-            {/* Filters */}
-            <div className="flex items-center gap-4">
-              <select className="border rounded-md px-3 py-2 text-sm">
-                <option>Tất cả trạng thái</option>
-                <option>Đã hoàn thành</option>
-                <option>Đang đăng</option>
-                <option>Đang xét duyệt</option>
-              </select>
-              <select className="border rounded-md px-3 py-2 text-sm">
-                <option>Mới đăng nhất</option>
-                <option>Cũ nhất</option>
-                <option>Tên A-Z</option>
-                <option>Tên Z-A</option>
-              </select>
-            </div>
+    // --- Sắp xếp ---
+    // Giả sử object 'book' có 'createdAt' (cho mới/cũ) và 'novelTitle' (cho A-Z)
+    switch (sortFilter) {
+      case "newest":
+        filteredBooks.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        break;
+      case "oldest":
+        filteredBooks.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+        break;
+      case "name-az":
+        filteredBooks.sort((a, b) => a.novelTitle.localeCompare(b.novelTitle));
+        break;
+      case "name-za":
+        filteredBooks.sort((a, b) => b.novelTitle.localeCompare(a.novelTitle));
+        break;
+      default:
+        break;
+    }
 
-            {/* Buttons */}
-            <div className="flex items-center gap-3">
-              <Link
-                to="/AddChapterPage"
-                className="px-4 py-2 bg-[#14b263] text-white rounded-md text-sm hover:bg-green-600"
-              >
-                + Thêm chương mới
-              </Link>
+    return filteredBooks;
+  }, [books, statusFilter, sortFilter]); // Chạy lại khi 1 trong 3 giá trị này thay đổi
 
-              <Link
-                to="/UploadNovel"
-                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700"
-              >
-                + Đăng truyện mới
-              </Link>
-            </div>
-          </div>
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <HeaderProfile />
 
-          {/* Book grid */}
-          <div className="grid grid-cols-3 gap-6">
-            {books.map((book, idx) => (
-              <UploadBookCard key={idx} {...book} />
-            ))}
-          </div>
-        </main>
-      </div>
+      <div className="flex flex-1">
+        <SidebarLibrary />
 
-      <Footer />
-    </div>
-  );
+        <main className="flex-1 p-6">
+          <h1 className="text-xl font-bold mb-3">Truyện đã đăng</h1>
+
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-4">
+              {/* 3. Cập nhật JSX cho Filter Trạng thái */}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border rounded-md px-3 py-2 text-sm bg-white"
+              >
+                <option value="all">Tất cả trạng thái</option>
+                <option value="completed">Đã hoàn thành</option>
+                <option value="ongoing">Đang đăng</option>
+                <option value="pending">Đang xét duyệt</option>
+              </select>
+              
+              {/* 3. Cập nhật JSX cho Filter Sắp xếp */}
+              <select
+                value={sortFilter}
+                onChange={(e) => setSortFilter(e.target.value)}
+                className="border rounded-md px-3 py-2 text-sm bg-white"
+              >
+                <option value="newest">Mới đăng nhất</option>
+                <option value="oldest">Cũ nhất</option>
+                <option value="name-az">Tên A-Z</option>
+                <option value="name-za">Tên Z-A</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Link
+                to="/UploadNovel"
+                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm hover:bg-blue-700"
+              >
+                + Đăng truyện mới
+              </Link>
+            </div>
+          </div>
+
+          {/* 3. Render danh sách đã được xử lý */}
+          <div className="grid grid-cols-3 gap-6">
+            {processedBooks.map((book) => (
+              // Sử dụng _id hoặc một ID duy nhất làm key
+              <UploadBookCard key={book._id || book.novelId} {...book} />
+            ))}
+          </div>
+        </main>
+      </div>
+
+      <Footer />
+    </div>
+  );
 }
 
 export default UploadPage;
