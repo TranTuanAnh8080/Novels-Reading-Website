@@ -3,8 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, CheckCircle, AlertCircle, RefreshCcw } from 'lucide-react'; // Sử dụng RefreshCcw cho Old Password
 import image from "../assets/inkrealm_logo.png";
 import axios from 'axios';
+import { useDarkMode } from "../pages/DarkModeContext";
+import { IoMdSunny } from "react-icons/io";
+import { MdDarkMode } from "react-icons/md";
 
 const ChangePasswordModal = () => {
+
+    const { darkMode, setDarkMode } = useDarkMode();
     // States for input fields
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -175,110 +180,86 @@ const ChangePasswordModal = () => {
     };
 
     return (
-        <div className="fixed inset-0 bg-gradient-to-br from-cyan-200 via-transparent to-rose-200 bg-opacity-70 flex justify-center items-center z-50 p-4">
+        <div
+            className={`fixed inset-0 flex justify-center items-center z-50 p-4 transition-colors 
+        ${darkMode
+                    ? "bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900"
+                    : "bg-gradient-to-br from-cyan-100 via-transparent to-rose-100"
+                }`}
+        >
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
-                className="bg-white rounded-4xl shadow-md w-full max-w-lg p-8"
+                className={`
+          w-full max-w-lg rounded-3xl p-8 shadow-2xl border
+          ${darkMode
+                        ? "bg-gray-800/90 border-gray-700 text-gray-100"
+                        : "bg-white border-gray-200 text-gray-800"
+                    }`}
             >
-                {/* Tiêu đề */}
+                {/* Header */}
                 <div className="text-center mb-6">
-                    {/* Placeholder for Logo */}
                     <img
                         src={image}
                         alt="Inkrealm Logo"
-                        className="mb-2 w-40 mr-38 h-15 mx-auto contrast-150 brightness-105 saturate-150"
+                        className="mb-2 w-40 mr-37 mx-auto contrast-125 brightness-110 saturate-150"
                     />
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">Đổi mật khẩu?</h2>
-                    <p className="text-gray-600 mt-2">
+                    <h2 className="text-xl font-bold mb-2">Đổi mật khẩu?</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
                         Vui lòng nhập đầy đủ thông tin để thực hiện yêu cầu này.
                     </p>
                 </div>
 
-                {/* Form Inputs */}
+                {/* Form */}
                 <div className="space-y-5">
-                    {/* Mật khẩu cũ */}
-                    <div>
-
-                        <div>
-                            <label className="block text-gray-700 font-medium mb-2 text-sm">
-                                Mật khẩu cũ <strong className="text-red-500">*</strong>
+                    {[
+                        { label: "Mật khẩu cũ", value: oldPassword, setter: setOldPassword, show: showOldPassword, toggle: setShowOldPassword, placeholder: "Nhập mật khẩu cũ" },
+                        { label: "Mật khẩu mới", value: newPassword, setter: setNewPassword, show: showNewPassword, toggle: setShowNewPassword, placeholder: "Nhập mật khẩu mới" },
+                        { label: "Xác nhận mật khẩu mới", value: confirmPassword, setter: setConfirmPassword, placeholder: "Nhập lại mật khẩu mới", noToggle: true },
+                    ].map((field, i) => (
+                        <div key={i}>
+                            <label className="block font-medium mb-2 text-sm">
+                                {field.label} <strong className="text-red-500">*</strong>
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                                 <input
-                                    type={showOldPassword ? "text" : "password"}
-                                    value={oldPassword}
-                                    onChange={(e) => setOldPassword(e.target.value)}
-                                    placeholder="Nhập mật khẩu cũ của bạn"
-                                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+                                    type={field.show ? "text" : "password"}
+                                    value={field.value}
+                                    onChange={(e) => field.setter(e.target.value)}
+                                    placeholder={field.placeholder}
+                                    className={`w-full pl-10 pr-12 py-3 rounded-xl border transition duration-200 focus:ring-2
+                    ${darkMode
+                                            ? "bg-gray-700 border-gray-600 focus:ring-blue-500 text-gray-100 placeholder-gray-400"
+                                            : "bg-white border-gray-300 focus:ring-blue-500 text-gray-800"
+                                        }`}
                                     disabled={isLoading}
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowOldPassword(prev => !prev)}
-                                    className="absolute right-3 top-2 text-gray-500 hover:text-gray-700 px-2"
-                                    aria-label={showOldPassword ? "Hide old password" : "Show old password"}
-                                >
-                                    {showOldPassword ? "🙈" : "👀"}
-                                </button>
+                                {!field.noToggle && (
+                                    <button
+                                        type="button"
+                                        onClick={() => field.toggle((p) => !p)}
+                                        className="absolute right-3 top-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 px-2"
+                                    >
+                                        {field.show ? "🙈" : "👀"}
+                                    </button>
+                                )}
                             </div>
                         </div>
-                    </div>
-
-                    {/* Mật khẩu mới */}
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">
-                            Mật khẩu mới <strong className="text-red-500">*</strong>
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                            <input
-                                type={showNewPassword ? "text" : "password"}
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                placeholder="Mật khẩu mới (Tối thiểu 6 ký tự)"
-                                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
-                                disabled={isLoading}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowNewPassword(prev => !prev)}
-                                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700 px-2"
-                                aria-label={showNewPassword ? "Hide new password" : "Show new password"}
-                            >
-                                {showNewPassword ? "🙈" : "👀"}
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Xác nhận mật khẩu mới */}
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">
-                            Xác nhận mật khẩu mới <strong className="text-red-500">*</strong>
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                            <input
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                placeholder="Nhập lại mật khẩu mới"
-                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
-                                disabled={isLoading}
-                            />
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
-                {/* Nút hành động */}
+                {/* Action Buttons */}
                 <div className="flex justify-between mt-8 gap-3">
                     <button
-                        className="flex-1 px-4 py-3 rounded-xl text-gray-700 font-medium bg-red-200 hover:bg-red-300 hover:scale-[1.02] transition duration-300 shadow-xs"
-                        onClick={() => window.location.href = "/Profile"} // Quay lại trang profile/home
+                        className={`flex-1 px-4 py-3 rounded-xl font-medium transition duration-300
+              ${darkMode
+                                ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                                : "bg-red-200 text-gray-700 hover:bg-red-300"
+                            }`}
+                        onClick={() => (window.location.href = "/Profile")}
                         disabled={isLoading}
                     >
                         Hủy
@@ -286,31 +267,52 @@ const ChangePasswordModal = () => {
                     <button
                         onClick={handleChangePassword}
                         disabled={isLoading}
-                        className={`flex-1 px-4 py-3 rounded-xl bg-cyan-500 text-white font-medium hover:bg-cyan-600 hover:scale-[1.02] transition duration-300 shadow-lg flex items-center justify-center ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                        className={`flex-1 px-4 py-3 rounded-xl font-medium flex items-center justify-center transition duration-300 shadow-lg
+              ${isLoading ? "opacity-70 cursor-not-allowed" : ""}
+              ${darkMode
+                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                : "bg-cyan-500 text-white hover:bg-cyan-600"
                             }`}
                     >
                         {isLoading ? (
                             <>
-                                <svg className="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                <svg
+                                    className="animate-spin h-5 w-5 mr-2 text-white"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                        fill="none"
+                                    />
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 
+                    5.291A7.962 7.962 0 014 12H0c0 3.042 
+                    1.135 5.824 3 7.938l3-2.647z"
+                                    />
                                 </svg>
                                 Đang xử lý...
                             </>
                         ) : (
-                            'Đổi Mật Khẩu'
+                            "Đổi mật khẩu"
                         )}
                     </button>
                 </div>
 
-                {/* Thông tin bổ sung */}
-                <div className="mt-6 text-center text-sm text-gray-600 font-bold">
+                {/* Ghi chú */}
+                <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-300 font-medium">
                     <Lock className="inline w-4 h-4 mr-1 mb-0.5 text-blue-500" />
                     Thay đổi này sẽ có hiệu lực ngay lập tức.
                 </div>
             </motion.div>
 
-            {/* Thông báo Toast */}
+            {/* Toast */}
             <AnimatePresence>
                 {showMessage && (
                     <motion.div
@@ -319,38 +321,47 @@ const ChangePasswordModal = () => {
                         exit={{ opacity: 0, y: -50, scale: 0.8 }}
                         transition={{ duration: 0.3 }}
                         className={`fixed top-6 left-1/2 transform -translate-x-1/2 
-                            bg-white text-gray-800 
-                            border-2 ${messageType === 'success' ? 'border-green-400' : 'border-red-400'}
-                            font-sans font-semibold 
-                            px-5 py-3 rounded-xl
-                            shadow-2xl 
-                            flex items-center gap-3 z-50 
-                            min-w-[300px] max-w-[500px]`}
+              px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50
+              min-w-[300px] max-w-[500px] border-2
+              ${darkMode
+                                ? "bg-gray-800 text-gray-100"
+                                : "bg-white text-gray-800"
+                            }
+              ${messageType === "success"
+                                ? "border-green-400"
+                                : "border-red-400"
+                            }`}
                     >
-                        {/* Icon */}
-                        {messageType === 'success' ? (
+                        {messageType === "success" ? (
                             <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
                         ) : (
                             <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0" />
                         )}
-
-                        {/* Nội dung thông báo */}
-                        <p className="text-sm text-gray-700 font-medium text-center w-full break-words whitespace-normal">
-                            {messageText}
-                        </p>
-
-                        {/* Close button */}
+                        <p className="text-sm flex-1 text-center">{messageText}</p>
                         <button
                             onClick={() => setShowMessage(false)}
-                            className="ml-auto text-gray-400 hover:text-gray-600"
+                            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                         >
-                            <svg className="w-4 h-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                                <path d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
+                            ✕
                         </button>
                     </motion.div>
                 )}
             </AnimatePresence>
+            <button
+                onClick={() => setDarkMode(!darkMode)}
+                className="
+                      fixed top-5 right-5 z-50 p-2 rounded-full shadow-md border
+                      border-gray-200 dark:border-gray-600 
+                      bg-white dark:bg-gray-800 hover:scale-110 transform transition-all
+                    "
+                aria-label="Toggle Dark Mode"
+            >
+                {darkMode ? (
+                    <IoMdSunny className="text-yellow-300 w-6 h-6" />
+                ) : (
+                    <MdDarkMode className="text-indigo-700 w-6 h-6" />
+                )}
+            </button>
         </div>
     );
 };

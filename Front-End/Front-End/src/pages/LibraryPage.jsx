@@ -24,14 +24,14 @@ function LibraryPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-black">
       <HeaderProfile />
 
       <div className="flex flex-1">
         <SidebarLibrary />
 
         <main className="flex-1 p-6">
-          <h1 className="text-xl font-bold mb-4">Tủ truyện của bạn</h1>
+          <h1 className="text-xl font-bold mb-4 dark:text-white">Tủ truyện của bạn</h1>
 
           {/* 🔹 Filters */}
           <div className="bg-white border border-gray-200 rounded-md p-4 flex items-center space-x-6 mb-6 shadow-sm">
@@ -59,7 +59,7 @@ function LibraryPage() {
 
           {/* 🔹 Nếu chưa theo dõi truyện nào */}
           {followedBooks.length === 0 ? (
-            <div className="text-gray-500 text-sm text-center mt-10">
+            <div className="text-gray-500 dark:text-zinc-50 dark:italic text-sm text-center mt-10">
               Bạn chưa theo dõi truyện nào.
             </div>
           ) : (
