@@ -165,9 +165,9 @@ const RegisterPage = () => {
             formDataToSend.append('email', formData.email.trim());
 
             // Nếu có avatar thì thêm vào
-            if (formData.avatar) {
-                formDataToSend.append('avatar', formData.avatar);
-            }
+            // if (formData.avatar) {
+            //     formDataToSend.append('avatar', formData.avatar);
+            // }
 
             const response = await axios.post(
                 "https://be-ink-realm-c7jk.vercel.app/auth/register",

@@ -26,9 +26,9 @@ Mọi hoạt động đều tuân thủ nghiêm ngặt quy định pháp luật 
       title: "Quy Định",
       body: `
 Để giữ cho InkRealm luôn là nơi đọc truyện tích cực và an toàn, mọi thành viên vui lòng:  
-• Tôn trọng lẫn nhau và dùng ngôn ngữ lịch sự.  
-• Không chia sẻ, đăng tải nội dung vi phạm bản quyền hoặc trái thuần phong mỹ tục.  
-• Giữ tinh thần xây dựng và báo cáo các nội dung không phù hợp.  
+ Tôn trọng lẫn nhau và dùng ngôn ngữ lịch sự.  
+ Không chia sẻ, đăng tải nội dung vi phạm bản quyền hoặc trái thuần phong mỹ tục.  
+ Giữ tinh thần xây dựng và báo cáo các nội dung không phù hợp.  
 Chúng tôi mong muốn cùng bạn xây dựng một cộng đồng đọc truyện văn minh, sáng tạo và công bằng.`,
     },
 
@@ -37,8 +37,8 @@ Chúng tôi mong muốn cùng bạn xây dựng một cộng đồng đọc truy
       body: `
 Bạn gặp vấn đề khi đăng nhập, thanh toán, hay đọc truyện?  
 Đừng lo – đội ngũ hỗ trợ InkRealm luôn sẵn sàng giúp bạn!  
-• Gửi yêu cầu qua mục “Trung tâm Hỗ Trợ”.  
-• Hoặc liên hệ trực tiếp qua email: support@inkrealm.vn.  
+ Gửi yêu cầu qua mục “Trung tâm Hỗ Trợ”.  
+ Hoặc liên hệ trực tiếp qua email: support@inkrealm.vn.  
 Chúng tôi cam kết phản hồi nhanh chóng trong vòng 24 giờ làm việc để bạn có trải nghiệm liền mạch nhất.`,
     },
 
@@ -87,7 +87,7 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
                   shadow-xl rounded-xl p-4 border border-gray-700 z-50 animate-fadeIn 
                   backdrop-blur-sm"
                 >
-                  <h3 className="text-base font-semibold text-indigo-400 mb-1">
+                  <h3 className="font-bold text-blue-700 mb-1">
                     {contentMap[key].title}
                   </h3>
                   <p className="text-sm leading-relaxed text-gray-300 text-wrap">{contentMap[key].body}</p>

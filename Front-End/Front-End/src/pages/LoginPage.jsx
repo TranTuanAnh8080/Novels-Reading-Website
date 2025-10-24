@@ -81,11 +81,21 @@ const LoginPage = () => {
                 setTimeout(() => setShowSuccess(false), 3000);
 
                 // Show success toast
-                showToast('success', `Chào mừng ${user.fullName} đến với InkRealm! ⭐`, 2000);
+                showToast('success', `Chào mừng ${user.fullName} đến với InkRealm! ⭐`, 2500);
+
+                // Phân trang dựa trên roleId
+                const roleId = Number(user.roleId); // Convert sang number
+                let redirectPath = "/HomeLoggedIn";
+
+                if (roleId === 2) {
+                    redirectPath = "/AdminHomePage";
+                } else if (roleId === 3) {
+                    redirectPath = "/ModeratorHomePage";
+                }
 
                 // Redirect after 1.5s
                 setTimeout(() => {
-                    navigate("/HomeLoggedIn", { replace: true, state: { user } });
+                    navigate(redirectPath, { replace: true, state: { user } });
                 }, 1500);
             }
         } catch (error) {
