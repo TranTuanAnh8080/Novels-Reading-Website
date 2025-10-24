@@ -14,15 +14,24 @@ import logo from "../assets/inkrealm_logo.png";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
+// ✅ TẠO MỘT MAP ĐỂ QUẢN LÝ TRẠNG THÁI
+const STATUS_MAP = {
+  DRAFT: 3,
+  REVIEW: 2,
+};
+
 export default function AddChapterPage() {
   const [isTranslated, setIsTranslated] = useState(false);
   const [chapterNumber, setChapterNumber] = useState("");
   const [chapterTitle, setChapterTitle] = useState("");
-  const [chapterStatus, setChapterStatus] = useState("Bản nháp");
+
+  // ✅ SỬA STATE: Dùng ID (số 3) thay vì text ("Bản nháp")
+  const [chapterStatusId, setChapterStatusId] = useState(STATUS_MAP.DRAFT); // Mặc định là Bản nháp (3)
+
   const [releaseDate, setReleaseDate] = useState("");
   const [content, setContent] = useState("");
   const [translatedContent, setTranslatedContent] = useState("");
-  const { novelId } = useParams(); // Lấy novelId từ URL
+  const { novelId } = useParams();
   const [novelTitle, setNovelTitle] = useState("");
   const token = sessionStorage.getItem("token");
 
@@ -34,20 +43,21 @@ export default function AddChapterPage() {
       setIsTranslated(data.isTranslated || false);
       setChapterNumber(data.chapterNumber || "");
       setChapterTitle(data.chapterTitle || "");
-      setChapterStatus(data.chapterStatus || "Bản nháp");
+      // ✅ Cập nhật state mới
+      setChapterStatusId(data.chapterStatusId || STATUS_MAP.DRAFT);
       setReleaseDate(data.releaseDate || "");
       setContent(data.content || "");
       setTranslatedContent(data.translatedContent || "");
     }
   }, []);
 
-  // Fetch thông tin truyện từ API dựa trên novelId
+  // Fetch thông tin truyện
   useEffect(() => {
     const fetchNovel = async () => {
       try {
         const response = await axios.post(
           "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
-          { novelId: Number(novelId) } // gửi storyId trong body
+          { novelId: Number(novelId) }
         );
         setNovelTitle(response.data.novelTitle);
       } catch (error) {
@@ -57,13 +67,13 @@ export default function AddChapterPage() {
     if (novelId) fetchNovel();
   }, [novelId]);
 
-  // 🔹 Lưu bản nháp
-  const handleSaveDraft = () => {
+  // 🔹 Lưu bản nháp (Lưu tạm vào trình duyệt)
+  const handleSaveDraftLocal = () => {
     const draft = {
       isTranslated,
       chapterNumber,
       chapterTitle,
-      chapterStatus,
+      chapterStatusId, // ✅ Lưu ID
       releaseDate,
       content,
       translatedContent,
@@ -73,35 +83,39 @@ export default function AddChapterPage() {
     alert("✅ Bản nháp đã được lưu tạm!");
   };
 
-  // 🔹 Xóa bản nháp
-  const handleDeleteDraft = () => {
-    if (confirm("🗑️ Bạn có chắc muốn xóa bản nháp này không?")) {
+  // 🔹 Xóa bản nháp (Xóa khỏi trình duyệt)
+  const handleDeleteDraftLocal = () => {
+    // 💡 Lưu ý: Đổi tên hàm alert() / confirm() thành modal nếu đây là app thật
+    if (window.confirm("🗑️ Bạn có chắc muốn xóa bản nháp lưu tạm này không?")) {
       localStorage.removeItem("addChapterDraft");
       setIsTranslated(false);
       setChapterNumber("");
       setChapterTitle("");
-      setChapterStatus("Bản nháp");
+      setChapterStatusId(STATUS_MAP.DRAFT); // ✅ Reset về ID
       setReleaseDate("");
       setContent("");
       setTranslatedContent("");
-      alert("🧹 Bản nháp đã được xóa!");
+      alert("🧹 Bản nháp lưu tạm đã được xóa!");
     }
   };
 
-  const handleAddChapter = async () => {
-  if (!chapterNumber || !chapterTitle || !content) {
-    alert("⚠️ Vui lòng điền đầy đủ thông tin chương!");
-    return;
-  }
+  // ✅ HÀM NÀY LÀ HÀM QUAN TRỌNG NHẤT (ĐÃ SỬA)
+  const handleSubmitChapter = async () => {
+    if (!chapterNumber || !chapterTitle || !content) {
+      alert("⚠️ Vui lòng điền đầy đủ: Số chương, Tiêu đề, và Nội dung!");
+      return;
+    }
 
-  try {
+    try {
       const response = await axios.post(
         "https://be-ink-realm-c7jk.vercel.app/chapter/add",
         {
           novelId: Number(novelId),
           chapterIndex: Number(chapterNumber),
-          chapterTitle, 
-          chapterText: content
+          chapterTitle,
+          chapterText: content,
+          // ✅ SỬA LỖI: Gửi `chapterStatusId` (là số 2 hoặc 3) lên server
+          chapterStatusId: chapterStatusId,
         },
         {
           headers: {
@@ -112,11 +126,18 @@ export default function AddChapterPage() {
       );
 
       if (response.status === 201) {
-        alert("✅ Chapter mới được tạo thành công!");
+        // Tùy thuộc vào trạng thái đã gửi
+        if (chapterStatusId === STATUS_MAP.DRAFT) {
+          alert("✅ Đã lưu bản nháp thành công!");
+        } else {
+          alert("✅ Đã gửi chương đi kiểm duyệt thành công!");
+        }
+        
         // Reset form
         setChapterNumber("");
         setChapterTitle("");
         setContent("");
+        setChapterStatusId(STATUS_MAP.DRAFT); // Reset về bản nháp
       }
     } catch (error) {
       console.error("Lỗi khi thêm chapter:", error);
@@ -129,20 +150,17 @@ export default function AddChapterPage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
-          {/* Logo */}
-        <Link to="/HomeLoggedIn" className="flex items-center space-x-2">
-          <img src={logo} alt="InkRealm" className="h-10 w-auto" />
-        </Link>
-
-          {/* User */}
+          <Link to="/HomeLoggedIn" className="flex items-center space-x-2">
+            <img src={logo} alt="InkRealm" className="h-10 w-auto" />
+          </Link>
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-gray-700">Tác giả</span>
             <Link to="/Profile" className="flex items-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-              alt="User Avatar"
-              className="w-9 h-9 rounded-full border border-gray-200"
-            />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                alt="User Avatar"
+                className="w-9 h-9 rounded-full border border-gray-200"
+              />
             </Link>
           </div>
         </div>
@@ -152,7 +170,7 @@ export default function AddChapterPage() {
       <div className="max-w-7xl mx-auto w-full px-6 py-6 text-sm text-gray-500">
         <span>Trang cá nhân</span> <span className="mx-1">›</span>
         <span>Đăng truyện</span> <span className="mx-1">›</span>
-        <span>Quỷ Bí Chi Chủ</span> <span className="mx-1">›</span>
+        <span className="font-medium text-gray-800">{novelTitle || "..."}</span> <span className="mx-1">›</span>
         <span className="text-gray-900 font-medium">Thêm chương mới</span>
       </div>
 
@@ -161,7 +179,7 @@ export default function AddChapterPage() {
         <div className="max-w-5xl mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-8 mb-16">
           <h1 className="text-2xl font-bold mb-2">Thêm chương mới</h1>
           <p className="text-gray-600 mb-8">
-            Thêm chương mới cho truyện <strong>“{novelTitle || "..." }”</strong>
+            Thêm chương mới cho truyện <strong>“{novelTitle || "..."}”</strong>
           </p>
 
           {/* --- Thông tin chương --- */}
@@ -201,20 +219,20 @@ export default function AddChapterPage() {
                 />
               </div>
 
-              {/* Trạng thái */}
+              {/* ✅ SỬA DROPDOWN TRẠNG THÁI */}
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                   <FileText className="w-4 h-4 text-gray-700" />
-                  Trạng thái
+                  Hành động
                 </label>
                 <select
-                  value={chapterStatus}
-                  onChange={(e) => setChapterStatus(e.target.value)}
+                  value={chapterStatusId} // Dùng state ID
+                  onChange={(e) => setChapterStatusId(Number(e.target.value))} // Chuyển value (string) về số
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
                 >
-                  <option>Bản nháp</option>
-                  <option>Đang kiểm duyệt</option>
-                  <option>Đã duyệt</option>
+                  <option value={STATUS_MAP.DRAFT}>Lưu bản nháp</option>
+                  <option value={STATUS_MAP.REVIEW}>Gửi kiểm duyệt</option>
+                  {/* Bạn không nên cho Uploader tự chọn "Đã duyệt" */}
                 </select>
               </div>
 
@@ -300,25 +318,30 @@ export default function AddChapterPage() {
           {/* --- Buttons --- */}
           <div className="flex justify-end gap-4 mt-6 flex-wrap">
             <button
-              onClick={handleDeleteDraft}
+              onClick={handleDeleteDraftLocal}
               className="flex items-center gap-2 px-6 py-2.5 text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50 font-medium"
             >
               <Trash2 className="w-4 h-4" />
               Xóa bản nháp
             </button>
             <button
-              onClick={handleSaveDraft}
+              onClick={handleSaveDraftLocal}
               className="flex items-center gap-2 px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
             >
               <Save className="w-4 h-4" />
-              Lưu bản nháp
+              Lưu tạm bản nháp
             </button>
+
+            {/* ✅ SỬA NÚT SUBMIT */}
             <button
-              onClick={handleAddChapter}
+              onClick={handleSubmitChapter} // Gọi hàm submit chính
               className="flex items-center gap-2 px-6 py-2.5 text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-medium"
             >
               <Send className="w-4 h-4" />
-              Gửi kiểm duyệt
+              {/* Đổi chữ trên nút dựa theo dropdown */}
+              {chapterStatusId === STATUS_MAP.DRAFT
+                ? "Lưu bản nháp"
+                : "Gửi kiểm duyệt"}
             </button>
           </div>
         </div>
