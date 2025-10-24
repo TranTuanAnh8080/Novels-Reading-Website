@@ -69,7 +69,7 @@
         if (storyId) {
           const novelRes = await axios.post(
             "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
-            { storyId: storyId }
+            { novelId: storyId }
           );
           setNovel(novelRes.data);
         }
@@ -182,7 +182,7 @@
             <div className="flex gap-6">
               <div className="w-28 h-36 flex-shrink-0">
                 <img
-                  src={novel?.coverImage || defaultCover}
+                  src={novel?.novel_img_url || defaultCover}
                   alt={novel?.novelTitle || "Book cover"}
                   className="w-full h-full object-cover rounded-md border"
                 />

@@ -35,7 +35,7 @@ export default function ChapterList() {
         // ✅ Lấy thông tin truyện
         const novelRes = await axios.post(
           "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
-          { storyId: Number(id) }
+          { novelId: Number(id) }
         );
 
         // ✅ Lấy danh sách chương
@@ -116,7 +116,7 @@ export default function ChapterList() {
           <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm">
             <div className="flex gap-4 items-start">
               <img
-                src={novel.coverImage || defaultCover}
+                src={novel.novel_img_url || defaultCover}
                 alt={novel.novelTitle || "Book cover"}
                 className="w-24 h-32 object-cover rounded-md shadow"
               />

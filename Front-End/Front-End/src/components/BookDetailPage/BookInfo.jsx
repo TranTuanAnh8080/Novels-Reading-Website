@@ -19,7 +19,7 @@ export default function BookInfo({ book }) {
     author,
     novelDescription: description,
     createDate,
-    coverImage,
+    novel_img_url,
   } = book || {};
 
   // 🔹 Check xem truyện này có đang được theo dõi không
@@ -44,7 +44,7 @@ export default function BookInfo({ book }) {
         {
           id: book.novelId,
           title: title,
-          image: coverImage || defaultCover,
+          image: novel_img_url || defaultCover,
           status: "Chưa đọc",
         },
       ];
@@ -99,7 +99,7 @@ export default function BookInfo({ book }) {
         <div className="col-span-4">
           <div className="w-full aspect-[3/4] bg-gray-100 rounded-lg shadow-md mb-4 flex items-center justify-center text-gray-400 text-sm">
             <img
-              src={coverImage && coverImage.trim() !== "" ? coverImage : defaultCover}
+              src={novel_img_url && novel_img_url.trim() !== "" ? novel_img_url : defaultCover}
               alt={title || "Bìa truyện"}
               className="w-48 h-64 object-cover rounded-md shadow"
             />

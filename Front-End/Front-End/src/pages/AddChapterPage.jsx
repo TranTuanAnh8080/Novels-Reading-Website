@@ -24,6 +24,7 @@ export default function AddChapterPage() {
   const [translatedContent, setTranslatedContent] = useState("");
   const { novelId } = useParams(); // Lấy novelId từ URL
   const [novelTitle, setNovelTitle] = useState("");
+  const token = sessionStorage.getItem("token");
 
   // 🔹 Load lại dữ liệu từ localStorage khi mở trang
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function AddChapterPage() {
       try {
         const response = await axios.post(
           "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
-          { storyId: Number(novelId) } // gửi storyId trong body
+          { novelId: Number(novelId) } // gửi storyId trong body
         );
         setNovelTitle(response.data.novelTitle);
       } catch (error) {
@@ -94,15 +95,21 @@ export default function AddChapterPage() {
   }
 
   try {
-    const response = await axios.post(
-      "https://be-ink-realm-c7jk.vercel.app/chapter/add",
-      {
-        novelId: Number(novelId),
-        chapterIndex: Number(chapterNumber),
-        chapterTitle: chapterTitle,
-        chapterText: content
-      }
-    );
+      const response = await axios.post(
+        "https://be-ink-realm-c7jk.vercel.app/chapter/add",
+        {
+          novelId: Number(novelId),
+          chapterIndex: Number(chapterNumber),
+          chapterTitle, 
+          chapterText: content
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 201) {
         alert("✅ Chapter mới được tạo thành công!");
