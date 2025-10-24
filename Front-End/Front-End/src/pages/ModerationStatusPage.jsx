@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Clock, Check, FileText, Edit3, X } from 'lucide-react';
+import { Search, Clock, Check, FileText, Edit3, X, DollarSign } from 'lucide-react'; // 1. Import thêm DollarSign
 import Footer from "../components/SharedComponents/Footer";
 import logo from '../assets/inkrealm_logo.png';
 import { Link, useParams } from "react-router-dom";
@@ -19,6 +19,11 @@ export default function ModerationStatusPage() {
   const [chapterText, setChapterText] = useState('');
   const [updating, setUpdating] = useState(false);
   const [loadingChapterText, setLoadingChapterText] = useState(false);
+
+  // 💲 2. THÊM MỚI: State cho modal đặt giá
+  const [priceModalChapter, setPriceModalChapter] = useState(null); // Lưu chapter đang được set giá
+  const [newPrice, setNewPrice] = useState(0); // Lưu giá trị đang nhập
+  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false); // Trạng thái loading
 
   // ✅ Gọi API lấy dữ liệu truyện và chương
   useEffect(() => {
@@ -67,7 +72,6 @@ export default function ModerationStatusPage() {
         return;
       }
 
-      // Nếu có API lấy nội dung chương (ví dụ /chapter/text?chapterId=)
       const res = await axios.get(
         `https://be-ink-realm-c7jk.vercel.app/chapter/text`,
         {
@@ -107,7 +111,6 @@ export default function ModerationStatusPage() {
 
       alert("✅ " + (res.data.message || "Cập nhật thành công!"));
 
-      // Cập nhật lại trạng thái chương trong danh sách
       setAllChapters(prev =>
         prev.map(ch =>
           ch.chapterId === editingChapter.chapterId
@@ -116,7 +119,6 @@ export default function ModerationStatusPage() {
         )
       );
 
-      // Đóng modal
       setEditingChapter(null);
       setChapterText('');
     } catch (error) {
@@ -127,6 +129,61 @@ export default function ModerationStatusPage() {
       setUpdating(false);
     }
   };
+  
+  // 💲 3. THÊM MỚI: Hàm mở modal đặt giá
+  const openPriceModal = (chapter) => {
+    setPriceModalChapter(chapter);
+    setNewPrice(chapter.price || 0); // Lấy giá hiện tại của chương
+  };
+
+  // 💲 3. THÊM MỚI: Hàm gọi API đặt giá
+  const handleSetPrice = async () => {
+    if (newPrice < 0 || newPrice % 1 !== 0) {
+      alert("Giá phải là số nguyên không âm.");
+      return;
+    }
+    if (!priceModalChapter) return;
+
+    setIsUpdatingPrice(true);
+    try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        alert("Bạn cần đăng nhập để đặt giá!");
+        setIsUpdatingPrice(false);
+        return;
+      }
+
+      // 🚀 GỌI API ĐẶT GIÁ CỦA BẠN
+      const res = await axios.put(
+        `https://be-ink-realm-c7jk.vercel.app/uploader/${priceModalChapter.chapterId}/set-price`,
+        { price: newPrice }, // Body: { "price": 50 }
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      // Cập nhật giá mới trong danh sách (state)
+      setAllChapters(prev =>
+        prev.map(ch =>
+          ch.chapterId === priceModalChapter.chapterId
+            ? { ...ch, price: res.data.price } // Cập nhật 'price' từ response
+            : ch
+        )
+      );
+
+      alert(res.data.message || "Cập nhật giá thành công!");
+      setPriceModalChapter(null); // Đóng modal
+
+    } catch (error) {
+      console.error("❌ Lỗi đặt giá:", error?.response?.data || error.message);
+      const msg = error?.response?.data?.message || "❌ Lỗi khi đặt giá";
+      // Hiển thị lỗi từ server (400, 403, 404...)
+      alert(msg);
+    } finally {
+      setIsUpdatingPrice(false);
+    }
+  };
+
 
   // ✅ Lọc theo tab và tìm kiếm
   const filteredChapters = useMemo(() => {
@@ -295,18 +352,34 @@ export default function ModerationStatusPage() {
                   {filteredChapters.map((ch) => (
                     <tr key={ch.chapterId} className="border-b border-gray-200 hover:bg-gray-50 transition">
                       <td className="py-3 text-sm text-gray-800">Chương {ch.chapterIndex}</td>
-                      <td className="py-3 text-sm text-gray-800">{ch.chapterTitle}</td>
+                      <td className="py-3 text-sm text-gray-800">
+                        {ch.chapterTitle}
+                        {/* 💲 4. THÊM MỚI: Hiển thị giá */}
+                        <span className="block text-xs text-green-700 font-medium mt-0.5">
+                          Giá: {ch.price || 0}
+                        </span>
+                      </td>
                       <td className="py-3 text-sm text-gray-500">
                         {new Date(ch.createDate).toLocaleDateString("vi-VN")}
                       </td>
                       <td className="py-3 text-sm">{getStatusDisplay(ch.chapterStatusId)}</td>
                       <td className="py-3 text-right">
-                        <button
-                          onClick={() => openEditModal(ch)}
-                          className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
-                        >
-                          <Edit3 className="w-4 h-4" /> Chỉnh sửa
-                        </button>
+                        {/* 💲 5. THÊM MỚI: Bọc 2 nút vào div */}
+                        <div className="flex justify-end items-center gap-4">
+                          <button
+                            onClick={() => openPriceModal(ch)}
+                            className="text-green-600 hover:underline flex items-center gap-1 text-sm"
+                          >
+                            <DollarSign className="w-4 h-4" /> Đặt giá
+                          </button>
+                          
+                          <button
+                            onClick={() => openEditModal(ch)}
+                            className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
+                          >
+                            <Edit3 className="w-4 h-4" /> Chỉnh sửa
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -352,6 +425,46 @@ export default function ModerationStatusPage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+      
+      {/* 💲 6. THÊM MỚI: Modal đặt giá */}
+      {priceModalChapter && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white w-[450px] p-6 rounded-lg shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">
+              Đặt giá cho: {priceModalChapter.chapterTitle}
+            </h3>
+            
+            <label htmlFor="chapterPrice" className="block text-sm font-medium text-gray-700 mb-1">
+              Giá chương
+            </label>
+            <input
+              type="number"
+              id="chapterPrice"
+              value={newPrice}
+              onChange={(e) => setNewPrice(Number(e.target.value))}
+              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#2E5BFF]"
+              placeholder="Nhập giá (ví dụ: 50)"
+            />
+            <p className="text-xs text-gray-500 mt-1">Nhập 0 để đặt là chương miễn phí.</p>
+            
+            <div className="flex justify-end gap-3 mt-5">
+              <button
+                onClick={() => setPriceModalChapter(null)}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md flex items-center gap-2"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleSetPrice}
+                disabled={isUpdatingPrice}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+              >
+                {isUpdatingPrice ? "Đang lưu..." : "Lưu giá"}
+              </button>
+            </div>
           </div>
         </div>
       )}
