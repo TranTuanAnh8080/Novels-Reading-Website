@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import bgmoderator from "../../assets/bgmoderator.png"; // Hình nền 1
 import bgmoderator2 from "../../assets/bgmoderator2.png"; // Hình nền 2
 import bgmoderator4 from "../../assets/bgmoderator4.png"; // Hình nền 4
-
 import { LuSquareMenu } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
 import {
     HiOutlineClipboardList, HiOutlineUserGroup, HiOutlineExclamationCircle,
     HiOutlineCheckCircle, HiOutlineBan, HiOutlineSparkles,
 } from "react-icons/hi";
+
+import axios from "axios";
+
+import { useNavigate } from "react-router-dom";
 
 const MoMainItem = () => {
 
@@ -17,6 +20,8 @@ const MoMainItem = () => {
 
     const [currentBackground, setCurrentBackground] = useState(bgmoderator4); // Hình nền mặc định
     const backgrounds = React.useMemo(() => [bgmoderator2, bgmoderator, bgmoderator4], []); // Danh sách hình nền
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -29,6 +34,13 @@ const MoMainItem = () => {
 
         return () => clearInterval(interval);
     }, [backgrounds]);
+
+    // 🚪 Đăng xuất
+    const handleLogout = () => {
+        sessionStorage.clear();
+        delete axios.defaults.headers.common['Authorization'];
+        navigate('/LoginPage', { replace: true });
+    };
 
 
     return (
@@ -103,7 +115,7 @@ const MoMainItem = () => {
                             Dashboard thống kê
                         </a>
                         <a
-                            href="/logout"
+                            onClick={handleLogout}
                             className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300"
                         >
                             Đăng xuất

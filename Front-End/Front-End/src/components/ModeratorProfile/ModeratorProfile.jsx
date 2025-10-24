@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Edit3, LogOut, Copy, Activity } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 const initialModerator = {
   id: "MOD-CN-047",
-  name: "Nguyễn Minh Anh",
+  name: "Trần Tuấn Anh",
   title: "Content Guardian — Kiểm duyệt viên Cấp cao",
   avatarUrl:
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8",
+    "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
   bio:
     "Đồng hành cùng cộng đồng, giữ gìn một không gian đọc truyện văn minh và an toàn. Luôn lắng nghe và hỗ trợ.",
-  location: "Hà Nội, Việt Nam",
+  location: "FPT University HCMC, Việt Nam",
   status: "active",
-  joined: "2022-08-10",
+  joined: "2025-08-10",
   stats: {
     totalReviews: 100,
     avgQualityScore: 9.2,
@@ -167,6 +167,14 @@ export default function ModeratorProfilePage() {
   const [openEdit, setOpenEdit] = useState(false);
   const navigate = useNavigate();
 
+
+  // 🚪 Đăng xuất
+  const handleLogout = () => {
+    sessionStorage.clear();
+    delete axios.defaults.headers.common['Authorization'];
+    navigate('/LoginPage', { replace: true });
+  };
+
   useEffect(() => {
     // example: could fetch real data here
   }, []);
@@ -203,12 +211,9 @@ export default function ModeratorProfilePage() {
             >
               <Edit3 className="w-4 h-4" /> Chỉnh sửa
             </button>
-            <button
-              onClick={() => {
-                /* logout */
-                navigate("/");
-              }}
-              className="px-3 py-2 rounded-md bg-red-500 text-white flex items-center gap-2 hover:scale-105 transform transition duration-200"
+             <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-md bg-red-600 text-white flex items-center gap-2 hover:scale-105 transform transition duration-200"
             >
               <LogOut className="w-4 h-4" /> Đăng xuất
             </button>

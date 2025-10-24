@@ -50,7 +50,7 @@ const ModerateOriginalNovels = () => {
 
     const { darkMode, setDarkMode } = useDarkMode();
 
-
+    const {statusList, setStatusList} = useState();
     // Khai báo state cho tìm kiếm và sắp xếp
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
@@ -62,28 +62,165 @@ const ModerateOriginalNovels = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     // ... (logic statusCounts, filteredData, renderActionButton, statusColors, pages giữ nguyên) ...
-    const statusCounts = { Pending: 1, Moderating: 2, Approved: 3, Rejected: 4, Published: 5 };
-    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending'  : item.status === activeTab);
-    const statusColors = { Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" }, Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" }, Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" }, Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" }, Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" }, };
+    // const statusCounts = { Pending: 1, Moderating: 2, Approved: 3, Rejected: 4, Published: 5 };
+    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' : item.status === activeTab);
+    // const statusColors = { Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" }, Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" }, Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" }, Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" }, Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" }, };
     const totalPages = 5;
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-    const renderActionButton = (status, id) => {
-        switch (status) {
-            case 'Pending': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1">
-                <HiOutlinePencilAlt className="w-4 h-4" /> Bắt đầu duyệt</button>);
-            case 'Moderating': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition flex items-center gap-1">
-                <HiOutlineEye className="w-4 h-4" /> Tiếp tục duyệt</button>);
-            case 'Approved': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1">
-                <HiOutlineCheckCircle className="w-4 h-4" /> Chuẩn bị xuất bản</button>);
-            case 'Rejected': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1">
-                <HiOutlineXCircle className="w-4 h-4" /> Xem Lý do</button>);
-            case 'Published': return (<button className="px-3 py-1 text-sm font-semibold rounded-md bg-blue-500 text-white hover:bg-blue-600 transition flex items-center gap-1">
-                <HiOutlineCheckCircle className="w-4 h-4" />Đã hoàn thành</button>);
-            default: return null;
-        }
+    const [chapterData, setChapterData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [statusCounts, setStatusCounts] = useState({
+        Pending: 0,
+        Moderating: 0,
+        Approved: 0,
+        Rejected: 0,
+        Published: 0,
+    });
+
+    // 🗺️ Map status code -> ID (API sẽ dùng ID)
+  const statusIdMap = {
+    "WAIT FOR VERIFY": 5,
+    VERIFIED: 6,
+    REFUSE: 7,
+  };
+
+  // 🧠 Lấy danh sách trạng thái từ API
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch("https://be-ink-realm-c7jk.vercel.app/moderator/chapter-status", {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Không thể tải danh sách trạng thái");
+        const data = await res.json();
+        setStatusList(data);
+      } catch (err) {
+        console.error("❌ Lỗi khi tải trạng thái:", err);
+      }
     };
 
+    fetchStatuses();
+  }, []);
+    
+    useEffect(() => {
+  const fetchChapters = async () => {
+    try {
+      setLoading(true);
+
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        console.warn("⚠️ Không tìm thấy token trong sessionStorage");
+        return;
+      }
+
+      // Nếu bạn có tab filter (ví dụ "Chờ duyệt" = 2, "Đã duyệt" = 6,...)
+      const statusId = statusIdMap[activeTab];
+
+      const res = await fetch(
+        `https://be-ink-realm-c7jk.vercel.app/moderator/chapter/list/2`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("API error");
+
+      const data = await res.json();
+      console.log("📦 API data:", data);
+
+      // ✅ Kiểm tra dữ liệu
+      if (!data || !Array.isArray(data.novels)) {
+        console.warn("⚠️ API không trả về mảng novels:", data);
+        setChapterData([]);
+        return;
+      }
+
+      // ✅ Gộp tất cả chapter của các novel lại thành 1 danh sách
+      const chapters = data.novels.flatMap((novel) =>
+        novel.chapters.map((chap) => ({
+          ...chap,
+          novelTitle: novel.novelTitle,
+        }))
+      );
+
+      console.log("✅ Tổng số chương:", chapters.length);
+      setChapterData(chapters);
+
+      // ✅ Tính số lượng chương theo status
+      const counts = { Pending: 0, Approved: 0, Rejected: 0 };
+      chapters.forEach((chap) => {
+        if (chap.chapterStatusId === 5) counts.Pending++;
+        else if (chap.chapterStatusId === 6) counts.Approved++;
+        else if (chap.chapterStatusId === 7) counts.Rejected++;
+      });
+      setStatusCounts(counts);
+    } catch (err) {
+      console.error("❌ Lỗi khi tải danh sách chương:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchChapters();
+}, [activeTab]);
+
+
+
+    // 🔹 Màu cho từng trạng thái
+    const statusColors = {
+        Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" },
+        Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" },
+        Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" },
+        Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" },
+        Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" },
+    };
+
+    // 🔹 Render nút hành động
+    const renderActionButton = (status, id) => {
+        switch (status) {
+            case "Pending":
+                return (
+                    <button
+                        className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1"
+                    // onClick={() => handleReview(id)}
+                    >
+                        <HiOutlinePencilAlt className="w-4 h-4" /> Bắt đầu duyệt
+                    </button>
+                );
+
+            case "Approved":
+                return (
+                    <button
+                        className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1"
+                    // onClick={() => handlePublish(id)}
+                    >
+                        <HiOutlineCheckCircle className="w-4 h-4" /> Chuẩn bị xuất bản
+                    </button>
+                );
+
+            case "Rejected":
+                return (
+                    <button
+                        className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1"
+                    // onClick={() => handleViewReason(id)}
+                    >
+                        <HiOutlineXCircle className="w-4 h-4" /> Xem lý do
+                    </button>
+                );
+
+            default:
+                return null;
+        }
+    };
     // Bắt đầu thay đổi: div ngoài cùng chỉ dùng flex và min-h
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -191,43 +328,21 @@ const ModerateOriginalNovels = () => {
                     </h2>
                 </header>
 
-                {/* Status Tabs Navigation */}
-                <div className="flex flex-wrap gap-3 mb-8 justify-center"> {/* Đổi gap-4 thành gap-3 cho gọn hơn */}
-                    <StatusTab
-                        label="Chờ Duyệt"
-                        count={statusCounts.Pending}
-                        color={{ bgActive: "bg-yellow-500", textActive: "text-white", bgInactive: "bg-yellow-100", textInactive: "text-yellow-800", bgHover: "bg-yellow-200", ring: "ring-yellow-500" }}
-                        isActive={activeTab === 'Pending'}
-                        onClick={() => setActiveTab('Pending')}
-                    />
-                    <StatusTab
-                        label="Đang Duyệt"
-                        count={statusCounts.Moderating}
-                        color={{ bgActive: "bg-indigo-500", textActive: "text-white", bgInactive: "bg-indigo-200", textInactive: "text-indigo-800", bgHover: "bg-indigo-200", ring: "ring-indigo-500" }}
-                        isActive={activeTab === 'Moderating'}
-                        onClick={() => setActiveTab('Moderating')}
-                    />
-                    <StatusTab
-                        label="Đã Duyệt"
-                        count={statusCounts.Approved}
-                        color={{ bgActive: "bg-green-500", textActive: "text-white", bgInactive: "bg-green-100", textInactive: "text-green-800", bgHover: "bg-green-200", ring: "ring-green-500" }}
-                        isActive={activeTab === 'Approved'}
-                        onClick={() => setActiveTab('Approved')}
-                    />
-                    <StatusTab
-                        label="Từ Chối"
-                        count={statusCounts.Rejected}
-                        color={{ bgActive: "bg-red-500", textActive: "text-white", bgInactive: "bg-red-100", textInactive: "text-red-800", bgHover: "bg-red-200", ring: "ring-red-500" }}
-                        isActive={activeTab === 'Rejected'}
-                        onClick={() => setActiveTab('Rejected')}
-                    />
-                    <StatusTab
-                        label="Đã Xuất bản"
-                        count={statusCounts.Published}
-                        color={{ bgActive: "bg-blue-500", textActive: "text-white", bgInactive: "bg-blue-100", textInactive: "text-blue-800", bgHover: "bg-blue-200", ring: "ring-blue-500" }}
-                        isActive={activeTab === 'Published'}
-                        onClick={() => setActiveTab('Published')}
-                    />
+                {/* 🔸 Tabs trạng thái */}
+                <div className="flex flex-wrap gap-3 mb-8 justify-center">
+                    {Object.keys(statusIdMap).map((statusKey) => (
+                        <button
+                            key={statusKey}
+                            onClick={() => setActiveTab(statusKey)}
+                            className={`px-4 py-2 rounded-lg font-semibold text-sm transition ring-2 
+              ${activeTab === statusKey
+                                    ? "bg-blue-600 text-white ring-blue-600"
+                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200 ring-gray-300"
+                                }`}
+                        >
+                            {statusKey} ({statusCounts[statusKey] || 0})
+                        </button>
+                    ))}
                 </div>
 
                 {/* --- BỘ LỌC VÀ TÌM KIẾM MỚI --- */}
@@ -274,46 +389,44 @@ const ModerateOriginalNovels = () => {
                     </div>
                 </div>
 
-                {/* Bảng Dữ liệu Chính */}
-                <div className="bg-white rounded-xs shadow-md overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
+                <table className="min-w-full border">
+                    <thead className="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Tên truyện</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Chương</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Ngày tạo</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {chapterData.length > 0 ? (
+                            chapterData.map((item) => {
+                                let statusKey = "Pending";
+                                if (item.chapterStatusId === 6) statusKey = "Approved";
+                                else if (item.chapterStatusId === 7) statusKey = "Rejected";
 
-                        <thead className="bg-gray-100 dark:bg-gray-800">
-                            <tr>
-                                {['ID', 'NỘI DUNG', 'TÁC GIẢ', 'NGÀY TẠO', 'MÔ TẢ', 'TRẠNG THÁI', 'HÀNH ĐỘNG'].map((header) => (
-                                    <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-bold
-                                    dark:text-white  text-gray-500uppercase tracking-wider">{header}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-100 dark:text-white dark:bg-gray-800">
-                            {filteredData.length > 0 ? (
-                                filteredData.map((item) => {
-                                    const statusInfo = statusColors[item.status] || statusColors.Pending;
-                                    return (<tr key={item.id} className="hover:bg-indigo-50  transition duration-150">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{item.id}</td>
-                                        <td className="px-6 py-4 max-w-xs truncate text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer" title={item.content}>
-                                            <a href={`/moderator/original/${item.id}/edit`}>{item.content}</a>
+                                return (
+                                    <tr key={item.chapterId} className="border-b hover:bg-gray-50">
+                                        <td className="px-6 py-4">{item.novelTitle}</td>
+                                        <td className="px-6 py-4">{item.chapterTitle}</td>
+                                        <td className="px-6 py-4">
+                                            {new Date(item.createDate).toLocaleString("vi-VN")}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.author}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.date}</td>
-                                        <td className="px-6 py-4 max-w-sm truncate text-sm text-gray-500" title={item.description}>{item.description}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-3 inline-flex text-xs leading-5 font-semibold rounded-full ${statusInfo.bg} ${statusInfo.text} flex items-center gap-1`}>
-                                                <span className={`w-2 h-2 rounded-full ${statusInfo.dot}`}></span>
-                                                {item.status === 'Pending' ? 'Chờ duyệt' : item.status === 'Moderating' ? 'Đang duyệt' : item.status === 'Approved' ? 'Đã duyệt' : item.status === 'Rejected' ? 'Từ chối' : 'Xuất bản'}</span></td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{renderActionButton(item.status)}</td>
-
-                                    </tr>);
-                                })
-                            ) : (
-                                <tr><td colSpan="7" className="px-6 py-10 text-center dark:text-white text-gray-700 
-                                text-lg font-medium italic">Tuyệt vời! Không còn truyện nào cần xử lý.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
+                                        <td className="px-6 py-4">
+                                            {renderActionButton(statusKey, item.chapterId)}
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        ) : (
+                            <tr>
+                                <td colSpan="4" className="text-center py-4 text-gray-500">
+                                    Không có chương nào cần xử lý
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
                 {/* Phân trang */}
                 <div className="mt-8 flex items-center justify-between max-w-screen px-4 py-3 sm:px-6">
                     <div className="flex flex-1 justify-between sm:hidden">
