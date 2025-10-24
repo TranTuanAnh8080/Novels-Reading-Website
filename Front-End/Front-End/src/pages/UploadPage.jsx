@@ -44,12 +44,12 @@ function UploadPage() {
     switch (sortFilter) {
       case "newest":
         filteredBooks.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.createDate) - new Date(a.createDate)
         );
         break;
       case "oldest":
         filteredBooks.sort(
-          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+          (a, b) => new Date(a.createDate) - new Date(b.createDate)
         );
         break;
       case "name-az":

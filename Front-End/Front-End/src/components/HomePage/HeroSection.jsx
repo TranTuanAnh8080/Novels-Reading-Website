@@ -81,8 +81,8 @@ function HeroSection() {
             <div className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden cursor-pointer transition">
               <img
                 src={
-                  novel.coverImg && novel.coverImg.trim() !== ""
-                    ? novel.coverImg
+                  novel.novel_img_url && novel.novel_img_url.trim() !== ""
+                    ? novel.novel_img_url
                     : defaultCover
                 }
                 alt={novel.novelTitle}
@@ -116,8 +116,8 @@ function HeroSection() {
             <div className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden cursor-pointer transition">
               <img
                 src={
-                  novel.coverImg && novel.coverImg.trim() !== ""
-                    ? novel.coverImg
+                  novel.novel_img_url && novel.novel_img_url.trim() !== ""
+                    ? novel.novel_img_url
                     : defaultCover
                 }
                 alt={novel.novelTitle}

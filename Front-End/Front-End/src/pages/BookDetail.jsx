@@ -44,7 +44,7 @@ export default function BookDetail() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ storyId: id }), // id lấy từ useParams
+          body: JSON.stringify({ novelId: id }), // id lấy từ useParams
         });
 
         if (!res.ok) {
