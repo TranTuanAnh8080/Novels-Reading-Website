@@ -49,12 +49,14 @@ const StatusTab = ({ label, count, color, isActive, onClick }) => (
 const ModerateOriginalNovels = () => {
 
     const { darkMode, setDarkMode } = useDarkMode();
+    const [expandedChapterId, setExpandedChapterId] = useState(null);
+    const [chapterContents, setChapterContents] = useState({}); // Lưu nội dung từng chương
 
-    const {statusList, setStatusList} = useState();
+
     // Khai báo state cho tìm kiếm và sắp xếp
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
-
+    const [statusList, setStatusList] = useState([]);
     const [activeTab, setActiveTab] = useState('Pending');
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -79,148 +81,166 @@ const ModerateOriginalNovels = () => {
     });
 
     // 🗺️ Map status code -> ID (API sẽ dùng ID)
-  const statusIdMap = {
-    "WAIT FOR VERIFY": 5,
-    VERIFIED: 6,
-    REFUSE: 7,
-  };
-
-  // 🧠 Lấy danh sách trạng thái từ API
-  useEffect(() => {
-    const fetchStatuses = async () => {
-      try {
-        const token = sessionStorage.getItem("token");
-        const res = await fetch("https://be-ink-realm-c7jk.vercel.app/moderator/chapter-status", {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Không thể tải danh sách trạng thái");
-        const data = await res.json();
-        setStatusList(data);
-      } catch (err) {
-        console.error("❌ Lỗi khi tải trạng thái:", err);
-      }
+    const statusIdMap = {
+        "WAIT FOR VERIFY": 5,
+        VERIFIED: 6,
+        REFUSE: 7,
     };
 
-    fetchStatuses();
-  }, []);
-    
     useEffect(() => {
-  const fetchChapters = async () => {
-    try {
-      setLoading(true);
+        // 🧠 Lấy danh sách trạng thái từ API
+        const fetchStatuses = async () => {
+            try {
+                const token = sessionStorage.getItem("token");
+                const res = await fetch("https://be-ink-realm-c7jk.vercel.app/moderator/chapter-status", {
+                    headers: {
+                        accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        console.warn("⚠️ Không tìm thấy token trong sessionStorage");
-        return;
-      }
+                if (!res.ok) throw new Error("Không thể tải danh sách trạng thái");
+                const data = await res.json();
 
-      // Nếu bạn có tab filter (ví dụ "Chờ duyệt" = 2, "Đã duyệt" = 6,...)
-      const statusId = statusIdMap[activeTab];
+                console.log("✅ Danh sách trạng thái:", data);
+                setStatusList(data); // setState hợp lệ
+            } catch (err) {
+                console.error("❌ Lỗi khi tải trạng thái:", err);
+            }
+        };
 
-      const res = await fetch(
-        `https://be-ink-realm-c7jk.vercel.app/moderator/chapter/list/2`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        fetchStatuses();
+    }, []);
 
-      if (!res.ok) throw new Error("API error");
+    // 🧩 Lấy danh sách chương theo trạng thái đang chọn
+    useEffect(() => {
+        const fetchChapters = async () => {
+            try {
+                setLoading(true);
+                const token = sessionStorage.getItem("token");
+                const statusId = statusIdMap[activeTab] ?? 5;
 
-      const data = await res.json();
-      console.log("📦 API data:", data);
+                const res = await fetch(
+                    `https://be-ink-realm-c7jk.vercel.app/moderator/chapter/list/${statusId}`,
+                    {
+                        headers: {
+                            accept: "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
 
-      // ✅ Kiểm tra dữ liệu
-      if (!data || !Array.isArray(data.novels)) {
-        console.warn("⚠️ API không trả về mảng novels:", data);
-        setChapterData([]);
-        return;
-      }
+                const data = await res.json();
 
-      // ✅ Gộp tất cả chapter của các novel lại thành 1 danh sách
-      const chapters = data.novels.flatMap((novel) =>
-        novel.chapters.map((chap) => ({
-          ...chap,
-          novelTitle: novel.novelTitle,
-        }))
-      );
+                // ✅ Gộp tất cả chapter lại để hiển thị
+                const chapters = data.novels.flatMap((novel) =>
+                    novel.chapters.map((chap) => ({
+                        ...chap,
+                        novelTitle: novel.novelTitle,
+                        novelId: novel.novelId,
+                    }))
+                );
 
-      console.log("✅ Tổng số chương:", chapters.length);
-      setChapterData(chapters);
+                setChapterData(chapters);
+                
+                const novelCountsByStatus = {};
+                data.novels.forEach((novel) => {
+                    const statusIds = new Set(novel.chapters.map((c) => c.chapterStatusId));
+                    statusIds.forEach((statusId) => {
+                        novelCountsByStatus[statusId] = (novelCountsByStatus[statusId] || 0) + 1;
+                    });
+                });
 
-      // ✅ Tính số lượng chương theo status
-      const counts = { Pending: 0, Approved: 0, Rejected: 0 };
-      chapters.forEach((chap) => {
-        if (chap.chapterStatusId === 5) counts.Pending++;
-        else if (chap.chapterStatusId === 6) counts.Approved++;
-        else if (chap.chapterStatusId === 7) counts.Rejected++;
-      });
-      setStatusCounts(counts);
-    } catch (err) {
-      console.error("❌ Lỗi khi tải danh sách chương:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+                setStatusCounts(novelCountsByStatus);
+            } catch (err) {
+                console.error("❌ Lỗi khi tải danh sách chương:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  fetchChapters();
-}, [activeTab]);
-
-
+        fetchChapters();
+    }, [activeTab]);
 
     // 🔹 Màu cho từng trạng thái
     const statusColors = {
-        Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" },
-        Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" },
-        Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" },
-        Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" },
-        Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" },
+        "WAIT FOR VERIFY": "bg-yellow-100 text-yellow-800",
+        "VERIFIED": "bg-green-100 text-green-800",
+        "REFUSE": "bg-red-100 text-red-800",
+        "UNKNOWN": "bg-gray-100 text-gray-700",
     };
 
-    // 🔹 Render nút hành động
+    // 🧩 Hàm render nút hành động
     const renderActionButton = (status, id) => {
         switch (status) {
-            case "Pending":
+            case "WAIT FOR VERIFY":
                 return (
                     <button
+                        onClick={() => fetchChapterText(id)}
                         className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1"
-                    // onClick={() => handleReview(id)}
                     >
-                        <HiOutlinePencilAlt className="w-4 h-4" /> Bắt đầu duyệt
+                        <HiOutlinePencilAlt className="w-4 h-4" /> Xem nội dung
                     </button>
                 );
-
-            case "Approved":
+            case "VERIFIED":
                 return (
                     <button
+                        onClick={() => fetchChapterText(id)}
                         className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1"
-                    // onClick={() => handlePublish(id)}
                     >
-                        <HiOutlineCheckCircle className="w-4 h-4" /> Chuẩn bị xuất bản
+                        <HiOutlineCheckCircle className="w-4 h-4" /> Xem nội dung
                     </button>
                 );
-
-            case "Rejected":
+            case "REFUSE":
                 return (
                     <button
+                        onClick={() => fetchChapterText(id)}
                         className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1"
-                    // onClick={() => handleViewReason(id)}
                     >
-                        <HiOutlineXCircle className="w-4 h-4" /> Xem lý do
+                        <HiOutlineXCircle className="w-4 h-4" /> Xem nội dung
                     </button>
                 );
-
             default:
                 return null;
         }
     };
+
+    // 🧠 Hàm fetch nội dung chương
+    const fetchChapterText = async (chapterId) => {
+        try {
+            if (expandedChapterId === chapterId) {
+                setExpandedChapterId(null);
+                return;
+            }
+
+            if (!chapterContents[chapterId]) {
+                const token = sessionStorage.getItem("token");
+                const res = await fetch(
+                    `https://be-ink-realm-c7jk.vercel.app/moderator/chapter/text/${chapterId}`,
+                    {
+                        headers: {
+                            accept: "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (!res.ok) throw new Error("Không thể tải nội dung chương");
+                const data = await res.json();
+
+                // ⚠️ Ở đây sửa lại `data.chapterText` thay vì `data.contentText`
+                setChapterContents((prev) => ({
+                    ...prev,
+                    [chapterId]: data.chapterText || "Không có nội dung",
+                }));
+            }
+
+            setExpandedChapterId(chapterId);
+        } catch (err) {
+            console.error("❌ Lỗi khi lấy nội dung chương:", err);
+        }
+    };
+
     // Bắt đầu thay đổi: div ngoài cùng chỉ dùng flex và min-h
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -245,13 +265,26 @@ const ModerateOriginalNovels = () => {
                 <button
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="p-3 rounded-2xl bg-white shadow-lg border border-gray-100 
-                                          hover:shadow-indigo-300/50
-                                           hover:border-indigo-500 transition duration-300 scale-100 
-                                           hover:scale-105 fixed focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-blue-800 dark:border-blue-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400"
-                >
-
-                    <LuSquareMenu size={24} className="text-indigo-600 w-6 h-6 dark:text-white " />
+                    className={`
+    p-3 rounded-2xl shadow-lg border transition duration-300 scale-100 hover:scale-105 fixed
+    focus:outline-none focus:ring-2
+    ${activeTab === "WAIT FOR VERIFY"
+                            ? "bg-yellow-100 border-yellow-300 hover:shadow-yellow-300/50 hover:border-yellow-500 focus:ring-yellow-400"
+                            : activeTab === "VERIFIED"
+                                ? "bg-green-100 border-green-300 hover:shadow-green-300/50 hover:border-green-500 focus:ring-green-400"
+                                : activeTab === "REFUSE"
+                                    ? "bg-red-100 border-red-300 hover:shadow-red-300/50 hover:border-red-500 focus:ring-red-400"
+                                    : "bg-white border-gray-100 hover:shadow-indigo-300/50 hover:border-indigo-500 focus:ring-indigo-500"}
+                                        dark:bg-blue-800 dark:border-blue-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400 `} >
+                        <LuSquareMenu
+                            size={24}
+                            className={`w-6 h-6 ${activeTab === "WAIT FOR VERIFY" ? "text-yellow-600"
+                                : activeTab === "VERIFIED"
+                                ? "text-green-600"
+                                 : activeTab === "REFUSE"
+                                ? "text-red-600"
+                                : "text-indigo-600" }dark:text-white`}
+                    />
                 </button>
                 {menuOpen && (
                     <div className="w-64 bg-white/95 backdrop-blur-sm 
@@ -328,22 +361,23 @@ const ModerateOriginalNovels = () => {
                     </h2>
                 </header>
 
-                {/* 🔸 Tabs trạng thái */}
+                {/* 🔹 Tabs trạng thái */}
                 <div className="flex flex-wrap gap-3 mb-8 justify-center">
-                    {Object.keys(statusIdMap).map((statusKey) => (
+                    {statusList.map((s) => (
                         <button
-                            key={statusKey}
-                            onClick={() => setActiveTab(statusKey)}
+                            key={s.chapterStatusId}
+                            onClick={() => setActiveTab(s.chapterStatusCode)}
                             className={`px-4 py-2 rounded-lg font-semibold text-sm transition ring-2 
-              ${activeTab === statusKey
+              ${activeTab === s.chapterStatusCode
                                     ? "bg-blue-600 text-white ring-blue-600"
                                     : "bg-gray-100 text-gray-800 hover:bg-gray-200 ring-gray-300"
                                 }`}
                         >
-                            {statusKey} ({statusCounts[statusKey] || 0})
+                            {s.chapterStatusDescription} ({statusCounts[s.chapterStatusId] || 0})
                         </button>
                     ))}
                 </div>
+
 
                 {/* --- BỘ LỌC VÀ TÌM KIẾM MỚI --- */}
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 p-4">
@@ -389,44 +423,116 @@ const ModerateOriginalNovels = () => {
                     </div>
                 </div>
 
-                <table className="min-w-full border">
+                {/* 🔸 Bảng dữ liệu */}
+                <table className="min-w-full border dark:bg-white">
                     <thead className="bg-gray-100 text-gray-700">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Tên truyện</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Chương</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Ngày tạo</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Hành động</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Trạng thái</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Nội dung</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Cập nhật</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {chapterData.length > 0 ? (
+                        {loading ? (
+                            <tr>
+                                <td colSpan="6" className="text-center py-6 text-gray-500">
+                                    Đang tải dữ liệu...
+                                </td>
+                            </tr>
+                        ) : chapterData.length > 0 ? (
                             chapterData.map((item) => {
-                                let statusKey = "Pending";
-                                if (item.chapterStatusId === 6) statusKey = "Approved";
-                                else if (item.chapterStatusId === 7) statusKey = "Rejected";
+                                const statusObj = statusList.find(
+                                    (s) => s.chapterStatusId === item.chapterStatusId
+                                );
+                                const statusCode = statusObj?.chapterStatusCode || "UNKNOWN";
+                                const statusDesc = statusObj?.chapterStatusDescription || "Không xác định";
+                                const isExpanded = expandedChapterId === item.chapterId;
 
                                 return (
-                                    <tr key={item.chapterId} className="border-b hover:bg-gray-50">
-                                        <td className="px-6 py-4">{item.novelTitle}</td>
-                                        <td className="px-6 py-4">{item.chapterTitle}</td>
-                                        <td className="px-6 py-4">
-                                            {new Date(item.createDate).toLocaleString("vi-VN")}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {renderActionButton(statusKey, item.chapterId)}
-                                        </td>
-                                    </tr>
+                                    <React.Fragment key={item.chapterId}>
+                                        {/* Hàng chính */}
+                                        <tr className="border-b hover:bg-gray-50">
+                                            <td className="px-6 py-4">{item.novelTitle}</td>
+                                            <td className="px-6 py-4">{item.chapterTitle}</td>
+                                            <td className="px-6 py-4">
+                                                {new Date(item.createDate).toLocaleString("vi-VN")}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${statusCode === "WAIT FOR VERIFY"
+                                                        ? "bg-yellow-100 text-yellow-800"
+                                                        : statusCode === "VERIFIED"
+                                                            ? "bg-green-100 text-green-800"
+                                                            : statusCode === "REFUSE"
+                                                                ? "bg-red-100 text-red-800"
+                                                                : "bg-gray-100 text-gray-700"
+                                                        }`}
+                                                >
+                                                    {statusDesc}
+                                                </span>
+                                            </td>
+
+                                            {/* 👉 Nút "Xem chi tiết" */}
+                                            <td className="px-6 py-4">
+                                                <button
+                                                    onClick={() => fetchChapterText(item.chapterId)}
+                                                    className="text-blue-600 hover:text-blue-800 text-md"
+                                                >
+                                                    {isExpanded ? "Ẩn nội dung" : "Xem chi tiết"}
+                                                </button>
+                                            </td>
+
+                                            {/* 👉 Nút cập nhật trạng thái */}
+                                            <td className="px-6 py-4 space-x-2">
+                                                <button
+                                                    // onClick={() => updateChapterStatus(item.chapterId, 6)} // VERIFIED
+                                                    className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+                                                >
+                                                    Duyệt
+                                                </button>
+                                                <button
+                                                    // onClick={() => updateChapterStatus(item.chapterId, 7)} // REFUSE
+                                                    className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                                                >
+                                                    Từ chối
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        {/* Hàng mở rộng hiển thị nội dung */}
+                                        {isExpanded && (
+                                            <tr className="bg-gray-50">
+                                                <td colSpan="6" className="px-6 py-4">
+                                                    {chapterContents[item.chapterId] ? (
+                                                        <div className="whitespace-pre-line text-gray-800 text-sm">
+                                                            {chapterContents[item.chapterId]}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-gray-500 italic">
+                                                            Đang tải nội dung...
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
                                 );
                             })
                         ) : (
                             <tr>
-                                <td colSpan="4" className="text-center py-4 text-gray-500">
+                                <td colSpan="6" className="text-center py-6 text-gray-500">
                                     Không có chương nào cần xử lý
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
+
+
                 {/* Phân trang */}
                 <div className="mt-8 flex items-center justify-between max-w-screen px-4 py-3 sm:px-6">
                     <div className="flex flex-1 justify-between sm:hidden">
@@ -451,8 +557,6 @@ const ModerateOriginalNovels = () => {
                     </div>
                 </div>
             </div>
-
-
 
             {/* Phần giới thiệu vai trò Moderator & Workflow */}
             <div className="max-w-7xl mx-auto px-6 py-16">
@@ -765,4 +869,4 @@ const ModerateOriginalNovels = () => {
     );
 };
 
-export default ModerateOriginalNovels;
+export default ModerateOriginalNovels; 
