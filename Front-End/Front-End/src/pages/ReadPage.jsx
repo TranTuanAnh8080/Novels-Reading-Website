@@ -8,12 +8,14 @@ import {
   Clock,
   LogOut,
   Loader2,
+  Volume2, // Icon cho nút nghe
+  StopCircle, // Icon cho nút dừng
 } from "lucide-react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import logo from "../assets/inkrealm_logo.png";
-import defaultCover from "../assets/book-cover-blank.jpg";
-import Footer from "../components/SharedComponents/Footer";
+import logo from "../assets/inkrealm_logo.png"; // Đảm bảo đường dẫn này đúng
+import defaultCover from "../assets/book-cover-blank.jpg"; // Đảm bảo đường dẫn này đúng
+import Footer from "../components/SharedComponents/Footer"; // Đảm bảo đường dẫn này đúng
 
 export default function ReadPage() {
   const { id } = useParams(); // chapterId
@@ -39,7 +41,9 @@ export default function ReadPage() {
   // --- STATE MỚI ĐỂ QUẢN LÝ MUA CHƯƠNG ---
   const [purchaseInfo, setPurchaseInfo] = useState(null); // Lưu thông tin { error, price } khi cần mua
   const [isBuying, setIsBuying] = useState(false); // Trạng thái loading khi nhấn nút mua
-  // --- KẾT THÚC STATE MỚI ---
+
+  // --- STATE MỚI ĐỂ QUẢN LÝ TTS ---
+  const [isSpeaking, setIsSpeaking] = useState(false); // Trạng thái đang đọc TTS
 
   const fetchChapter = async () => {
     try {
@@ -96,7 +100,7 @@ export default function ReadPage() {
         console.warn("Không thể lấy danh sách chương:", err);
       }
 
-      // 6. Lấy comments (tạm giả lập, có thể fetch API thật)
+      // 6. Lấy comments (tạm giả lập)
       setComments([
         {
           user: "NguyenReader",
@@ -137,9 +141,30 @@ export default function ReadPage() {
     }
   };
 
+  // Sẽ chạy lại mỗi khi `id` (chapterId) thay đổi
   useEffect(() => {
+    // --- TÍCH HỢP TTS ---
+    // Dừng đọc TTS nếu đang đọc khi chuyển chương
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+    // --- KẾT THÚC TTS ---
+
     fetchChapter();
-  }, [id]); // Sẽ chạy lại mỗi khi `id` (chapterId) thay đổi
+  }, [id]);
+
+  // --- TÍCH HỢP TTS ---
+  // Dừng đọc khi rời khỏi trang (unmount)
+  useEffect(() => {
+    // Cleanup function này sẽ chạy khi component bị unmount
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []); // Dependency rỗng nghĩa là nó chỉ chạy 1 lần lúc mount và cleanup lúc unmount
+  // --- KẾT THÚC TTS ---
 
   // --- HÀM MỚI ĐỂ XỬ LÝ MUA CHƯƠNG ---
   const handleBuyChapter = async () => {
@@ -173,7 +198,7 @@ export default function ReadPage() {
     } catch (err) {
       console.error("Lỗi khi mua chương:", err);
       if (err.response) {
-        // Hiển thị lỗi từ server (ví dụ: "Số dư không đủ")
+        // Hiển thị lỗi từ server (ví dụ: "Số dư không đủ, vui lòng nạp thêm xu để mua đọc!")
         setError(err.response.data?.message || "Đã xảy ra lỗi khi mua.");
       } else {
         setError("Không thể kết nối đến máy chủ.");
@@ -182,6 +207,65 @@ export default function ReadPage() {
     }
   };
   // --- KẾT THÚC HÀM MỚI ---
+
+  // --- HÀM MỚI XỬ LÝ TTS ---
+  const handleSpeak = () => {
+    // Kiểm tra trình duyệt có hỗ trợ không
+    if (!("speechSynthesis" in window)) {
+      alert("Xin lỗi, trình duyệt của bạn không hỗ trợ chức năng này.");
+      return;
+    }
+
+    if (isSpeaking) {
+      // Nếu đang đọc -> Dừng
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      // Nếu chưa đọc -> Bắt đầu đọc
+      if (!chapterText) {
+        alert("Nội dung chương chưa được tải hoặc chương này cần mua.");
+        return;
+      }
+
+      // Tạo một đối tượng phát âm
+      // Thêm tiêu đề chương vào nội dung đọc
+      const fullTextToSpeak = `${
+        chapter?.chapterTitle || "Bắt đầu đọc"
+      }. ${chapterText}`;
+
+      const utterance = new SpeechSynthesisUtterance(fullTextToSpeak);
+
+      // Cố gắng tìm giọng tiếng Việt
+      // (Lưu ý: getVoices() có thể bất đồng bộ, nên set lang là cách an toàn)
+      utterance.lang = "vi-VN";
+
+      const voices = window.speechSynthesis.getVoices();
+      const vietnameseVoice = voices.find((voice) =>
+        voice.lang.startsWith("vi")
+      );
+      if (vietnameseVoice) {
+        utterance.voice = vietnameseVoice;
+      }
+
+      // Tùy chỉnh tốc độ, cao độ (tùy chọn)
+      utterance.rate = 1; // Tốc độ (1 là bình thường)
+      utterance.pitch = 1; // Cao độ
+
+      // Xử lý sự kiện khi đọc xong (hoặc bị lỗi)
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+        console.error("Đã xảy ra lỗi khi đọc TTS.");
+      };
+
+      // Bắt đầu đọc
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+    }
+  };
+  // --- KẾT THÚC HÀM TTS ---
 
   // Comment functions
   const addComment = () => {
@@ -196,7 +280,8 @@ export default function ReadPage() {
     setNewComment("");
     commentsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const sortedComments = sortOrder === "new" ? comments : [...comments].reverse();
+  const sortedComments =
+    sortOrder === "new" ? comments : [...comments].reverse();
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -233,8 +318,8 @@ export default function ReadPage() {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/LoginPage"
-                  className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
-                                     text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
+                  className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600
+                                       text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
                 >
                   <i className="fas fa-sign-in-alt mr-2"></i>
                   Đăng nhập
@@ -242,8 +327,8 @@ export default function ReadPage() {
 
                 <Link
                   to="/RegisterPage"
-                  className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
-                                     text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
+                  className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600
+                                       text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm"
                 >
                   <i className="fas fa-user-plus mr-2"></i>
                   Đăng ký
@@ -352,6 +437,26 @@ export default function ReadPage() {
             >
               <BookOpen className="w-4 h-4" /> Mục lục
             </button>
+
+            {/* --- NÚT TTS ĐÃ TÍCH HỢP --- */}
+            <button
+              onClick={handleSpeak}
+              disabled={loading || !chapterText || purchaseInfo} // Không cho đọc khi đang load, chưa có text, hoặc đang ở màn hình mua
+              className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm hover:shadow-sm disabled:opacity-50 ${
+                isSpeaking
+                  ? "bg-red-50 text-red-600 border-red-200" // Style khi đang đọc
+                  : "bg-white" // Style bình thường
+              }`}
+            >
+              {isSpeaking ? (
+                <StopCircle className="w-4 h-4" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
+              {isSpeaking ? "Dừng đọc" : "Nghe đọc"}
+            </button>
+            {/* --- KẾT THÚC NÚT TTS --- */}
+
             <button
               disabled={!chapter?.next?.chapterId}
               onClick={() =>
@@ -416,7 +521,6 @@ export default function ReadPage() {
             )}
           </article>
           {/* --- KẾT THÚC CONTENT --- */}
-
 
           {/* Comments */}
           <section className="mt-10">
