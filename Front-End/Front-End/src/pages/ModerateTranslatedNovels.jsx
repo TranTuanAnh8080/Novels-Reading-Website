@@ -7,10 +7,11 @@ import Footer from '../components/SharedComponents/Footer';
 import { LuSquareMenu } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
 import { Search, ChevronDown } from 'lucide-react';
-
 import { useDarkMode } from "../pages/DarkModeContext";
 import { IoMdSunny } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // --- Dữ liệu giả định và StatusTab Component (Giữ nguyên) ---
 const mockData = [
@@ -49,8 +50,7 @@ const StatusTab = ({ label, count, color, isActive, onClick }) => (
 const ModerateTranslatedNovels = () => {
 
     const { darkMode, setDarkMode } = useDarkMode();
-
-
+    const navigate = useNavigate();
     // Khai báo state cho tìm kiếm và sắp xếp
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
@@ -82,6 +82,14 @@ const ModerateTranslatedNovels = () => {
                 <HiOutlineCheckCircle className="w-4 h-4" />Đã hoàn thành</button>);
             default: return null;
         }
+    };
+
+
+    // 🚪 Đăng xuất
+    const handleLogout = () => {
+        sessionStorage.clear();
+        delete axios.defaults.headers.common['Authorization'];
+        navigate('/LoginPage', { replace: true });
     };
 
     // Bắt đầu thay đổi: div ngoài cùng chỉ dùng flex và min-h
@@ -172,8 +180,8 @@ const ModerateTranslatedNovels = () => {
                             Dashboard thống kê
                         </a>
                         <a
-                            href="/logout"
-                            className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300"
+                            onClick={handleLogout}
+                            className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300 hover:cursor-pointer"
                         >
                             Đăng xuất
                         </a>
@@ -276,18 +284,18 @@ const ModerateTranslatedNovels = () => {
                 </div>
 
                 {/* Bảng Dữ liệu Chính */}
-                <div className="bg-white rounded-xs shadow-md overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
+                <div className="bg-white rounded-xs shadow-md overflow-x-aut">
+                    <table className="min-w-full divide-y divide-gray-200 dark:bg-white">
 
-                        <thead className="bg-gray-100 dark:bg-gray-800">
+                        <thead className="bg-gray-100 dark:bg-white">
                             <tr>
                                 {['ID', 'NỘI DUNG', 'TÁC GIẢ', 'NGÀY TẠO', 'MÔ TẢ', 'TRẠNG THÁI', 'HÀNH ĐỘNG'].map((header) => (
                                     <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-bold
-                                    dark:text-white  text-gray-500uppercase tracking-wider">{header}</th>
+                                    dark:text-blacktext-gray-500 uppercase tracking-wider">{header}</th>
                                 ))}
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-100 dark:text-white dark:bg-gray-800">
+                        <tbody className="bg-white divide-y divide-gray-100 dark:bg-white dark:bg-gray-800">
                             {filteredData.length > 0 ? (
                                 filteredData.map((item) => {
                                     const statusInfo = statusColors[item.status] || statusColors.Pending;

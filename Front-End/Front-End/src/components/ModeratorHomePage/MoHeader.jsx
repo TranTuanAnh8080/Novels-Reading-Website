@@ -47,6 +47,13 @@ const MoHeader = () => {
     // Hàm kiểm tra xem nội dung nào đang được hover để hiển thị Tooltip
     const isHovering = (type) => hoverContent && hoverContent.title === contentMap[type].title;
 
+    // 🚪 Đăng xuất
+    const handleLogout = () => {
+        sessionStorage.clear();
+        delete axios.defaults.headers.common['Authorization'];
+        navigate('/LoginPage', { replace: true });
+    };
+
     return (
         <header
             className="w-full flex items-center justify-between px-6 py-4 shadow-md fixed
@@ -78,7 +85,7 @@ const MoHeader = () => {
                     <div
                         key={key}
                         className="relative"
-                        onMouseEnter={() => handleMouseEnter(key)} 
+                        onMouseEnter={() => handleMouseEnter(key)}
                         onMouseLeave={handleMouseLeave}
                     >
                         <button

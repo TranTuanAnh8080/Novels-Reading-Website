@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react';
 // Giả định bạn đã import các icon này từ thư viện (ví dụ: react-icons)
-import { HiOutlineMenu, HiOutlinePencilAlt, HiOutlineCheckCircle, HiOutlineExclamationCircle, HiOutlineBan, HiOutlineXCircle, HiOutlineClock, HiOutlineEye } from 'react-icons/hi';
+import { HiOutlineCheckCircle, HiOutlineExclamationCircle, HiOutlineBan, HiOutlineXCircle, HiOutlineClock, HiOutlineEye } from 'react-icons/hi';
 import { HiOutlineSparkles } from 'react-icons/hi';
 import MoHeader from '../components/ModeratorHomePage/MoHeader';
 import Footer from '../components/SharedComponents/Footer';
 import { LuSquareMenu } from "react-icons/lu";
 import { FaChevronDown } from "react-icons/fa";
 import { Search, ChevronDown } from 'lucide-react';
-
 import { useDarkMode } from "../pages/DarkModeContext";
 import { IoMdSunny } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
+import axios from 'axios';
 
-// --- Dữ liệu giả định và StatusTab Component (Giữ nguyên) ---
-const mockData = [
-    // ... dữ liệu của bạn ...
-    { id: 2001, content: "Chương 1: Khởi đầu mới tại học viện", author: "Tác giả ẩn danh", date: "2025-10-02", description: "Truyện sáng tác, phong cách ngôn tình. Cần kiểm tra lỗi chính tả/văn phong.", status: "Pending" },
-    { id: 2002, content: "Chương 15: Bí mật của Long Thần", author: "Bắc Phong", date: "2025-10-01", description: "Truyện bị nghi ngờ đạo văn (plagiarism). Đang trong quá trình so sánh.", status: "Moderating" },
-    { id: 2003, content: "Chương 3: Hành trình tu tiên", author: "Vũ Thiên", date: "2025-09-28", description: "Văn phong sơ sài, quá nhiều lỗi ngữ pháp. Đã từ chối và gửi gợi ý chỉnh sửa.", status: "Rejected" },
-    { id: 2004, content: "Chương 50: Hôn lễ thế kỷ", author: "Hạ Du", date: "2025-09-25", description: "Truyện đạt chất lượng tốt, đã xuất bản. Theo dõi tương tác độc giả.", status: "Published" },
-    { id: 2005, content: "Chương 2: Lời nguyền cổ xưa", author: "Tác giả ẩn danh", date: "2025-10-03", description: "Chương mới, cần check nội dung nhạy cảm theo quy định cộng đồng.", status: "Approved" },
-];
+import { useNavigate } from 'react-router-dom';
 
 // Component cho từng tab trạng thái
 const StatusTab = ({ label, count, color, isActive, onClick }) => (
@@ -47,12 +39,10 @@ const StatusTab = ({ label, count, color, isActive, onClick }) => (
 );
 
 const ModerateOriginalNovels = () => {
-
+    const navigate = useNavigate();
     const { darkMode, setDarkMode } = useDarkMode();
     const [expandedChapterId, setExpandedChapterId] = useState(null);
     const [chapterContents, setChapterContents] = useState({}); // Lưu nội dung từng chương
-
-
     // Khai báo state cho tìm kiếm và sắp xếp
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
@@ -65,7 +55,7 @@ const ModerateOriginalNovels = () => {
 
     // ... (logic statusCounts, filteredData, renderActionButton, statusColors, pages giữ nguyên) ...
     // const statusCounts = { Pending: 1, Moderating: 2, Approved: 3, Rejected: 4, Published: 5 };
-    const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' : item.status === activeTab);
+    // const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' : item.status === activeTab);
     // const statusColors = { Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" }, Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" }, Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" }, Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" }, Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" }, };
     const totalPages = 5;
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -142,7 +132,7 @@ const ModerateOriginalNovels = () => {
                 );
 
                 setChapterData(chapters);
-                
+
                 const novelCountsByStatus = {};
                 data.novels.forEach((novel) => {
                     const statusIds = new Set(novel.chapters.map((c) => c.chapterStatusId));
@@ -163,47 +153,47 @@ const ModerateOriginalNovels = () => {
     }, [activeTab]);
 
     // 🔹 Màu cho từng trạng thái
-    const statusColors = {
-        "WAIT FOR VERIFY": "bg-yellow-100 text-yellow-800",
-        "VERIFIED": "bg-green-100 text-green-800",
-        "REFUSE": "bg-red-100 text-red-800",
-        "UNKNOWN": "bg-gray-100 text-gray-700",
-    };
+    // const statusColors = {
+    //     "WAIT FOR VERIFY": "bg-yellow-100 text-yellow-800",
+    //     "VERIFIED": "bg-green-100 text-green-800",
+    //     "REFUSE": "bg-red-100 text-red-800",
+    //     "UNKNOWN": "bg-gray-100 text-gray-700",
+    // };
 
-    // 🧩 Hàm render nút hành động
-    const renderActionButton = (status, id) => {
-        switch (status) {
-            case "WAIT FOR VERIFY":
-                return (
-                    <button
-                        onClick={() => fetchChapterText(id)}
-                        className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1"
-                    >
-                        <HiOutlinePencilAlt className="w-4 h-4" /> Xem nội dung
-                    </button>
-                );
-            case "VERIFIED":
-                return (
-                    <button
-                        onClick={() => fetchChapterText(id)}
-                        className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1"
-                    >
-                        <HiOutlineCheckCircle className="w-4 h-4" /> Xem nội dung
-                    </button>
-                );
-            case "REFUSE":
-                return (
-                    <button
-                        onClick={() => fetchChapterText(id)}
-                        className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1"
-                    >
-                        <HiOutlineXCircle className="w-4 h-4" /> Xem nội dung
-                    </button>
-                );
-            default:
-                return null;
-        }
-    };
+    // // 🧩 Hàm render nút hành động
+    // const renderActionButton = (status, id) => {
+    //     switch (status) {
+    //         case "WAIT FOR VERIFY":
+    //             return (
+    //                 <button
+    //                     onClick={() => fetchChapterText(id)}
+    //                     className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1"
+    //                 >
+    //                     <HiOutlinePencilAlt className="w-4 h-4" /> Xem nội dung
+    //                 </button>
+    //             );
+    //         case "VERIFIED":
+    //             return (
+    //                 <button
+    //                     onClick={() => fetchChapterText(id)}
+    //                     className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1"
+    //                 >
+    //                     <HiOutlineCheckCircle className="w-4 h-4" /> Xem nội dung
+    //                 </button>
+    //             );
+    //         case "REFUSE":
+    //             return (
+    //                 <button
+    //                     onClick={() => fetchChapterText(id)}
+    //                     className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1"
+    //                 >
+    //                     <HiOutlineXCircle className="w-4 h-4" /> Xem nội dung
+    //                 </button>
+    //             );
+    //         default:
+    //             return null;
+    //     }
+    // };
 
     // 🧠 Hàm fetch nội dung chương
     const fetchChapterText = async (chapterId) => {
@@ -241,6 +231,14 @@ const ModerateOriginalNovels = () => {
         }
     };
 
+
+    // 🚪 Đăng xuất
+    const handleLogout = () => {
+        sessionStorage.clear();
+        delete axios.defaults.headers.common['Authorization'];
+        navigate('/LoginPage', { replace: true });
+    };
+
     // Bắt đầu thay đổi: div ngoài cùng chỉ dùng flex và min-h
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -276,14 +274,14 @@ const ModerateOriginalNovels = () => {
                                     ? "bg-red-100 border-red-300 hover:shadow-red-300/50 hover:border-red-500 focus:ring-red-400"
                                     : "bg-white border-gray-100 hover:shadow-indigo-300/50 hover:border-indigo-500 focus:ring-indigo-500"}
                                         dark:bg-blue-800 dark:border-blue-700 dark:text-gray-200 dark:hover:border-indigo-400 dark:focus:ring-indigo-400 `} >
-                        <LuSquareMenu
-                            size={24}
-                            className={`w-6 h-6 ${activeTab === "WAIT FOR VERIFY" ? "text-yellow-600"
-                                : activeTab === "VERIFIED"
+                    <LuSquareMenu
+                        size={24}
+                        className={`w-6 h-6 ${activeTab === "WAIT FOR VERIFY" ? "text-yellow-600"
+                            : activeTab === "VERIFIED"
                                 ? "text-green-600"
-                                 : activeTab === "REFUSE"
-                                ? "text-red-600"
-                                : "text-indigo-600" }dark:text-white`}
+                                : activeTab === "REFUSE"
+                                    ? "text-red-600"
+                                    : "text-indigo-600"}dark:text-white`}
                     />
                 </button>
                 {menuOpen && (
@@ -341,8 +339,8 @@ const ModerateOriginalNovels = () => {
                             Dashboard thống kê
                         </a>
                         <a
-                            href="/logout"
-                            className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300"
+                            onClick={handleLogout}
+                            className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300 hover:cursor-pointer"
                         >
                             Đăng xuất
                         </a>
