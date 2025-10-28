@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import AdminSidebar from "../Admin/AdminSideBar";
+import AdminSidebar from "../Admin/AdminSidebar.jsx";
 import { useDarkMode } from "../../pages/DarkModeContext";
 import { IoMdSunny } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
