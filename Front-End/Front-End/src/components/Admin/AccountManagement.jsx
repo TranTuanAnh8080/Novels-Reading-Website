@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, Edit, Trash2, PlusCircle, UserPlus, X, AlertCircle, Users } from "lucide-react";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
 // --- Component con: Modal Tạo Tài khoản ---
@@ -48,6 +49,39 @@ const CreateAccountModal = ({ show, onClose, onSubmit, newAccount, setNewAccount
             )}
 
             <form onSubmit={onSubmit} className="space-y-5">
+              {/* Họ và tên */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                  Họ và tên
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                  value={newAccount.fullName || ""}
+                  onChange={(e) =>
+                    setNewAccount({ ...newAccount, fullName: e.target.value })
+                  }
+                  required
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                  value={newAccount.email || ""}
+                  onChange={(e) =>
+                    setNewAccount({ ...newAccount, email: e.target.value })
+                  }
+                  required
+                />
+              </div>
+
+              {/* Tên đăng nhập */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
                   Tên đăng nhập
@@ -55,7 +89,7 @@ const CreateAccountModal = ({ show, onClose, onSubmit, newAccount, setNewAccount
                 <input
                   type="text"
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                  value={newAccount.username}
+                  value={newAccount.username || ""}
                   onChange={(e) =>
                     setNewAccount({ ...newAccount, username: e.target.value })
                   }
@@ -63,6 +97,7 @@ const CreateAccountModal = ({ show, onClose, onSubmit, newAccount, setNewAccount
                 />
               </div>
 
+              {/* Mật khẩu */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
                   Mật khẩu
@@ -70,7 +105,7 @@ const CreateAccountModal = ({ show, onClose, onSubmit, newAccount, setNewAccount
                 <input
                   type="password"
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                  value={newAccount.password}
+                  value={newAccount.password || ""}
                   onChange={(e) =>
                     setNewAccount({ ...newAccount, password: e.target.value })
                   }
@@ -78,24 +113,7 @@ const CreateAccountModal = ({ show, onClose, onSubmit, newAccount, setNewAccount
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                  Xác nhận mật khẩu
-                </label>
-                <input
-                  type="password"
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                  value={newAccount.confirmPassword}
-                  onChange={(e) =>
-                    setNewAccount({
-                      ...newAccount,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-
+              {/* Nút hành động */}
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
@@ -113,6 +131,7 @@ const CreateAccountModal = ({ show, onClose, onSubmit, newAccount, setNewAccount
                 </button>
               </div>
             </form>
+
           </motion.div>
         </motion.div>
       )}
@@ -131,62 +150,109 @@ const AccountManagement = () => {
     confirmPassword: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Fake data ban đầu
-  useEffect(() => {
-    setAccounts([
-      { id: 1, username: "admin01", role: "Admin", status: "Active" },
-      { id: 2, username: "mod02", role: "Moderator", status: "Active" },
-      { id: 3, username: "editor03", role: "Editor", status: "Active" },
-      { id: 4, username: "banneduser", role: "Customer", status: "Banned" },
-    ]);
-  }, []);
+  const [confirmDelete, setConfirmDelete] = useState({ show: false, accountId: null });
+  const [successMessge, setSuccessMessage] = useState("");
 
   // Lọc danh sách theo từ khóa
   const filteredAccounts = accounts.filter((acc) =>
     acc.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleCreateAccount = (e) => {
+  const handleCreateAccount = async (e) => {
     e.preventDefault();
     setErrorMessage("");
 
-    if (!newAccount.username || !newAccount.password || !newAccount.confirmPassword) {
-      setErrorMessage("Vui lòng điền đầy đủ tất cả các trường!");
-      return;
-    }
-    if (newAccount.password !== newAccount.confirmPassword) {
-      setErrorMessage("Mật khẩu xác nhận không khớp!");
-      return;
-    }
-    if (newAccount.password.length < 6) {
-      setErrorMessage("Mật khẩu phải có ít nhất 6 ký tự.");
-      return;
-    }
+    try {
+      const token = sessionStorage.getItem("token");
 
-    // Kiểm tra trùng tên đăng nhập
-    if (accounts.some(acc => acc.username.toLowerCase() === newAccount.username.toLowerCase())) {
-      setErrorMessage("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.");
-      return;
-    }
+      const response = await fetch(
+        "https://be-ink-realm-c7jk.vercel.app/admin/account/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            username: newAccount.username,
+            password: newAccount.password,
+            fullName: newAccount.fullName || "Không có tên",
+            email: newAccount.email || "",
+            avatar: newAccount.avatar || "https://example.com/default-avatar.png",
+            roleId: 2, // mặc định Moderator/Admin tùy vai trò
+          }),
+        }
+      );
 
-    const newAcc = {
-      id: accounts.length > 0 ? Math.max(...accounts.map(acc => acc.id)) + 1 : 1,
-      username: newAccount.username,
-      role: "Moderator",
-      status: "Active",
-    };
-    setAccounts([...accounts, newAcc]);
-    setShowModal(false);
-    setNewAccount({ username: "", password: "", confirmPassword: "" });
-    setErrorMessage("");
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Nếu API trả lỗi (status >= 400)
+        setErrorMessage(data.message || "Tạo tài khoản thất bại!");
+        return;
+      }
+
+      // --- Nếu tạo thành công ---
+      console.log("✅ Account created:", data);
+
+      // Cập nhật danh sách trong bảng UI
+      const createdAcc = data.account;
+      setAccounts((prev) => [
+        ...prev,
+        {
+          id: createdAcc.accountId,
+          username: createdAcc.username,
+          role: createdAcc.roleId === 2 ? "Admin" : "Moderator",
+          status: "Active",
+        },
+      ]);
+
+      // Reset modal
+      setShowModal(false);
+      setNewAccount({ username: "", password: "", confirmPassword: "" });
+      setErrorMessage("");
+    } catch (error) {
+      console.error("❌ Lỗi khi tạo tài khoản:", error);
+      setErrorMessage("Lỗi kết nối đến server. Vui lòng thử lại sau!");
+    }
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa tài khoản này không?")) {
-      setAccounts(accounts.filter((acc) => acc.id !== id));
+  const handleDelete = async (accountId) => {
+    try {
+      const token = sessionStorage.getItem("token");
+
+      const response = await fetch(
+        `https://be-ink-realm-c7jk.vercel.app/admin/account/${accountId}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(data.message || "Xóa tài khoản thất bại!");
+        return;
+      }
+
+      console.log("✅ Account deleted:", data.message);
+
+      // Cập nhật danh sách UI
+      setAccounts((prev) => prev.filter((acc) => acc.id !== accountId));
+
+      setSuccessMessage("🗑️ Tài khoản đã được xóa thành công!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      console.error("❌ Lỗi khi xóa tài khoản:", error);
+      setErrorMessage("Lỗi kết nối đến server. Vui lòng thử lại sau!");
     }
   };
+
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -195,9 +261,13 @@ const AccountManagement = () => {
   }
 
   return (
+
+
     <div className="p-6 sm:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+
+
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
           <Users className="w-8 h-8 text-blue-600" />
           Quản lý tài khoản nội bộ
@@ -246,8 +316,8 @@ const AccountManagement = () => {
                 <td className="py-3.5 px-6 text-sm">{acc.role}</td>
                 <td
                   className={`py-3.5 px-6 font-semibold text-sm ${acc.status === "Active"
-                      ? "text-green-500 dark:text-green-400"
-                      : "text-red-500 dark:text-red-400"
+                    ? "text-green-500 dark:text-green-400"
+                    : "text-red-500 dark:text-red-400"
                     }`}
                 >
                   {acc.status}
@@ -293,6 +363,52 @@ const AccountManagement = () => {
         setNewAccount={setNewAccount}
         errorMessage={errorMessage}
       />
+
+      <AnimatePresence>
+        {confirmDelete.show && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center bg-black/40 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-sm text-center"
+            >
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
+                Xác nhận xóa tài khoản
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Bạn có chắc chắn muốn xóa tài khoản này không?
+                Hành động này không thể hoàn tác.
+              </p>
+
+              <div className="flex justify-center gap-3">
+                <button
+                  onClick={() => setConfirmDelete({ show: false, accountId: null })}
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={() => {
+                    handleDelete(confirmDelete.accountId);
+                    setConfirmDelete({ show: false, accountId: null });
+                  }}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+                >
+                  Xóa
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

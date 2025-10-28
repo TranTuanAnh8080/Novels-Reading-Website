@@ -3,9 +3,8 @@ import {
     TrendingUp, Users, BookOpen, DollarSign, LayoutDashboard, Icon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { LineChart, Legend, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList } from "recharts";
-
+import { useEffect } from "react";
 
 // --- DỮ LIỆU GIẢ LẬP ---
 const kpiData = [
@@ -80,11 +79,11 @@ const genreData = [
 
 const topTrendingData = [
     { day: "Thứ 2", "Đế Bá": 10, "Thần Đạo Đan Tôn": 25, "Nhất Niệm Vĩnh Hằng": 100, "Linh Vũ Thiên Hạ": 112, "Hạ Tân": 112 },
-    { day: "Thứ 3", "Đế Bá": 20, "Thần Đạo Đan Tôn": 40, "Nhất Niệm Vĩnh Hằng": 120, "Linh Vũ Thiên Hạ": 43 , "Hạ Tân": 23},
-    { day: "Thứ 4", "Đế Bá": 30, "Thần Đạo Đan Tôn": 65, "Nhất Niệm Vĩnh Hằng": 57, "Linh Vũ Thiên Hạ": 123 , "Hạ Tân": 76},
-    { day: "Thứ 5", "Đế Bá": 40, "Thần Đạo Đan Tôn": 80, "Nhất Niệm Vĩnh Hằng": 87, "Linh Vũ Thiên Hạ": 32 , "Hạ Tân": 11},
-    { day: "Thứ 6", "Đế Bá": 30, "Thần Đạo Đan Tôn": 11, "Nhất Niệm Vĩnh Hằng": 23, "Linh Vũ Thiên Hạ": 32 , "Hạ Tân": 7},
-    { day: "Thứ 7", "Đế Bá": 70, "Thần Đạo Đan Tôn": 32, "Nhất Niệm Vĩnh Hằng": 54, "Linh Vũ Thiên Hạ": 33 , "Hạ Tân": 87},
+    { day: "Thứ 3", "Đế Bá": 20, "Thần Đạo Đan Tôn": 40, "Nhất Niệm Vĩnh Hằng": 120, "Linh Vũ Thiên Hạ": 43, "Hạ Tân": 23 },
+    { day: "Thứ 4", "Đế Bá": 30, "Thần Đạo Đan Tôn": 65, "Nhất Niệm Vĩnh Hằng": 57, "Linh Vũ Thiên Hạ": 123, "Hạ Tân": 76 },
+    { day: "Thứ 5", "Đế Bá": 40, "Thần Đạo Đan Tôn": 80, "Nhất Niệm Vĩnh Hằng": 87, "Linh Vũ Thiên Hạ": 32, "Hạ Tân": 11 },
+    { day: "Thứ 6", "Đế Bá": 30, "Thần Đạo Đan Tôn": 11, "Nhất Niệm Vĩnh Hằng": 23, "Linh Vũ Thiên Hạ": 32, "Hạ Tân": 7 },
+    { day: "Thứ 7", "Đế Bá": 70, "Thần Đạo Đan Tôn": 32, "Nhất Niệm Vĩnh Hằng": 54, "Linh Vũ Thiên Hạ": 33, "Hạ Tân": 87 },
     { day: "Chủ nhật", "Đế Bá": 100, "Thần Đạo Đan Tôn": 56, "Nhất Niệm Vĩnh Hằng": 89, "Linh Vũ Thiên Hạ": 34, "Hạ Tân": 92 },
 ];
 
@@ -113,115 +112,211 @@ const KpiCard = ({ title, value, icon: Icon, color, bgColor, description }) => (
 
 // --- BIỂU ĐỒ DOANH THU ---
 const RevenueChart = () => {
-    const [selectedRange, setSelectedRange] = useState("week");
+    const [range, setRange] = useState("day");
+    const [selectedDate, setSelectedDate] = useState("");
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const [chartData, setChartData] = useState([]);
+    const [totalRevenue, setTotalRevenue] = useState(0);
+    const [loading, setLoading] = useState(false);
 
-    // --- Thay đổi kích thước cột dựa theo phạm vi ---
-    const getBarSize = () => {
-        switch (selectedRange) {
-            case "month":
-                return 110;
-            case "quarter":
-                return 110;
-            case "year":
-                return 220;
-            default:
-                return 45;
+    // --- Gọi API doanh thu ---
+    const fetchRevenueData = async () => {
+        try {
+            setLoading(true);
+            const token = sessionStorage.getItem("token");
+            let endpoint = "";
+
+            // ✅ Xác định endpoint giống như RevenueStatistics
+            if (range === "day") {
+                endpoint = selectedDate ? `date/${selectedDate}` : "today";
+            } else if (range === "month") {
+                endpoint = "month";
+            } else if (range === "year") {
+                endpoint = "year";
+            } else if (range === "range" && fromDate && toDate) {
+                endpoint = `range/${fromDate}/${toDate}`;
+            } else {
+                return;
+            }
+
+            const res = await fetch(
+                `https://be-ink-realm-c7jk.vercel.app/admin/dashboard/revenue/${endpoint}`,
+                {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Lỗi tải dữ liệu doanh thu");
+
+            // ✅ Chuẩn hóa dữ liệu cho biểu đồ
+            if (range === "day") {
+                setChartData([{ name: data.date, DoanhThu: Number(data.revenue) }]);
+                setTotalRevenue(Number(data.revenue));
+            } else if (range === "month") {
+                const list = data.data?.map((item) => ({
+                    name: item.name || item.date || "Ngày",
+                    DoanhThu: Number(item.revenue || 0),
+                })) || [{ name: "Tháng này", DoanhThu: Number(data.revenue) }];
+                setChartData(list);
+                setTotalRevenue(Number(data.revenue));
+            } else if (range === "year") {
+                setChartData([{ name: data.year || "Năm nay", DoanhThu: Number(data.revenue) }]);
+                setTotalRevenue(Number(data.revenue));
+            } else if (range === "range") {
+                const list =
+                    data.dailyRevenue?.map((d) => ({
+                        name: d.date,
+                        DoanhThu: Number(d.revenue),
+                    })) || [];
+                setChartData(list);
+                setTotalRevenue(Number(data.totalRevenue || 0));
+            }
+        } catch (err) {
+            console.error("❌ Lỗi tải dữ liệu doanh thu:", err);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const getCategoryGap = () => {
-        switch (selectedRange) {
-            case "month":
-                return "10%";
-            case "quarter":
-                return "10%";
-            case "year":
-                return "0%";
-            default:
-                return "20%";
-        }
-    };
+    useEffect(() => {
+        fetchRevenueData();
+    }, [range, selectedDate, fromDate, toDate]);
 
+    // --- Giao diện giống như trước ---
     return (
         <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Biểu đồ doanh thu
                 </h2>
 
                 {/* Bộ chọn phạm vi */}
-                <select
-                    value={selectedRange}
-                    onChange={(e) => setSelectedRange(e.target.value)}
-                    className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 
-                     rounded-lg px-3 py-1 text-sm focus:ring focus:ring-blue-400
-                     text-gray-800 dark:text-gray-200"
-                >
-                    <option value="week">Tuần</option>
-                    <option value="month">Tháng</option>
-                    <option value="quarter">Quý</option>
-                    <option value="year">Năm</option>
-                </select>
+                <div className="flex gap-2 flex-wrap items-center">
+                    {["day", "month", "year", "range"].map((r) => (
+                        <button
+                            key={r}
+                            onClick={() => {
+                                setRange(r);
+                                setSelectedDate("");
+                                setFromDate("");
+                                setToDate("");
+                            }}
+                            className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${range === r
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
+                                }`}
+                        >
+                            {r === "day"
+                                ? "Ngày"
+                                : r === "month"
+                                    ? "Tháng"
+                                    : r === "year"
+                                        ? "Năm"
+                                        : "Khoảng"}
+                        </button>
+                    ))}
+
+                    {/* Ngày cụ thể */}
+                    {range === "day" && (
+                        <input
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            className="p-1.5 border rounded-lg text-sm bg-gray-50 dark:bg-gray-700 dark:text-white"
+                        />
+                    )}
+
+                    {/* Khoảng thời gian */}
+                    {range === "range" && (
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="date"
+                                value={fromDate}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                className="p-1.5 border rounded-lg text-sm bg-gray-50 dark:bg-gray-700 dark:text-white"
+                            />
+                            <span className="text-gray-500 dark:text-gray-300">→</span>
+                            <input
+                                type="date"
+                                value={toDate}
+                                onChange={(e) => setToDate(e.target.value)}
+                                className="p-1.5 border rounded-lg text-sm bg-gray-50 dark:bg-gray-700 dark:text-white"
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Biểu đồ cột */}
-            <ResponsiveContainer width="100%" height={320}>
-                <BarChart
-                    data={revenueData[selectedRange]}
-                    margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
-                    barCategoryGap={getCategoryGap()}
-                >
+            <div className="w-full h-[320px] min-h-[300px]">
+                {loading ? (
+                    <div className="flex justify-center items-center h-full text-gray-500">
+                        Đang tải dữ liệu...
+                    </div>
+                ) : chartData.length === 0 ? (
+                    <div className="flex justify-center items-center h-full text-gray-400">
+                        Không có dữ liệu doanh thu.
+                    </div>
+                ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+                            <XAxis dataKey="name" stroke="#888888" />
+                            <YAxis
+                                tickFormatter={(v) =>
+                                    new Intl.NumberFormat("vi-VN", { notation: "compact" }).format(v)
+                                }
+                                stroke="#888888"
+                            />
+                            <Tooltip
+                            cursor={false}
+                                formatter={(v) => `${new Intl.NumberFormat("vi-VN").format(v)} ₫`}
+                                contentStyle={{
+                                    backgroundColor: "#fff",
+                                    borderRadius: "10px",
+                                    border: "1px solid #ddd",
+                                }}
+                            />
+                            <Bar
+                                dataKey="DoanhThu"
+                                fill="#4f46e5"
+                                radius={[8, 8, 0, 0]}
+                                barSize={60}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
+                )}
+            </div>
 
-                    <XAxis
-                        dataKey="name"
-                        stroke="#888888"
-                        tick={{ fontSize: 12, fill: "#888888" }}
-                    />
-                    <YAxis
-                        tickFormatter={(v) =>
-                            new Intl.NumberFormat("vi-VN", {
-                                notation: "compact",
-                                compactDisplay: "short",
-                            }).format(v)
-                        }
-                        stroke="#888888"
-                    />
-                    <Tooltip
-                        cursor={false} // ❌ Tắt nền xám hover
-                        formatter={(value) =>
-                            new Intl.NumberFormat("vi-VN").format(value) + " ₫"
-                        }
-                        contentStyle={{
-                            backgroundColor: "#fff",
-                            borderRadius: "10px",
-                            border: "1px solid #ddd",
-                        }}
-                    />
-                    <Bar
-                        dataKey="DoanhThu"
-                        fill="#4f46e5"
-                        activeBar={{ fill: "#6366f1" }}
-                        radius={[8, 8, 0, 0]}
-                        barSize={getBarSize()}
-                    >
-                        <LabelList
-                            dataKey="DoanhThu"
-                            position="top"
-                            formatter={(v) =>
-                                new Intl.NumberFormat("vi-VN", {
-                                    notation: "compact",
-                                    compactDisplay: "short",
-                                }).format(v)
-                            }
-                            className="text-xs text-gray-700 dark:text-gray-200"
-                        />
-                    </Bar>
-                </BarChart>
-            </ResponsiveContainer>
+            {/* Tổng doanh thu */}
+            <div className="text-center mt-5">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Tổng doanh thu{" "}
+                    {range === "day"
+                        ? selectedDate
+                            ? `ngày ${selectedDate}`
+                            : "hôm nay"
+                        : range === "month"
+                            ? "tháng này"
+                            : range === "year"
+                                ? "năm nay"
+                                : fromDate && toDate
+                                    ? `từ ${fromDate} → ${toDate}`
+                                    : ""}
+                </p>
+                <h3 className="text-2xl font-bold text-blue-600 mt-1">
+                    {new Intl.NumberFormat("vi-VN").format(totalRevenue)} ₫
+                </h3>
+            </div>
         </div>
     );
 };
+
 // --- BIỂU ĐỒ TRÒN ---
 const GenrePieChart = () => (
     <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200/60 dark:border-gray-700 flex flex-col items-center">
@@ -359,14 +454,14 @@ const Dashboard = () => (
         </div>
 
         {/* BẢNG XU HƯỚNG */}
-       <motion.div
-  initial={{ opacity: 0, y: 30 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
-  className="mt-10"
->
-  <TopTrendingLineChart />
-</motion.div>
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mt-10"
+        >
+            <TopTrendingLineChart />
+        </motion.div>
     </div>
 );
 
