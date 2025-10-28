@@ -88,7 +88,7 @@ const LoginPage = () => {
                 let redirectPath = "/HomeLoggedIn";
 
                 if (roleId === 2) {
-                    redirectPath = "/AdminHomePage";
+                    redirectPath = "/Admin";
                 } else if (roleId === 3) {
                     redirectPath = "/ModeratorHomePage";
                 }

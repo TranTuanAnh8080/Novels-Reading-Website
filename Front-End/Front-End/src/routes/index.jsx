@@ -26,6 +26,11 @@ import AddChapterPage from "../pages/AddChapterPage";
 import ModerationStatusPage from "../pages/ModerationStatusPage";
 import ChangePasswordModal from "../pages/ChangePasswordModal";
 import MainItem from "../components/PaymentItemPage/MainItem";
+import AdminLayout from "../components/Admin/AdminLayout";
+import AccountManagement from "../components/Admin/AccountManagement";
+import Dashboard from "../components/Admin/Dashboard";
+import RevenueStatistics from "../components/Admin/RevenueStatistics";
+import PersonalProfile from "../components/Admin/PersonalProfile";
 const AppRouter = createBrowserRouter([
 
     { path: "/", element: <Popups /> },
@@ -55,6 +60,17 @@ const AppRouter = createBrowserRouter([
     { path: "/ModerationStatusPage/:novelId", element: <ModerationStatusPage /> },
     { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
     { path: "/MainItem", element: <PaymentItem /> },
+    {
+    path: "/Admin",
+    element: <AdminLayout />,
+    children: [
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "accounts", element: <AccountManagement /> },
+      { path: "revenue", element: <RevenueStatistics /> },
+      { path: "profile", element: <PersonalProfile /> },
+    ],
+  },
+
 ]);
 
 export default AppRouter;
