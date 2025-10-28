@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { LayoutDashboard, Users, BookOpen, BarChart2, UserCircle, LogOut, ChevronLeft, ChevronRight, } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
-import inkrealm from "../../assets/inkrealm_logo.png"
 import axios from "axios";
 
 // Cấu hình danh sách menu
