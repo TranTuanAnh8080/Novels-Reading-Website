@@ -1,12 +1,45 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Clock, Check, FileText, Edit3, X, DollarSign } from 'lucide-react'; // 1. Import thêm DollarSign
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import {
+  Search,
+  Clock,
+  Check,
+  FileText,
+  Edit3,
+  X,
+  DollarSign,
+  PlusCircle,
+} from 'lucide-react';
 import Footer from "../components/SharedComponents/Footer";
 import logo from '../assets/inkrealm_logo.png';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
+
+const uploadNovelCoverApi = async (novelId, coverFile, token) => {
+  const formData = new FormData();
+  formData.append("novelId", String(novelId)); 
+  formData.append("cover", coverFile);
+
+  try {
+    const response = await axios.post(
+      "https://be-ink-realm-c7jk.vercel.app/uploader/novel/upload-cover",
+      formData,
+      {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data; // { message, coverUrl }
+  } catch (error) {
+    console.error("Lỗi khi upload cover:", error.response?.data || error.message);
+    throw error.response?.data || new Error("Upload ảnh bìa thất bại");
+  }
+};
+
 
 export default function ModerationStatusPage() {
   const { novelId } = useParams();
+  const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [novelData, setNovelData] = useState(null);
@@ -14,16 +47,17 @@ export default function ModerationStatusPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('published');
 
-  // ✏️ Biến dùng cho chỉnh sửa chương
   const [editingChapter, setEditingChapter] = useState(null);
   const [chapterText, setChapterText] = useState('');
   const [updating, setUpdating] = useState(false);
   const [loadingChapterText, setLoadingChapterText] = useState(false);
 
-  // 💲 2. THÊM MỚI: State cho modal đặt giá
-  const [priceModalChapter, setPriceModalChapter] = useState(null); // Lưu chapter đang được set giá
-  const [newPrice, setNewPrice] = useState(0); // Lưu giá trị đang nhập
-  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false); // Trạng thái loading
+  const [priceModalChapter, setPriceModalChapter] = useState(null);
+  const [newPrice, setNewPrice] = useState(0);
+  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
+
+  const fileInputRef = useRef(null);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
 
   // ✅ Gọi API lấy dữ liệu truyện và chương
   useEffect(() => {
@@ -130,13 +164,11 @@ export default function ModerationStatusPage() {
     }
   };
   
-  // 💲 3. THÊM MỚI: Hàm mở modal đặt giá
   const openPriceModal = (chapter) => {
     setPriceModalChapter(chapter);
     setNewPrice(chapter.price || 0); // Lấy giá hiện tại của chương
   };
 
-  // 💲 3. THÊM MỚI: Hàm gọi API đặt giá
   const handleSetPrice = async () => {
     if (newPrice < 0 || newPrice % 1 !== 0) {
       alert("Giá phải là số nguyên không âm.");
@@ -153,7 +185,6 @@ export default function ModerationStatusPage() {
         return;
       }
 
-      // 🚀 GỌI API ĐẶT GIÁ CỦA BẠN
       const res = await axios.put(
         `https://be-ink-realm-c7jk.vercel.app/uploader/${priceModalChapter.chapterId}/set-price`,
         { price: newPrice }, // Body: { "price": 50 }
@@ -177,13 +208,49 @@ export default function ModerationStatusPage() {
     } catch (error) {
       console.error("❌ Lỗi đặt giá:", error?.response?.data || error.message);
       const msg = error?.response?.data?.message || "❌ Lỗi khi đặt giá";
-      // Hiển thị lỗi từ server (400, 403, 404...)
       alert(msg);
     } finally {
       setIsUpdatingPrice(false);
     }
   };
 
+  const handleFileSelect = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Bạn cần đăng nhập để thay đổi ảnh bìa!");
+      return;
+    }
+
+    setIsUploadingCover(true);
+    try {
+      const data = await uploadNovelCoverApi(novelId, file, token);
+
+      setNovelData(prevData => ({
+        ...prevData,
+        novel_img_url: data.coverUrl 
+      }));
+
+      alert(data.message || "Cập nhật ảnh bìa thành công!");
+
+    } catch (error) {
+      console.error("Lỗi upload cover:", error.message);
+      alert(error.message || "Upload ảnh bìa thất bại.");
+    } finally {
+      setIsUploadingCover(false);
+      // Reset input để người dùng có thể chọn lại file y hệt
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
+    }
+  };
+
+  const triggerFileSelect = () => {
+    if (isUploadingCover) return; // Không cho click khi đang upload
+    fileInputRef.current.click();
+  };
 
   // ✅ Lọc theo tab và tìm kiếm
   const filteredChapters = useMemo(() => {
@@ -261,35 +328,68 @@ export default function ModerationStatusPage() {
           <div className="text-center text-red-500 py-20">Không tìm thấy thông tin truyện.</div>
         ) : (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+            
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              className="hidden"
+              accept="image/png, image/jpeg, image/webp"
+            />
+
             {/* Thông tin truyện */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 relative">
+
+              <button
+                onClick={() => navigate(`/AddChapterPage/${novelId}`)}
+                className="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow-sm"
+                title="Thêm chương mới"
+              >
+                <PlusCircle className="w-5 h-5" />
+                Thêm chương
+              </button>
+
               <div className="flex gap-6 items-start">
-                <img
-                  src={novelData.novel_img_url || "https://via.placeholder.com/150x200?text=No+Cover"}
-                  alt={novelData.novelTitle}
-                  className="w-36 h-48 object-cover rounded-md shadow-sm border border-gray-100"
-                />
+                <div 
+                  className="relative w-36 h-48 flex-shrink-0"
+                  title="Nhấp để thay đổi ảnh bìa"
+                >
+                  <img
+                    src={novelData.novel_img_url || "https://via.placeholder.com/150x200?text=No+Cover"}
+                    alt={novelData.novelTitle}
+                    className={`w-36 h-48 object-cover rounded-md shadow-sm border border-gray-100 transition-opacity ${
+                      isUploadingCover ? 'opacity-50' : 'hover:opacity-80 cursor-pointer'
+                    }`}
+                    onClick={triggerFileSelect}
+                  />
+                  {isUploadingCover && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                    </div>
+                  )}
+                </div>
+                
                 <div className="flex-1 min-w-0">
                   <h1 className="text-2xl font-bold text-gray-900">{novelData.novelTitle}</h1>
                   <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm text-gray-700">
-                    <div>
-                      <span className="font-semibold text-gray-800">Tác giả:</span>{" "}
-                      <span className="font-medium text-gray-500">{novelData.author}</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gray-800">Loại truyện:</span>{" "}
-                      <span className="font-medium text-[#2E5BFF]">{novelData.type || "Không rõ"}</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gray-800">Trạng thái:</span>{" "}
-                      <span className="inline-block px-2 py-0.5 rounded bg-green-50 text-green-700 text-xs font-medium">
-                        {novelData.status || "Đang viết"}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gray-800">Tổng số chương:</span>{" "}
-                      <span className="font-medium text-gray-500">{allChapters.length}</span>
-                    </div>
+                     <div>
+                       <span className="font-semibold text-gray-800">Tác giả:</span>{" "}
+                       <span className="font-medium text-gray-500">{novelData.author}</span>
+                     </div>
+                     <div>
+                       <span className="font-semibold text-gray-800">Loại truyện:</span>{" "}
+                       <span className="font-medium text-[#2E5BFF]">{novelData.type || "Không rõ"}</span>
+                     </div>
+                     <div>
+                       <span className="font-semibold text-gray-800">Trạng thái:</span>{" "}
+                       <span className="inline-block px-2 py-0.5 rounded bg-green-50 text-green-700 text-xs font-medium">
+                         {novelData.status || "Đang viết"}
+                       </span>
+                     </div>
+                     <div>
+                       <span className="font-semibold text-gray-800">Tổng số chương:</span>{" "}
+                       <span className="font-medium text-gray-500">{allChapters.length}</span>
+                     </div>
                   </div>
                 </div>
               </div>
@@ -354,7 +454,6 @@ export default function ModerationStatusPage() {
                       <td className="py-3 text-sm text-gray-800">Chương {ch.chapterIndex}</td>
                       <td className="py-3 text-sm text-gray-800">
                         {ch.chapterTitle}
-                        {/* 💲 4. THÊM MỚI: Hiển thị giá */}
                         <span className="block text-xs text-green-700 font-medium mt-0.5">
                           Giá: {ch.price || 0}
                         </span>
@@ -364,7 +463,6 @@ export default function ModerationStatusPage() {
                       </td>
                       <td className="py-3 text-sm">{getStatusDisplay(ch.chapterStatusId)}</td>
                       <td className="py-3 text-right">
-                        {/* 💲 5. THÊM MỚI: Bọc 2 nút vào div */}
                         <div className="flex justify-end items-center gap-4">
                           <button
                             onClick={() => openPriceModal(ch)}
@@ -429,7 +527,6 @@ export default function ModerationStatusPage() {
         </div>
       )}
       
-      {/* 💲 6. THÊM MỚI: Modal đặt giá */}
       {priceModalChapter && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white w-[450px] p-6 rounded-lg shadow-lg">
@@ -473,3 +570,4 @@ export default function ModerationStatusPage() {
     </div>
   );
 }
+
