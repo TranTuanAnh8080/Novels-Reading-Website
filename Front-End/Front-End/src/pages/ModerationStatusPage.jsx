@@ -16,7 +16,7 @@ import axios from 'axios';
 
 const uploadNovelCoverApi = async (novelId, coverFile, token) => {
   const formData = new FormData();
-  formData.append("novelId", String(novelId)); 
+  formData.append("novelId", String(novelId));
   formData.append("cover", coverFile);
 
   try {
@@ -24,7 +24,7 @@ const uploadNovelCoverApi = async (novelId, coverFile, token) => {
       "https://be-ink-realm-c7jk.vercel.app/uploader/novel/upload-cover",
       formData,
       {
-        headers: { 
+        headers: {
           Authorization: `Bearer ${token}`,
         },
       }
@@ -36,7 +36,6 @@ const uploadNovelCoverApi = async (novelId, coverFile, token) => {
   }
 };
 
-
 export default function ModerationStatusPage() {
   const { novelId } = useParams();
   const navigate = useNavigate();
@@ -46,11 +45,6 @@ export default function ModerationStatusPage() {
   const [allChapters, setAllChapters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('published');
-
-  const [editingChapter, setEditingChapter] = useState(null);
-  const [chapterText, setChapterText] = useState('');
-  const [updating, setUpdating] = useState(false);
-  const [loadingChapterText, setLoadingChapterText] = useState(false);
 
   const [priceModalChapter, setPriceModalChapter] = useState(null);
   const [newPrice, setNewPrice] = useState(0);
@@ -92,81 +86,9 @@ export default function ModerationStatusPage() {
     if (novelId) fetchData();
   }, [novelId]);
 
-  // ✅ Khi nhấn "Chỉnh sửa" -> mở modal và thử tải nội dung chương
-  const openEditModal = async (chapter) => {
-    setEditingChapter(chapter);
-    setChapterText("");
-    setLoadingChapterText(true);
-
-    try {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        alert("Bạn cần đăng nhập để chỉnh sửa chương.");
-        setLoadingChapterText(false);
-        return;
-      }
-
-      const res = await axios.get(
-        `https://be-ink-realm-c7jk.vercel.app/chapter/text`,
-        {
-          params: { chapterId: chapter.chapterId },
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      setChapterText(res.data?.chapterText || "");
-    } catch (err) {
-      console.warn("Không thể lấy nội dung chương:", err?.response?.data || err.message);
-      setChapterText(""); // vẫn cho nhập mới
-    } finally {
-      setLoadingChapterText(false);
-    }
-  };
-
-  // ✅ Gửi request cập nhật nội dung chương
-  const handleUpdateChapter = async () => {
-    if (!editingChapter || !chapterText.trim()) return alert("Vui lòng nhập nội dung chương!");
-
-    try {
-      setUpdating(true);
-
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        alert("Bạn cần đăng nhập để cập nhật chương!");
-        setUpdating(false);
-        return;
-      }
-
-      const res = await axios.put(
-        `https://be-ink-realm-c7jk.vercel.app/chapter/${editingChapter.chapterId}/text/update`,
-        { chapterText },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      alert("✅ " + (res.data.message || "Cập nhật thành công!"));
-
-      setAllChapters(prev =>
-        prev.map(ch =>
-          ch.chapterId === editingChapter.chapterId
-            ? { ...ch, chapterStatusId: 3, updateDate: new Date().toISOString() }
-            : ch
-        )
-      );
-
-      setEditingChapter(null);
-      setChapterText('');
-    } catch (error) {
-      console.error("❌ Lỗi cập nhật:", error?.response?.data || error.message);
-      const msg = error?.response?.data?.message || "❌ Lỗi khi cập nhật nội dung chương";
-      alert(msg);
-    } finally {
-      setUpdating(false);
-    }
-  };
-  
   const openPriceModal = (chapter) => {
     setPriceModalChapter(chapter);
-    setNewPrice(chapter.price || 0); // Lấy giá hiện tại của chương
+    setNewPrice(chapter.price || 0);
   };
 
   const handleSetPrice = async () => {
@@ -187,7 +109,7 @@ export default function ModerationStatusPage() {
 
       const res = await axios.put(
         `https://be-ink-realm-c7jk.vercel.app/uploader/${priceModalChapter.chapterId}/set-price`,
-        { price: newPrice }, // Body: { "price": 50 }
+        { price: newPrice },
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -197,13 +119,13 @@ export default function ModerationStatusPage() {
       setAllChapters(prev =>
         prev.map(ch =>
           ch.chapterId === priceModalChapter.chapterId
-            ? { ...ch, price: res.data.price } // Cập nhật 'price' từ response
+            ? { ...ch, price: res.data.price }
             : ch
         )
       );
 
       alert(res.data.message || "Cập nhật giá thành công!");
-      setPriceModalChapter(null); // Đóng modal
+      setPriceModalChapter(null);
 
     } catch (error) {
       console.error("❌ Lỗi đặt giá:", error?.response?.data || error.message);
@@ -230,7 +152,7 @@ export default function ModerationStatusPage() {
 
       setNovelData(prevData => ({
         ...prevData,
-        novel_img_url: data.coverUrl 
+        novel_img_url: data.coverUrl
       }));
 
       alert(data.message || "Cập nhật ảnh bìa thành công!");
@@ -240,7 +162,6 @@ export default function ModerationStatusPage() {
       alert(error.message || "Upload ảnh bìa thất bại.");
     } finally {
       setIsUploadingCover(false);
-      // Reset input để người dùng có thể chọn lại file y hệt
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
       }
@@ -248,7 +169,7 @@ export default function ModerationStatusPage() {
   };
 
   const triggerFileSelect = () => {
-    if (isUploadingCover) return; // Không cho click khi đang upload
+    if (isUploadingCover) return;
     fileInputRef.current.click();
   };
 
@@ -328,7 +249,7 @@ export default function ModerationStatusPage() {
           <div className="text-center text-red-500 py-20">Không tìm thấy thông tin truyện.</div>
         ) : (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-            
+
             <input
               type="file"
               ref={fileInputRef}
@@ -350,16 +271,15 @@ export default function ModerationStatusPage() {
               </button>
 
               <div className="flex gap-6 items-start">
-                <div 
+                <div
                   className="relative w-36 h-48 flex-shrink-0"
                   title="Nhấp để thay đổi ảnh bìa"
                 >
                   <img
                     src={novelData.novel_img_url || "https://via.placeholder.com/150x200?text=No+Cover"}
                     alt={novelData.novelTitle}
-                    className={`w-36 h-48 object-cover rounded-md shadow-sm border border-gray-100 transition-opacity ${
-                      isUploadingCover ? 'opacity-50' : 'hover:opacity-80 cursor-pointer'
-                    }`}
+                    className={`w-36 h-48 object-cover rounded-md shadow-sm border border-gray-100 transition-opacity ${isUploadingCover ? 'opacity-50' : 'hover:opacity-80 cursor-pointer'
+                      }`}
                     onClick={triggerFileSelect}
                   />
                   {isUploadingCover && (
@@ -368,28 +288,28 @@ export default function ModerationStatusPage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <h1 className="text-2xl font-bold text-gray-900">{novelData.novelTitle}</h1>
                   <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm text-gray-700">
-                     <div>
-                       <span className="font-semibold text-gray-800">Tác giả:</span>{" "}
-                       <span className="font-medium text-gray-500">{novelData.author}</span>
-                     </div>
-                     <div>
-                       <span className="font-semibold text-gray-800">Loại truyện:</span>{" "}
-                       <span className="font-medium text-[#2E5BFF]">{novelData.type || "Không rõ"}</span>
-                     </div>
-                     <div>
-                       <span className="font-semibold text-gray-800">Trạng thái:</span>{" "}
-                       <span className="inline-block px-2 py-0.5 rounded bg-green-50 text-green-700 text-xs font-medium">
-                         {novelData.status || "Đang viết"}
-                       </span>
-                     </div>
-                     <div>
-                       <span className="font-semibold text-gray-800">Tổng số chương:</span>{" "}
-                       <span className="font-medium text-gray-500">{allChapters.length}</span>
-                     </div>
+                    <div>
+                      <span className="font-semibold text-gray-800">Tác giả:</span>{" "}
+                      <span className="font-medium text-gray-500">{novelData.author}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-800">Loại truyện:</span>{" "}
+                      <span className="font-medium text-[#2E5BFF]">{novelData.type || "Không rõ"}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-800">Trạng thái:</span>{" "}
+                      <span className="inline-block px-2 py-0.5 rounded bg-green-50 text-green-700 text-xs font-medium">
+                        {novelData.status || "Đang viết"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-800">Tổng số chương:</span>{" "}
+                      <span className="font-medium text-gray-500">{allChapters.length}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -399,33 +319,30 @@ export default function ModerationStatusPage() {
             <div className="flex items-center gap-3 mt-6 mb-4 border-b border-gray-200 pb-2">
               <button
                 onClick={() => setActiveTab('published')}
-                className={`px-4 py-2 text-sm font-medium rounded-md ${
-                  activeTab === 'published'
+                className={`px-4 py-2 text-sm font-medium rounded-md ${activeTab === 'published'
                     ? 'bg-green-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Đã đăng ({allChapters.filter(ch => ch.chapterStatusId === 1).length})
               </button>
 
               <button
                 onClick={() => setActiveTab('review')}
-                className={`px-4 py-2 text-sm font-medium rounded-md ${
-                  activeTab === 'review'
+                className={`px-4 py-2 text-sm font-medium rounded-md ${activeTab === 'review'
                     ? 'bg-yellow-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Đang kiểm duyệt ({allChapters.filter(ch => ch.chapterStatusId === 2).length})
               </button>
 
               <button
                 onClick={() => setActiveTab('draft')}
-                className={`px-4 py-2 text-sm font-medium rounded-md ${
-                  activeTab === 'draft'
+                className={`px-4 py-2 text-sm font-medium rounded-md ${activeTab === 'draft'
                     ? 'bg-gray-700 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Bản nháp ({allChapters.filter(ch => ch.chapterStatusId === 3).length})
               </button>
@@ -470,9 +387,8 @@ export default function ModerationStatusPage() {
                           >
                             <DollarSign className="w-4 h-4" /> Đặt giá
                           </button>
-                          
                           <button
-                            onClick={() => openEditModal(ch)}
+                            onClick={() => navigate(`/EditChapterPage/${novelId}/${ch.chapterId}`)}
                             className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
                           >
                             <Edit3 className="w-4 h-4" /> Chỉnh sửa
@@ -488,52 +404,14 @@ export default function ModerationStatusPage() {
         )}
       </main>
 
-      {/* ✏️ Modal chỉnh sửa chương */}
-      {editingChapter && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white w-[600px] p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">
-              Chỉnh sửa: {editingChapter.chapterTitle}
-            </h3>
-
-            {loadingChapterText ? (
-              <div className="text-center py-6 text-gray-500">Đang tải nội dung chương...</div>
-            ) : (
-              <>
-                <textarea
-                  value={chapterText}
-                  onChange={(e) => setChapterText(e.target.value)}
-                  className="w-full h-48 border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-[#2E5BFF]"
-                  placeholder="Nhập nội dung chương mới..."
-                />
-                <div className="flex justify-end gap-3 mt-4">
-                  <button
-                    onClick={() => setEditingChapter(null)}
-                    className="px-4 py-2 bg-gray-200 rounded-md flex items-center gap-2"
-                  >
-                    <X className="w-4 h-4" /> Hủy
-                  </button>
-                  <button
-                    onClick={handleUpdateChapter}
-                    disabled={updating}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                    {updating ? "Đang lưu..." : "Lưu thay đổi"}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-      
+      {/* Modal Đặt giá */}
       {priceModalChapter && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white w-[450px] p-6 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold mb-4">
               Đặt giá cho: {priceModalChapter.chapterTitle}
             </h3>
-            
+
             <label htmlFor="chapterPrice" className="block text-sm font-medium text-gray-700 mb-1">
               Giá chương
             </label>
@@ -546,7 +424,7 @@ export default function ModerationStatusPage() {
               placeholder="Nhập giá (ví dụ: 50)"
             />
             <p className="text-xs text-gray-500 mt-1">Nhập 0 để đặt là chương miễn phí.</p>
-            
+
             <div className="flex justify-end gap-3 mt-5">
               <button
                 onClick={() => setPriceModalChapter(null)}
@@ -570,4 +448,3 @@ export default function ModerationStatusPage() {
     </div>
   );
 }
-

@@ -31,36 +31,39 @@ import AccountManagement from "../components/Admin/AccountManagement";
 import Dashboard from "../components/Admin/Dashboard";
 import RevenueStatistics from "../components/Admin/RevenueStatistics";
 import PersonalProfile from "../components/Admin/PersonalProfile";
+
 const AppRouter = createBrowserRouter([
 
-    { path: "/", element: <Popups /> },
-    { path: "/LoadingPage", element: <LoadingPage /> },
-    { path: "/LoginPage", element: <LoginPage /> },
-    { path: "/RegisterPage", element: <RegisterPage /> },
-    { path: "/ForgotPasswordModal", element: <ForgotPasswordModal /> },
-    { path: "/HomePage", element: <HomePage /> },
-    { path: "/PaymentItem", element: <PaymentItem /> },
-    { path: "/HomeLoggedIn", element: <HomeLoggedIn /> },
-    { path: "/Profile", element: <Profile /> },
-    { path: "/LibraryPage", element: <LibraryPage /> },
-    { path: "/UploadNovel", element: <ChooseUploadNovel /> },
-    { path: "/UploadPage", element: <UploadPage /> },
-    { path: "/CodePayment", element: <CodePayment /> },
-    { path: "/TransactionPayment", element: <TransactionPayment /> },
-    { path: "/RecommendedAll", element: <RecommendedAll /> },
-    { path: "/BookDetail/:id", element: <BookDetail /> },
-    { path: "/ChapterList/:id", element: <ChapterList /> },
-    { path: "/ReadPage/:id", element: <ReadPage /> },
-    { path: "/SoloLevelingSearch", element: <SoloLevelingSearch /> },
-    { path: "/ModeratorHomePage", element: <ModeratorHomePage /> },
-    { path: "/ModerateOriginalNovels", element: <ModerateOriginalNovels /> },
-    { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> },
-    { path: "/ModeratorProfile", element: <ModeratorProfile /> },
-    { path: "/AddChapterPage/:novelId", element: <AddChapterPage /> },
-    { path: "/ModerationStatusPage/:novelId", element: <ModerationStatusPage /> },
-    { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
-    { path: "/MainItem", element: <PaymentItem /> },
-    {
+  { path: "/", element: <Popups /> },
+  { path: "/LoadingPage", element: <LoadingPage /> },
+  { path: "/LoginPage", element: <LoginPage /> },
+  { path: "/RegisterPage", element: <RegisterPage /> },
+  { path: "/ForgotPasswordModal", element: <ForgotPasswordModal /> },
+  { path: "/HomePage", element: <HomePage /> },
+  { path: "/PaymentItem", element: <PaymentItem /> },
+  { path: "/HomeLoggedIn", element: <HomeLoggedIn /> },
+  { path: "/Profile", element: <Profile /> },
+  { path: "/LibraryPage", element: <LibraryPage /> },
+  { path: "/UploadNovel", element: <ChooseUploadNovel /> },
+  { path: "/UploadPage", element: <UploadPage /> },
+  { path: "/CodePayment", element: <CodePayment /> },
+  { path: "/TransactionPayment", element: <TransactionPayment /> },
+  { path: "/RecommendedAll", element: <RecommendedAll /> },
+  { path: "/BookDetail/:id", element: <BookDetail /> },
+  { path: "/ChapterList/:id", element: <ChapterList /> },
+  { path: "/ReadPage/:id", element: <ReadPage /> },
+  { path: "/SoloLevelingSearch", element: <SoloLevelingSearch /> },
+  { path: "/ModeratorHomePage", element: <ModeratorHomePage /> },
+  { path: "/ModerateOriginalNovels", element: <ModerateOriginalNovels /> },
+  { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> },
+  { path: "/ModeratorProfile", element: <ModeratorProfile /> },
+  { path: "/AddChapterPage/:novelId", element: <AddChapterPage /> },
+  { path: "/ModerationStatusPage/:novelId", element: <ModerationStatusPage /> },
+  { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
+  { path: "/MainItem", element: <PaymentItem /> },
+  { path: "/EditChapterPage/:novelId/:chapterId", element: <AddChapterPage /> },
+
+  {
     path: "/Admin",
     element: <AdminLayout />,
     children: [
@@ -74,4 +77,3 @@ const AppRouter = createBrowserRouter([
 ]);
 
 export default AppRouter;
-
