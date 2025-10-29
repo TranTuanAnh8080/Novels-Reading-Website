@@ -35,10 +35,8 @@ export default function BookInfo({ book }) {
     let updated;
 
     if (isFollowing) {
-      // Bỏ theo dõi
       updated = saved.filter((b) => b.id !== book.novelId);
     } else {
-      // Theo dõi
       updated = [
         ...saved,
         {
@@ -55,7 +53,7 @@ export default function BookInfo({ book }) {
     window.dispatchEvent(new Event("storage")); // 🔄 Cập nhật LibraryPage realtime
   };
 
-  // 🔹 Gọi API lấy 3 chương mới nhất
+  // 🔹 Gọi API
   useEffect(() => {
     if (!book?.novelId) return;
 
@@ -101,7 +99,7 @@ export default function BookInfo({ book }) {
             <img
               src={novel_img_url && novel_img_url.trim() !== "" ? novel_img_url : defaultCover}
               alt={title || "Bìa truyện"}
-              className="w-48 h-64 object-cover rounded-md shadow"
+              className="w-full h-full object-cover rounded-md shadow"
             />
           </div>
 
