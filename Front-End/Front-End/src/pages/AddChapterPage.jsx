@@ -16,8 +16,8 @@ import axios from "axios";
 
 // ✅ TẠO MỘT MAP ĐỂ QUẢN LÝ TRẠNG THÁI
 const STATUS_MAP = {
-  DRAFT: 3,
-  REVIEW: 2,
+  DRAFT: 2,
+  REVIEW: 5,
 };
 
 export default function AddChapterPage() {
@@ -25,8 +25,7 @@ export default function AddChapterPage() {
   const [chapterNumber, setChapterNumber] = useState("");
   const [chapterTitle, setChapterTitle] = useState("");
 
-  // ✅ SỬA STATE: Dùng ID (số 3) thay vì text ("Bản nháp")
-  const [chapterStatusId, setChapterStatusId] = useState(STATUS_MAP.DRAFT); // Mặc định là Bản nháp (3)
+  const [chapterStatusId, setChapterStatusId] = useState(STATUS_MAP.DRAFT);
 
   const [releaseDate, setReleaseDate] = useState("");
   const [content, setContent] = useState("");
@@ -85,7 +84,6 @@ export default function AddChapterPage() {
 
   // 🔹 Xóa bản nháp (Xóa khỏi trình duyệt)
   const handleDeleteDraftLocal = () => {
-    // 💡 Lưu ý: Đổi tên hàm alert() / confirm() thành modal nếu đây là app thật
     if (window.confirm("🗑️ Bạn có chắc muốn xóa bản nháp lưu tạm này không?")) {
       localStorage.removeItem("addChapterDraft");
       setIsTranslated(false);
@@ -99,7 +97,6 @@ export default function AddChapterPage() {
     }
   };
 
-  // ✅ HÀM NÀY LÀ HÀM QUAN TRỌNG NHẤT (ĐÃ SỬA)
   const handleSubmitChapter = async () => {
     if (!chapterNumber || !chapterTitle || !content) {
       alert("⚠️ Vui lòng điền đầy đủ: Số chương, Tiêu đề, và Nội dung!");
@@ -114,7 +111,6 @@ export default function AddChapterPage() {
           chapterIndex: Number(chapterNumber),
           chapterTitle,
           chapterText: content,
-          // ✅ SỬA LỖI: Gửi `chapterStatusId` (là số 2 hoặc 3) lên server
           chapterStatusId: chapterStatusId,
         },
         {
@@ -132,7 +128,6 @@ export default function AddChapterPage() {
         } else {
           alert("✅ Đã gửi chương đi kiểm duyệt thành công!");
         }
-        
         // Reset form
         setChapterNumber("");
         setChapterTitle("");
@@ -168,9 +163,21 @@ export default function AddChapterPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto w-full px-6 py-6 text-sm text-gray-500">
-        <span>Trang cá nhân</span> <span className="mx-1">›</span>
-        <span>Đăng truyện</span> <span className="mx-1">›</span>
-        <span className="font-medium text-gray-800">{novelTitle || "..."}</span> <span className="mx-1">›</span>
+        <Link to="/Profile" className="hover:text-blue-600 hover:underline">
+          Trang cá nhân 
+        </Link>
+        <span className="mx-2">›</span>
+        <Link to="/UploadPage" className="hover:text-blue-600 hover:underline">
+          Đăng truyện
+        </Link>
+        <span className="mx-2">›</span>
+        <Link
+          to={`/ModerationStatusPage/${novelId}`}
+          className="font-medium text-gray-800 hover:text-blue-600 hover:underline"
+        >
+          {novelTitle || "..."}
+        </Link>
+         <span className="mx-2">›</span>
         <span className="text-gray-900 font-medium">Thêm chương mới</span>
       </div>
 
@@ -232,7 +239,6 @@ export default function AddChapterPage() {
                 >
                   <option value={STATUS_MAP.DRAFT}>Lưu bản nháp</option>
                   <option value={STATUS_MAP.REVIEW}>Gửi kiểm duyệt</option>
-                  {/* Bạn không nên cho Uploader tự chọn "Đã duyệt" */}
                 </select>
               </div>
 

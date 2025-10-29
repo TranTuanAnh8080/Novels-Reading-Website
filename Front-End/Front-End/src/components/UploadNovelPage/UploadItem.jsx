@@ -9,34 +9,78 @@ import {
   Info,
   Headset,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// 🔹 ===================================================================
+// 🔹 HÀM GỌI API UPLOAD COVER
+// 🔹 ===================================================================
+const uploadNovelCoverApi = async (novelId, coverFile, token) => {
+  const formData = new FormData();
+  formData.append("novelId", novelId);
+  formData.append("cover", coverFile);
+
+  try {
+    const response = await axios.post(
+      "https://be-ink-realm-c7jk.vercel.app/uploader/novel/upload-cover",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data; // { message, coverUrl }
+  } catch (error) {
+    console.error("Lỗi khi upload cover:", error.response?.data || error.message);
+    throw error.response?.data || new Error("Upload ảnh bìa thất bại");
+  }
+};
 
 const UploadItem = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [coverPreview1, setCoverPreview1] = useState(null);
   const [coverPreview2, setCoverPreview2] = useState(null);
 
+  // 🔹 State mới để lưu trữ đối tượng File
+  const [coverFile1, setCoverFile1] = useState(null);
+  const [coverFile2, setCoverFile2] = useState(null);
+
   // 🔹 Dữ liệu form
   const [novelTitle, setNovelTitle] = useState("");
   const [novelDescription, setNovelDescription] = useState("");
   const [author, setAuthor] = useState("");
 
-  // 🔹 Hàm gọi API tạo truyện
-  const handleCreateNovel = async () => {
+  // 🔹 State loading
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate(); // 🔹 Dùng để chuyển hướng
+
+  // 🔹 ===================================================================
+  // 🔹 HÀM GỌI API
+  // 🔹 ===================================================================
+  const handleCreateNovel = async (coverFile) => {
+    // 1. Kiểm tra file ảnh trước
+    if (!coverFile) {
+      alert("⚠️ Vui lòng chọn ảnh bìa!");
+      return;
+    }
+
     if (!novelTitle || !novelDescription || !author) {
       alert("⚠️ Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
-    try {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        alert("❌ Bạn chưa đăng nhập!");
-        return;
-      }
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("❌ Bạn chưa đăng nhập!");
+      return;
+    }
 
-      const response = await axios.post(
+    setIsLoading(true);
+
+    try {
+      // --- BƯỚC 1: TẠO TRUYỆN (TEXT DATA) ---
+      const createResponse = await axios.post(
         "https://be-ink-realm-c7jk.vercel.app/uploader/novel/create",
         {
           novelTitle,
@@ -51,13 +95,45 @@ const UploadItem = () => {
         }
       );
 
-      if (response.status === 200) {
-        alert("✅ Truyện được tạo thành công!");
-        console.log("Novel created:", response.data);
-        // có thể chuyển hướng đến trang upload chương sau khi tạo
-        // navigate(`/upload/${response.data.novelId}`);
+      // --- BƯỚC 2: UPLOAD COVER (NẾU BƯỚC 1 THÀNH CÔNG) ---
+      if (createResponse.status === 200) {
+        const novelId = createResponse.data.novelId;
+        if (!novelId) {
+          alert("❗ Lỗi: Không nhận được novelId từ server.");
+          setIsLoading(false);
+          return;
+        }
+
+        console.log(
+          "Tạo truyện thành công, đang upload cover cho novelId:",
+          novelId
+        );
+
+        try {
+          // Gọi API upload cover
+          const coverResponse = await uploadNovelCoverApi(
+            novelId,
+            coverFile,
+            token
+          );
+
+          alert("✅ Đã tạo truyện và upload ảnh bìa thành công!");
+          console.log("Upload cover thành công:", coverResponse.coverUrl);
+          setIsLoading(false);
+
+          navigate("/UploadPage"); // Quay về trang Uploader
+        } catch (uploadError) {
+          // Lỗi ở bước 2 (upload cover)
+          console.error("Lỗi khi upload cover:", uploadError);
+          alert(
+            "✅ Tạo truyện thành công, nhưng upload ảnh bìa thất bại! Vui lòng thử lại ở trang chỉnh sửa."
+          );
+          setIsLoading(false);
+          navigate("/UploadPage"); // Vẫn quay về trang Uploader
+        }
       }
     } catch (error) {
+      // Lỗi ở bước 1 (tạo truyện)
       console.error("Lỗi khi tạo truyện:", error);
       if (error.response?.status === 400) {
         alert("⚠️ Thiếu dữ liệu hoặc truyện đã tồn tại!");
@@ -66,16 +142,21 @@ const UploadItem = () => {
       } else {
         alert("❗ Lỗi server, vui lòng thử lại sau!");
       }
+      setIsLoading(false);
     }
   };
 
-  // xử lý upload ảnh + preview
-  const handleImageUpload = (e, setPreview) => {
+  // 🔹 xử lý upload ảnh + preview + lưu file
+  const handleImageUpload = (e, setPreview, setFile) => {
     const file = e.target.files[0];
-    if (file) setPreview(URL.createObjectURL(file));
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+      setFile(file); // 🔹 Lưu đối tượng File vào state
+    }
   };
 
-  const renderUploadBox = (coverPreview, setPreview) => (
+  // 🔹 Cập nhật renderUploadBox để nhận setFile
+  const renderUploadBox = (coverPreview, setPreview, setFile) => (
     <label className="block">
       {!coverPreview ? (
         <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-sky-400 transition">
@@ -92,8 +173,12 @@ const UploadItem = () => {
             className="w-full h-56 object-cover rounded-lg shadow"
           />
           <button
-            type="button"
-            onClick={() => setPreview(null)}
+            type="button" // Thêm type để tránh reload
+            onClick={(e) => {
+              e.stopPropagation(); // Ngăn click vào card
+              setPreview(null);
+              setFile(null); // 🔹 Reset cả file khi nhấn
+            }}
             className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow transition"
           >
             <RefreshCw size={18} />
@@ -104,7 +189,7 @@ const UploadItem = () => {
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={(e) => handleImageUpload(e, setPreview)}
+        onChange={(e) => handleImageUpload(e, setPreview, setFile)} // 🔹 Truyền setFile
       />
     </label>
   );
@@ -162,7 +247,8 @@ const UploadItem = () => {
             </div>
 
             <div className="space-y-5">
-              {renderUploadBox(coverPreview1, setCoverPreview1)}
+              {/* 🔹 Truyền setCoverFile1 vào */}
+              {renderUploadBox(coverPreview1, setCoverPreview1, setCoverFile1)}
               <input
                 type="text"
                 placeholder="Tên truyện của bạn"
@@ -188,11 +274,23 @@ const UploadItem = () => {
           </div>
 
           <button
-            onClick={handleCreateNovel}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCreateNovel(coverFile1); // 🔹 Truyền coverFile1
+            }}
+            disabled={isLoading} // 🔹 Thêm disabled
             className="mt-5 w-full py-4 rounded-xl bg-green-600 hover:bg-green-700
-            text-white font-semibold shadow flex justify-center items-center gap-2 text-md transition"
+             text-white font-semibold shadow flex justify-center items-center gap-2 text-md transition
+             disabled:bg-gray-400 disabled:cursor-not-allowed" // 🔹 Thêm style disabled
           >
-            <PenTool size={20} /> Đăng truyện sáng tác
+            {isLoading ? (
+              "Đang xử lý..."
+            ) : (
+              <>
+                <PenTool size={20} /> Đăng truyện sáng tác
+              </>
+            )}
           </button>
         </motion.div>
 
@@ -218,7 +316,8 @@ const UploadItem = () => {
             </div>
 
             <div className="space-y-5">
-              {renderUploadBox(coverPreview2, setCoverPreview2)}
+              {/* 🔹 Truyền setCoverFile2 vào */}
+              {renderUploadBox(coverPreview2, setCoverPreview2, setCoverFile2)}
               <input
                 type="text"
                 placeholder="Tên truyện tiếng Việt"
@@ -238,11 +337,23 @@ const UploadItem = () => {
           </div>
 
           <button
-            onClick={handleCreateNovel}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCreateNovel(coverFile2); // 🔹 Truyền coverFile2
+            }}
+            disabled={isLoading} // 🔹 Thêm disabled
             className="mt-6 w-full py-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold
-            shadow flex justify-center items-center gap-2 text-md transition"
+             shadow flex justify-center items-center gap-2 text-md transition
+             disabled:bg-gray-400 disabled:cursor-not-allowed" // 🔹 Thêm style disabled
           >
-            <BookOpen size={20} /> Đăng truyện dịch
+            {isLoading ? (
+              "Đang xử lý..."
+            ) : (
+              <>
+                <BookOpen size={20} /> Đăng truyện dịch
+              </>
+            )}
           </button>
         </motion.div>
       </div>
@@ -254,7 +365,9 @@ const UploadItem = () => {
           <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-100 rounded-full blur-3xl opacity-50"></div>
 
           <div className="flex justify-center mb-4">
-            <div className="p-4 rounded-full bg-sky-500/10 text-sky-600">💡</div>
+            <div className="p-4 rounded-full bg-sky-500/10 text-sky-600">
+              💡
+            </div>
           </div>
 
           <h2 className="text-2xl font-bold text-blue-900 mb-2">
