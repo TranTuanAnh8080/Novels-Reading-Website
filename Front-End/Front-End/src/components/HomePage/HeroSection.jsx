@@ -79,17 +79,20 @@ function HeroSection() {
         {novels.slice(0, 6).map((novel) => (
           <Link to={`/BookDetail/${novel.novelId}`} key={novel.novelId}>
             <div className="bg-white rounded-lg shadow hover:shadow-md overflow-hidden cursor-pointer transition">
-              <img
-                src={
-                  novel.novel_img_url && novel.novel_img_url.trim() !== ""
-                    ? novel.novel_img_url
-                    : defaultCover
-                }
-                alt={novel.novelTitle}
-                className="w-full h-auto object-cover"
-              />
+              <div className="aspect-w-3 aspect-h-4 w-full">
+                <img
+                  src={
+                    novel.novel_img_url && novel.novel_img_url.trim() !== ""
+                      ? novel.novel_img_url
+                      : defaultCover
+                  }
+                  alt={novel.novelTitle}
+                  className="w-full h-48 object-cover object-center"
+                  loading="lazy"
+                />
+              </div>
               <div className="p-3">
-                <h3 className="text-sm font-medium">{novel.novelTitle}</h3>
+                <h3 className="text-sm font-medium truncate">{novel.novelTitle}</h3>
                 <p className="text-xs text-gray-500 line-clamp-2 mt-2">
                   {novel.novelDescription}
                 </p>

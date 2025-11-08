@@ -12,9 +12,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// 🔹 ===================================================================
-// 🔹 HÀM GỌI API UPLOAD COVER
-// 🔹 ===================================================================
+
 const uploadNovelCoverApi = async (novelId, coverFile, token) => {
   const formData = new FormData();
   formData.append("novelId", novelId);

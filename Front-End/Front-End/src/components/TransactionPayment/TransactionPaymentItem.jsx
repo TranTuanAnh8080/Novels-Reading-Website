@@ -42,107 +42,118 @@ const TransactionPaymentItem = () => {
     const totalSpent = 325000;
 
     return (
-        <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-sm">
-            {/* Header */}
-            <h2 className="text-lg font-semibold text-sky-600 flex items-center gap-2 mb-1">
-                Lịch sử giao dịch
-            </h2>
-            <p className="text-sm text-gray-600 mb-6">
-                Theo dõi tất cả các giao dịch nạp xu và tiêu xu của bạn
-            </p>
+        <div className="min-h-screen p-6 bg-white text-black dark:bg-gray-900 dark:text-white">
+            <div className="max-w-6xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6">
+                {/* Header */}
+                <h2 className="text-xl font-bold text-sky-700 flex items-center gap-2 mb-1 dark:text-sky-500">
+                    Lịch Sử Giao Dịch
+                </h2>
+                <p className="text-sm text-black mb-6 dark:text-white">
+                    Theo dõi tất cả các giao dịch nạp xu và tiêu xu của bạn
+                </p>
 
-            {/* Tabs */}
-            <div className="flex gap-6 border-b border-gray-200 mb-6">
-                {["Tất cả", "Nạp xu", "Tiêu xu"].map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab.toLowerCase())}
-                        className={`pb-2 text-sm font-medium ${activeTab === tab.toLowerCase()
-                            ? "text-sky-600 border-b-2 border-sky-600"
-                            : "text-gray-500 hover:text-gray-700"
-                            }`}
-                    >
-                        {tab}
-                    </button>
-                ))}
-            </div>
+                {/* Tabs */}
+                <div className="flex gap-6 border-b border-gray-700 mb-6 ">
+                    {["Tất cả", "Nạp xu", "Tiêu xu"].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab.toLowerCase())}
+                            className={`pb-2 text-sm font-medium ${activeTab === tab.toLowerCase()
+                                    ? "text-sky-400 border-b-2 border-sky-400 "
+                                    : "text-gray-700 hover:text-gray-800 dark:text-white"
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
 
-            {/* Filters */}
-            <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center gap-2 border rounded-md px-3 py-2 flex-1 min-w-[200px]">
-                    <Search size={16} className="text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Tìm theo từ khoá..."
-                        className="w-full text-sm outline-none"
-                    />
+                {/* Filters */}
+                <div className="flex flex-wrap gap-4 mb-6">
+                    <div className="flex items-center gap-2 border border-gray-700 rounded-md px-3 py-2 flex-1 min-w-[200px]">
+                        <Search size={16} className="text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Tìm theo từ khoá..."
+                            className="w-full text-sm dark:bg-gray-900 bg-white text-white outline-none placeholder-gray-500"
+                        />
+                    </div>
+                    <div className="flex items-center border border-gray-700 rounded-md px-3 py-2 text-gray-400 text-sm">
+                        <input
+                            type="date"
+                            className="outline-none dark:bg-gray-900 bg-white text-black dark:text-white"
+                        />
+                        <Calendar size={16} className="ml-2 text-gray-400  dark:text-white" />
+                    </div>
+                    <div className="flex items-center border border-gray-700 rounded-md px-3 py-2 text-gray-400 text-sm">
+                        <input
+                            type="date"
+                            className="outline-none dark:bg-gray-900 bg-white text-black  dark:text-white"
+                        />
+                        <Calendar size={16} className="ml-2 text-gray-400  dark:text-white" />
+                    </div>
                 </div>
-                <div className="flex items-center border rounded-md px-3 py-2 text-gray-600 text-sm">
-                    <input type="date" className="outline-none" />
-                    <Calendar size={16} className="ml-2 text-gray-400" />
-                </div>
-                <div className="flex items-center border rounded-md px-3 py-2 text-gray-600 text-sm">
-                    <input type="date" className="outline-none" />
-                    <Calendar size={16} className="ml-2 text-gray-400" />
-                </div>
-            </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full  border-gray-50 rounded-lg">
-                    <thead className="bg-gray-50 text-gray-700">
-                        <tr>
-                            <th className="px-4 py-2 text-left">Thời gian</th>
-                            <th className="px-4 py-2 text-left">Loại giao dịch</th>
-                            <th className="px-4 py-2 text-left">Mô tả chi tiết</th>
-                            <th className="px-4 py-2 text-right">Số xu</th>
-                            <th className="px-4 py-2 text-center">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {transactions.map((t, idx) => (
-                            <tr key={idx} className=" hover:bg-gray-50">
-                                <td className="px-4 py-2">{t.time}</td>
-                                <td className="px-4 py-2">
-                                    <span
-                                        className={`px-2 py-1 rounded text-xs font-medium ${t.type === "Tiêu xu"
-                                            ? "bg-red-100 text-red-600"
-                                            : t.type === "Nạp xu"
-                                                ? "bg-green-100 text-green-600"
-                                                : "bg-indigo-100 text-indigo-600"
+                {/* Table */}
+                <div className="overflow-x-auto">
+                    <table className="w-full border border-gray-700 rounded-lg">
+                        <thead className="bg-gray-900 text-gray-300 dark:text-white dark:bg-gray-800">
+                            <tr>
+                                <th className="px-4 py-2 text-left">Thời gian</th>
+                                <th className="px-4 py-2 text-left">Loại giao dịch</th>
+                                <th className="px-4 py-2 text-left">Mô tả chi tiết</th>
+                                <th className="px-4 py-2 text-right">Số xu</th>
+                                <th className="px-4 py-2 text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transactions.map((t, idx) => (
+                                <tr
+                                    key={idx}
+                                    className="hover:bg-gray-700 transition-colors duration-200"
+                                >
+                                    <td className="px-4 py-2">{t.time}</td>
+                                    <td className="px-4 py-2">
+                                        <span
+                                            className={`px-2 py-1 rounded text-xs font-medium ${t.type === "Tiêu xu"
+                                                    ? "bg-red-700 text-red-100"
+                                                    : t.type === "Nạp xu"
+                                                        ? "bg-green-700 text-green-100"
+                                                        : "bg-indigo-700 text-indigo-100"
+                                                }`}
+                                        >
+                                            {t.type}
+                                        </span>
+                                    </td>
+                                    <td className="px-4 py-2">{t.detail}</td>
+                                    <td
+                                        className={`px-4 py-2 text-right font-medium ${t.amount < 0 ? "text-red-600" : "text-green-700"
                                             }`}
                                     >
-                                        {t.type}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-2">{t.detail}</td>
-                                <td
-                                    className={`px-4 py-2 text-right font-medium ${t.amount < 0 ? "text-red-500" : "text-green-600"
-                                        }`}
-                                >
-                                    {t.amount.toLocaleString("vi-VN")} xu
-                                </td>
-                                <td className="px-4 py-2 text-center">
-                                    <span className="text-green-600 font-medium">
-                                        ✅ {t.status}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                                        {t.amount.toLocaleString("vi-VN")} xu
+                                    </td>
+                                    <td className="px-4 py-2 text-center">
+                                        <span className="text-green-600 font-bold">
+                                            ✅ {t.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-            {/* Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <div className="p-4 rounded-lg bg-green-50 text-green-700 text-center font-medium">
-                    Nạp: {totalDeposit.toLocaleString("vi-VN")} xu
-                </div>
-                <div className="p-4 rounded-lg bg-indigo-50 text-indigo-700 text-center font-medium">
-                    TN: {totalRevenue.toLocaleString("vi-VN")} xu
-                </div>
-                <div className="p-4 rounded-lg bg-red-50 text-red-600 text-center font-medium">
-                    Đã tiêu: {totalSpent.toLocaleString("vi-VN")} xu
+                {/* Summary */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div className="p-4 rounded-lg bg-green-700 text-green-200 text-center font-medium">
+                        Nạp: {totalDeposit.toLocaleString("vi-VN")} xu
+                    </div>
+                    <div className="p-4 rounded-lg bg-indigo-700 text-indigo-200 text-center font-medium">
+                        TN: {totalRevenue.toLocaleString("vi-VN")} xu
+                    </div>
+                    <div className="p-4 rounded-lg bg-red-700 text-red-200 text-center font-medium">
+                        Đã tiêu: {totalSpent.toLocaleString("vi-VN")} xu
+                    </div>
                 </div>
             </div>
         </div>

@@ -151,7 +151,7 @@ const AccountManagement = () => {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [confirmDelete, setConfirmDelete] = useState({ show: false, accountId: null });
-  const [successMessge, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Lọc danh sách theo từ khóa
   const filteredAccounts = accounts.filter((acc) =>
@@ -245,7 +245,7 @@ const AccountManagement = () => {
       // Cập nhật danh sách UI
       setAccounts((prev) => prev.filter((acc) => acc.id !== accountId));
 
-      setSuccessMessage("🗑️ Tài khoản đã được xóa thành công!");
+      setSuccessMessage("🗑️ Tài khoản đã được xóa thành công !");
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
       console.error("❌ Lỗi khi xóa tài khoản:", error);
@@ -264,6 +264,35 @@ const AccountManagement = () => {
 
 
     <div className="p-6 sm:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+
+      <AnimatePresence>
+        {successMessage && (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-5 right-5 z-50 bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200 px-4 py-2 rounded-lg shadow-lg font-medium text-sm"
+          >
+            {successMessage}
+          </motion.div>
+        )}
+
+        {errorMessage && (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-5 right-5 z-50 bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200 px-4 py-2 rounded-lg shadow-lg font-medium text-sm"
+          >
+            {errorMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
 

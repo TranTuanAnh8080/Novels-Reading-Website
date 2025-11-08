@@ -66,14 +66,14 @@ function UploadPage() {
     }, [books, statusFilter, sortFilter]); // Chạy lại khi 1 trong 3 giá trị này thay đổi
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-black">
             <HeaderProfile />
 
             <div className="flex flex-1">
                 <SidebarLibrary />
 
                 <main className="flex-1 p-6">
-                    <h1 className="text-xl font-bold mb-3">Truyện đã đăng</h1>
+                    <h1 className="text-xl font-bold mb-3 dark:text-white">Truyện đã đăng</h1>
 
                     <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center gap-4">

@@ -11,39 +11,13 @@ import { useDarkMode } from "../pages/DarkModeContext";
 import { IoMdSunny } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
 import axios from 'axios';
-
 import { useNavigate } from 'react-router-dom';
-
-// Component cho từng tab trạng thái
-const StatusTab = ({ label, count, color, isActive, onClick }) => (
-    <button
-        onClick={onClick}
-        // Loại bỏ shadow từ đây, sẽ có shadow khi active
-        className={`flex items-center justify-center 
-                    min-w-[100px] px-4 py-2 rounded-md 
-                    font-bold text-sm transition-all duration-200 
-                    ${isActive
-                ? `${color.bgActive} ${color.textActive} ring-2 ${color.ring} ring-offset-2 shadow-lg` // Thêm shadow khi active
-                : `${color.bgInactive} ${color.textInactive} hover:${color.bgHover} hover:shadow-md` // Thêm shadow nhẹ khi hover
-            }`}
-    >
-        {label}
-        <span
-            className={`ml-2 px-2 py-0.5 text-xs rounded-full 
-                        ${isActive ? "bg-white text-gray-800" : "bg-gray-200 text-gray-600"} 
-                        font-extrabold shadow-sm`}
-        >
-            {count}
-        </span>
-    </button>
-);
 
 const ModerateOriginalNovels = () => {
     const navigate = useNavigate();
     const { darkMode, setDarkMode } = useDarkMode();
     const [expandedChapterId, setExpandedChapterId] = useState(null);
     const [chapterContents, setChapterContents] = useState({}); // Lưu nội dung từng chương
-    // Khai báo state cho tìm kiếm và sắp xếp
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
     const [statusList, setStatusList] = useState([]);
@@ -73,8 +47,8 @@ const ModerateOriginalNovels = () => {
     // 🗺️ Map status code -> ID (API sẽ dùng ID)
     const statusIdMap = {
         "WAIT FOR VERIFY": 5,
-        VERIFIED: 6,
-        REFUSE: 7,
+        "VERIFIED": 6,
+        "REFUSE": 7,
     };
 
     useEffect(() => {
@@ -152,49 +126,6 @@ const ModerateOriginalNovels = () => {
         fetchChapters();
     }, [activeTab]);
 
-    // 🔹 Màu cho từng trạng thái
-    // const statusColors = {
-    //     "WAIT FOR VERIFY": "bg-yellow-100 text-yellow-800",
-    //     "VERIFIED": "bg-green-100 text-green-800",
-    //     "REFUSE": "bg-red-100 text-red-800",
-    //     "UNKNOWN": "bg-gray-100 text-gray-700",
-    // };
-
-    // // 🧩 Hàm render nút hành động
-    // const renderActionButton = (status, id) => {
-    //     switch (status) {
-    //         case "WAIT FOR VERIFY":
-    //             return (
-    //                 <button
-    //                     onClick={() => fetchChapterText(id)}
-    //                     className="px-3 py-1 text-sm font-semibold rounded-md bg-yellow-500 text-white hover:bg-yellow-600 transition flex items-center gap-1"
-    //                 >
-    //                     <HiOutlinePencilAlt className="w-4 h-4" /> Xem nội dung
-    //                 </button>
-    //             );
-    //         case "VERIFIED":
-    //             return (
-    //                 <button
-    //                     onClick={() => fetchChapterText(id)}
-    //                     className="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition flex items-center gap-1"
-    //                 >
-    //                     <HiOutlineCheckCircle className="w-4 h-4" /> Xem nội dung
-    //                 </button>
-    //             );
-    //         case "REFUSE":
-    //             return (
-    //                 <button
-    //                     onClick={() => fetchChapterText(id)}
-    //                     className="px-3 py-1 text-sm font-semibold rounded-md bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-1"
-    //                 >
-    //                     <HiOutlineXCircle className="w-4 h-4" /> Xem nội dung
-    //                 </button>
-    //             );
-    //         default:
-    //             return null;
-    //     }
-    // };
-
     // 🧠 Hàm fetch nội dung chương
     const fetchChapterText = async (chapterId) => {
         try {
@@ -231,7 +162,6 @@ const ModerateOriginalNovels = () => {
         }
     };
 
-
     // 🚪 Đăng xuất
     const handleLogout = () => {
         sessionStorage.clear();
@@ -239,7 +169,6 @@ const ModerateOriginalNovels = () => {
         navigate('/LoginPage', { replace: true });
     };
 
-    // Bắt đầu thay đổi: div ngoài cùng chỉ dùng flex và min-h
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
@@ -264,9 +193,9 @@ const ModerateOriginalNovels = () => {
                     aria-label="Open moderator menu"
                     onClick={() => setMenuOpen(!menuOpen)}
                     className={`
-    p-3 rounded-2xl shadow-lg border transition duration-300 scale-100 hover:scale-105 fixed
-    focus:outline-none focus:ring-2
-    ${activeTab === "WAIT FOR VERIFY"
+                            p-3 rounded-2xl shadow-lg border transition duration-300 scale-100 hover:scale-105 fixed
+                            focus:outline-none focus:ring-2
+                            ${activeTab === "WAIT FOR VERIFY"
                             ? "bg-yellow-100 border-yellow-300 hover:shadow-yellow-300/50 hover:border-yellow-500 focus:ring-yellow-400"
                             : activeTab === "VERIFIED"
                                 ? "bg-green-100 border-green-300 hover:shadow-green-300/50 hover:border-green-500 focus:ring-green-400"
@@ -290,17 +219,15 @@ const ModerateOriginalNovels = () => {
                                                 text-gray-700 font-medium fixed
                                                 border border-gray-100 animate-fadeIn dark:bg-gray-800/95 dark:text-gray-700 dark:border-gray-700">
 
-                        {/* Mục 1: Kiểm duyệt Nội dung (Đã tối ưu) */}
                         <div>
                             <button
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                                // Thêm gap-2 và làm cho button rõ ràng hơn
                                 className="flex items-center justify-between w-full px-3 py-2 rounded-lg 
                                                        hover:bg-indigo-400 text-base font-semibold transition dark:text-white"
                             >
                                 Kiểm duyệt nội dung
                                 <FaChevronDown
-                                    size={12} // Icon nhỏ gọn hơn
+                                    size={12}
                                     className={`ml-2 transition transform ${dropdownOpen ? "rotate-180 text-indigo-600" : "text-gray-400"}`}
                                 />
                             </button>
@@ -315,12 +242,12 @@ const ModerateOriginalNovels = () => {
                                         <span className="w-2 h-2  bg-indigo-500 rounded-full flex-shrink-0"></span>
                                         Truyện Sáng Tác
                                     </a>
+
                                     {/* Truyện Dịch */}
                                     <a
                                         href="/ModerateTranslatedNovels"
                                         className="px-3 py-2 rounded-lg dark:text-white hover:bg-green-100 hover:text-green-700 transition duration-150 flex items-center gap-3"
                                     >
-                                        {/* Đổi màu chấm tròn cho dễ phân biệt */}
                                         <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
                                         Truyện Dịch
                                     </a>
@@ -328,10 +255,8 @@ const ModerateOriginalNovels = () => {
                             )}
                         </div>
 
-                        {/* Thêm đường phân cách tinh tế */}
                         <div className="border-t border-gray-100 my-2"></div>
 
-                        {/* Các mục khác */}
                         <a
                             href="#overview"
                             className="block dark:text-white px-3 py-2 rounded-lg hover:bg-green-300 font-medium text-gray-700"
@@ -347,9 +272,8 @@ const ModerateOriginalNovels = () => {
                     </div>
                 )}
             </div>
-            {/* Nội dung chính: Áp dụng padding tại đây */}
+
             <div className="flex-grow p-6 sm:p-10 mt-20">
-                {/* Thanh tiêu đề chính */}
                 <header className="flex items-center justify-center mb-8">
                     <h2 className="text-4xl font-medium italic flex items-center gap-3 mr-4 bg-gradient-to-r 
                        from-indigo-600 via-purple-600 to-pink-500 
@@ -359,7 +283,6 @@ const ModerateOriginalNovels = () => {
                     </h2>
                 </header>
 
-                {/* 🔹 Tabs trạng thái */}
                 <div className="flex flex-wrap gap-3 mb-8 justify-center">
                     {statusList.map((s) => (
                         <button
@@ -415,7 +338,6 @@ const ModerateOriginalNovels = () => {
                                 <option value="writer">Tác giả</option>
                                 <option value="last-activity">Hoạt động gần nhất</option>
                             </select>
-                            {/* Icon mũi tên tùy chỉnh để thay thế appearance-none */}
                             <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                         </div>
                     </div>
@@ -522,8 +444,8 @@ const ModerateOriginalNovels = () => {
                             })
                         ) : (
                             <tr>
-                                <td colSpan="6" className="text-center py-6 text-gray-500">
-                                    Không có chương nào cần xử lý
+                                <td colSpan="6" className="text-center py-6 text-gray-500 italic">
+                                    Không có chương nào cần xử lý.
                                 </td>
                             </tr>
                         )}

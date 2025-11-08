@@ -2,9 +2,9 @@ import React from "react";
 
 function HeroBanner() {
   return (
-    <div className="relative w-full h-64 rounded-lg overflow-hidden">
+    <div className="relative max-w-screen h-100 overflow-hidden">
       <img
-        src="https://wallpapercave.com/wp/wp7050559.jpg"
+        src="https://i.pinimg.com/1200x/7c/c6/29/7cc629470a4fb1e07ec0c7c16a203a16.jpg"
         alt="Banner"
         className="w-full h-full object-cover"
       />

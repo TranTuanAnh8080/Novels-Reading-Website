@@ -6,17 +6,18 @@ import TransactionPaymentItem from "../components/TransactionPayment/Transaction
 
 const TransactionPayment = () => {
     return (
-        <div>
-            <HeaderProfile />
+        <div className="min-h-screen bg-white text-white dark:bg-gray-900 dark:text-white">
+            <HeaderProfile className="bg-gray-900 text-white" />
             <div className="flex">
-                <SidebarProfile />
+                <SidebarProfile className="bg-gray-900 text-white" />
                 <main className="flex-1 p-6">
                     <TransactionPaymentItem />
                 </main>
             </div>
-            <Footer />
+            <Footer className="bg-gray-900 text-white" />
         </div>
     );
+
 };
 
 
