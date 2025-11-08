@@ -173,7 +173,6 @@ const ModerateOriginalNovels = () => {
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
             <MoHeader />
-
             <button
                 onClick={() => setDarkMode(!darkMode)}
                 className="p-2 rounded-full dark:bg-gray-700 

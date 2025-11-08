@@ -38,6 +38,9 @@ export default function ReadPage() {
     sessionStorage.getItem("isLoggedIn") === "true"
   );
 
+  const [buyResult, setBuyResult] = useState(null); // "success" | "error" | null
+
+
   // --- STATE MỚI ĐỂ QUẢN LÝ MUA CHƯƠNG ---
   const [purchaseInfo, setPurchaseInfo] = useState(null); // Lưu thông tin { error, price } khi cần mua
   const [isBuying, setIsBuying] = useState(false); // Trạng thái loading khi nhấn nút mua
@@ -168,45 +171,41 @@ export default function ReadPage() {
 
   // --- HÀM MỚI ĐỂ XỬ LÝ MUA CHƯƠNG ---
   const handleBuyChapter = async () => {
-    if (!id) return; // Không có chapterId
-
+    if (!id) return;
     setIsBuying(true);
-    setError(""); // Xóa lỗi cũ
+    setBuyResult(null);
+    setError("");
     const token = sessionStorage.getItem("token");
 
     if (!token) {
       setError("Bạn cần đăng nhập để thực hiện giao dịch. 🔑");
       setIsBuying(false);
+      setBuyResult("error");
       return;
     }
 
     try {
-      // Gọi API POST /chapter/{chapterId}/buy
       await axios.post(
         `https://be-ink-realm-c7jk.vercel.app/chapter/${id}/buy`,
-        {}, // Body rỗng, vì chapterId đã có ở URL
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Mua thành công!
-      alert("Mua chương thành công! 🎉");
-      setPurchaseInfo(null); // Xóa thông tin cần mua
-      setIsBuying(false);
-      await fetchChapter(); // Tải lại dữ liệu chương (lần này sẽ có nội dung)
+      setBuyResult("success");
+      setTimeout(() => {
+        setPurchaseInfo(null);
+        setIsBuying(false);
+        fetchChapter();
+      }, 1200); // spinner hiển thị thêm 1.2s rồi reload
     } catch (err) {
-      console.error("Lỗi khi mua chương:", err);
-      if (err.response) {
-        // Hiển thị lỗi từ server (ví dụ: "Số dư không đủ, vui lòng nạp thêm xu để mua đọc!")
-        setError(err.response.data?.message || "Đã xảy ra lỗi khi mua.");
-      } else {
-        setError("Không thể kết nối đến máy chủ.");
-      }
-      setIsBuying(false);
+      setBuyResult("error");
+      setError(
+        err.response?.data?.message || "Đã xảy ra lỗi khi mua."
+      );
+      setTimeout(() => {
+        setIsBuying(false);
+      }, 1200); // spinner hiển thị thêm 1.2s rồi báo lỗi
     }
   };
-  // --- KẾT THÚC HÀM MỚI ---
 
   // --- HÀM MỚI XỬ LÝ TTS ---
   const handleSpeak = () => {
@@ -474,8 +473,8 @@ export default function ReadPage() {
               onClick={handleSpeak}
               disabled={loading || !chapterText || purchaseInfo} // Không cho đọc khi đang load, chưa có text, hoặc đang ở màn hình mua
               className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm hover:shadow-sm disabled:opacity-50 ${isSpeaking
-                  ? "bg-red-50 text-red-600 border-red-200" // Style khi đang đọc
-                  : "bg-white" // Style bình thường
+                ? "bg-red-50 text-red-600 border-red-200" // Style khi đang đọc
+                : "bg-white" // Style bình thường
                 }`}
             >
               {isSpeaking ? (
@@ -512,10 +511,10 @@ export default function ReadPage() {
                 {purchaseInfo ? (
                   // Hiển thị giao diện Mua chương
                   <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <h3 className="text-lg font-semibold text-yellow-800">
+                    <h3 className="text-lg font-bold text-yellow-800">
                       {purchaseInfo.error || "Chương này cần mua"}
                     </h3>
-                    <p className="text-yellow-700 mt-2">
+                    <p className="text-yellow-700 mt-2 italic">
                       Vui lòng mua chương để tiếp tục đọc.
                     </p>
                     <button
@@ -524,17 +523,26 @@ export default function ReadPage() {
                       className="mt-4 px-6 py-2 bg-[#2E5BFF] text-white rounded-full font-semibold hover:bg-indigo-600 disabled:bg-gray-400 flex items-center justify-center mx-auto shadow-md"
                     >
                       {isBuying ? (
-                        <Loader2 className="animate-spin w-4 h-4 mr-2" />
-                      ) : null}
-                      {isBuying
-                        ? "Đang xử lý..."
-                        : `Mua ngay (Giá: ${purchaseInfo.price} 🪙)`}
+                        <>
+                          <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                          Đang xử lý...
+                        </>
+                      ) : (
+                        `Mua ngay (Giá: ${purchaseInfo.price}🪙)`
+                      )}
                     </button>
 
-                    {/* Hiển thị lỗi Mua hàng (vd: Số dư không đủ) */}
-                    {!isBuying && error && error !== purchaseInfo.error && (
-                      <p className="text-red-600 text-sm mt-3">{error}</p>
+                    {/* Hiển thị kết quả sau khi mua */}
+                    {buyResult === "success" && !isBuying && (
+                      <p className="text-green-600 font-bold text-sm mt-3">Mua chương thành công! 🎉</p>
                     )}
+                    {buyResult === "error" && !isBuying && error && (
+                      <p className="text-red-600 font-bold text-sm mt-3">{error}</p>
+                    )}  
+                    {/* Hiển thị lỗi Mua hàng (vd: Số dư không đủ)
+                    {!isBuying && error && error !== purchaseInfo.error && (
+                      <p className="text-red-600 font-bold text-sm mt-3">{error}</p>
+                    )} */}
                   </div>
                 ) : (
                   // Hiển thị lỗi khác (vd: 404, 500)
@@ -573,8 +581,8 @@ export default function ReadPage() {
                 <button
                   onClick={() => setSortOrder("new")}
                   className={`px-3 py-1 rounded-md text-sm ${sortOrder === "new"
-                      ? "bg-indigo-50 text-[#2E5BFF] font-medium"
-                      : "bg-gray-50 text-slate-600 hover:bg-gray-100"
+                    ? "bg-indigo-50 text-[#2E5BFF] font-medium"
+                    : "bg-gray-50 text-slate-600 hover:bg-gray-100"
                     }`}
                 >
                   Mới nhất
@@ -582,8 +590,8 @@ export default function ReadPage() {
                 <button
                   onClick={() => setSortOrder("old")}
                   className={`px-3 py-1 rounded-md text-sm ${sortOrder === "old"
-                      ? "bg-indigo-50 text-indigo-600 font-medium"
-                      : "bg-gray-50 text-slate-600 hover:bg-gray-100"
+                    ? "bg-indigo-50 text-indigo-600 font-medium"
+                    : "bg-gray-50 text-slate-600 hover:bg-gray-100"
                     }`}
                 >
                   Cũ nhất
