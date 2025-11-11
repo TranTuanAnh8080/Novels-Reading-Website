@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UploadItem from '../components/UploadNovelPage/UploadItem';
-import HeaderUpload from "../components/UploadNovelPage/HeaderUpload";
+import HeaderUpload from "../components/ProfilePage/HeaderProfile";
 import Footer from "../components/SharedComponents/Footer"
 
 const SkeletonUpload = () => {
@@ -31,14 +31,14 @@ const ChooseUploadNovel = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
-      <HeaderUpload />
-      <div className="flex flex-1 justify-center items-center">
-        {loading ? <SkeletonUpload /> : <UploadItem />}
-      </div>
-      <Footer />
+  <div className="min-w-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:bg-black">
+    <HeaderUpload />
+    <div className="flex flex-1 justify-center items-center">
+      {loading ? <SkeletonUpload /> : <UploadItem />}
     </div>
-  );
+    <Footer />
+  </div>
+);
 };
 
 export default ChooseUploadNovel;
