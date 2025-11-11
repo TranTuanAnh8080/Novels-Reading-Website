@@ -44,7 +44,8 @@ export default function ReadPage() {
   );
 
   const [purchaseInfo, setPurchaseInfo] = useState(null);
-  const [isBuying, setIsBuying] = useState(false);
+  const [isBuying, setIsBuying] = useState(false); 
+  const [buyResult, setBuyResult] = useState(null);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
 
@@ -54,6 +55,7 @@ export default function ReadPage() {
       setError("");
       setChapterText("");
       setPurchaseInfo(null);
+      setBuyResult(null);
 
       const detailRes = await axios.get(
         `https://be-ink-realm-c7jk.vercel.app/chapter/detail`,
@@ -154,14 +156,15 @@ export default function ReadPage() {
 
   const handleBuyChapter = async () => {
     if (!id) return;
-
     setIsBuying(true);
+    setBuyResult(null);
     setError("");
     const token = sessionStorage.getItem("token");
 
     if (!token) {
       setError("Bạn cần đăng nhập để thực hiện giao dịch. 🔑");
       setIsBuying(false);
+      setBuyResult("error");
       return;
     }
 
@@ -169,23 +172,23 @@ export default function ReadPage() {
       await axios.post(
         `https://be-ink-realm-c7jk.vercel.app/chapter/${id}/buy`,
         {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      alert("Mua chương thành công! 🎉");
-      setPurchaseInfo(null);
-      setIsBuying(false);
-      await fetchChapter();
+      setBuyResult("success");
+      setTimeout(() => {
+        setPurchaseInfo(null);
+        setIsBuying(false);
+        fetchChapter();
+      }, 1200);
     } catch (err) {
       console.error("Lỗi khi mua chương:", err);
-      if (err.response) {
-        setError(err.response.data?.message || "Đã xảy ra lỗi khi mua.");
-      } else {
-        setError("Không thể kết nối đến máy chủ.");
-      }
-      setIsBuying(false);
+      setBuyResult("error");
+      setError(
+        err.response?.data?.message || "Đã xảy ra lỗi khi mua."
+      );
+      setTimeout(() => {
+        setIsBuying(false);
+      }, 1200);
     }
   };
 
@@ -208,7 +211,6 @@ export default function ReadPage() {
         }. ${chapterText}`;
 
       const utterance = new SpeechSynthesisUtterance(fullTextToSpeak);
-
       utterance.lang = "vi-VN";
 
       const voices = window.speechSynthesis.getVoices();
@@ -253,7 +255,7 @@ export default function ReadPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <header className="bg-white text-gray-900 border-b border-gray-200 shadow-md sticky top-0 z-50
-                   dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
+                     dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
         <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between gap-6">
           {/* LOGO */}
           <div className="flex items-center space-x-3">
@@ -300,9 +302,9 @@ export default function ReadPage() {
                 type="text"
                 placeholder="Tìm kiếm truyện..."
                 className="rounded-full bg-gray-100 border border-gray-300 pl-4 pr-10 py-1.5 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 
-                         placeholder-gray-500 text-sm w-56
-                         dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 
+                           placeholder-gray-500 text-sm w-56
+                           dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
               />
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
@@ -324,7 +326,7 @@ export default function ReadPage() {
               <div className="flex items-center gap-3">
                 <Link to="/LoginPage">
                   <button className="px-4 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-100 transition
-                                   dark:border-gray-700 dark:hover:bg-gray-800">
+                                     dark:border-gray-700 dark:hover:bg-gray-800">
                     Đăng nhập
                   </button>
                 </Link>
@@ -492,7 +494,7 @@ export default function ReadPage() {
                     <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200">
                       {purchaseInfo.error || "Chương này cần mua"}
                     </h3>
-                    <p className="text-yellow-700 mt-2 dark:text-yellow-300">
+                    <p className="text-yellow-700 mt-2 italic dark:text-yellow-300">
                       Vui lòng mua chương để tiếp tục đọc.
                     </p>
                     <button
@@ -502,15 +504,20 @@ export default function ReadPage() {
                                  dark:bg-blue-500 dark:hover:bg-blue-600 dark:disabled:bg-gray-500"
                     >
                       {isBuying ? (
-                        <Loader2 className="animate-spin w-4 h-4 mr-2" />
-                      ) : null}
-                      {isBuying
-                        ? "Đang xử lý..."
-                        : `Mua ngay (Giá: ${purchaseInfo.price} 🪙)`}
+                        <>
+                          <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                          Đang xử lý...
+                        </>
+                      ) : (
+                        `Mua ngay (Giá: ${purchaseInfo.price}🪙)`
+                      )}
                     </button>
 
-                    {!isBuying && error && error !== purchaseInfo.error && (
-                      <p className="text-red-600 text-sm mt-3 dark:text-red-400">{error}</p>
+                    {buyResult === "success" && !isBuying && (
+                      <p className="text-green-600 font-bold text-sm mt-3 dark:text-green-400">Mua chương thành công! 🎉</p>
+                    )}
+                    {buyResult === "error" && !isBuying && error && (
+                      <p className="text-red-600 font-bold text-sm mt-3 dark:text-red-400">{error}</p>
                     )}
                   </div>
                 ) : (

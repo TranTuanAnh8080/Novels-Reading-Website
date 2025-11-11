@@ -60,72 +60,97 @@ export default function ChapterList() {
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen dark:bg-gray-900">
-        {/* Header */}
-        <header className="w-full bg-white shadow-sm border-b border-gray-200
+      <header className="w-full bg-white shadow-sm border-b border-gray-200
                        dark:bg-gray-800 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-700 hover:text-gray-900
-                                                             dark:text-gray-300 dark:hover:text-white">
-                <ChevronLeft className="w-5 h-5" /> <span className="text-sm">Quay lại</span>
-              </button>
-              <span 
-                className="text-2xl font-extrabold tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer"
-                onClick={() => navigate(isLoggedIn ? "/HomeLoggedIn" : "/HomePage")}
-              >
-                INKREALM
-              </span>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+          <div className="flex items-center gap-4">
+            <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-700 hover:text-gray-900
+                                                           dark:text-gray-300 dark:hover:text-white">
+              <ChevronLeft className="w-5 h-5" /> <span className="text-sm">Quay lại</span>
+            </button>
+            <span 
+              className="text-2xl font-extrabold tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer"
+              onClick={() => navigate(isLoggedIn ? "/HomeLoggedIn" : "/HomePage")}
+            >
+              INKREALM
+            </span>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium flex-1 justify-center">
+            <Link
+              to={isLoggedIn ? "/HomeLoggedIn" : "/HomePage"}
+              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+            >
+              Trang chủ
+            </Link>
+            <Link to="/the-loai" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
+              Thể loại
+            </Link>
+            <Link to="/xep-hang" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
+              Xếp hạng
+            </Link>
+            <Link
+              to="/moi-cap-nhat"
+              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
+            >
+              Mới cập nhật
+            </Link>
+            <Link to="/sang-tac" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
+              Sáng tác
+            </Link>
+          </nav>
+          
+          <div className="flex items-center space-x-6">
             <div className="relative w-80">
               <input type="text" placeholder="Tìm truyện..." className="w-full border border-gray-300 rounded-full pl-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
                                                                        dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
               <Search className="absolute right-3 top-2.5 w-4 h-4 text-gray-500 dark:text-gray-400" />
             </div>
-            <div className="flex items-center space-x-6">
-              <button
-                onClick={toggleTheme}
-                aria-label="Toggle dark mode"
-                className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                {theme === 'light' ? (
-                  <Moon className="w-5 h-5" />
-                ) : (
-                  <Sun className="w-5 h-5" />
-                )}
-              </button>
 
-              {!isLoggedIn ? (
-                <div className="flex items-center space-x-3">
-                  <Link
-                    to="/LoginPage"
-                    className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
-                               text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm
-                               dark:bg-blue-500 dark:hover:bg-blue-600"
-                  >
-                    Đăng nhập
-                  </Link>
-
-                  <Link
-                    to="/RegisterPage"
-                    className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
-                               text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm
-                               dark:bg-blue-500 dark:hover:bg-blue-600"
-                  >
-                    Đăng ký
-                  </Link>
-                </div>
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5" />
               ) : (
-                <>
-                  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="user avatar" className="w-9 h-9 rounded-full border dark:border-gray-700 cursor-pointer hover:opacity-80" onClick={() => navigate("/Profile")} />
-                  <button onClick={() => { sessionStorage.removeItem("isLoggedIn"); window.location.href = "/HomePage"; }} className="flex items-center space-x-1 text-red-600 hover:text-red-700 text-sm font-medium
-                                                                                                                          dark:text-red-500 dark:hover:text-red-400">
-                    <LogOut className="w-4 h-4 mr-1" /> <span>Đăng xuất</span>
-                  </button>
-                </>
+                <Sun className="w-5 h-5" />
               )}
-            </div>
+            </button>
+
+            {!isLoggedIn ? (
+              <div className="flex items-center space-x-3">
+                <Link
+                  to="/LoginPage"
+                  className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
+                             text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm
+                             dark:bg-blue-500 dark:hover:bg-blue-600"
+                >
+                  Đăng nhập
+                </Link>
+
+                <Link
+                  to="/RegisterPage"
+                  className="flex items-center bg-[#2E5BFF] hover:bg-indigo-600 
+                             text-white text-sm font-medium px-4 py-1.5 rounded-full shadow-sm
+                             dark:bg-blue-500 dark:hover:bg-blue-600"
+                >
+                  Đăng ký
+                </Link>
+              </div>
+            ) : (
+              <>
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="user avatar" className="w-9 h-9 rounded-full border dark:border-gray-700 cursor-pointer hover:opacity-80" onClick={() => navigate("/Profile")} />
+                <button onClick={() => { sessionStorage.removeItem("isLoggedIn"); window.location.href = "/HomePage"; }} className="flex items-center space-x-1 text-red-600 hover:text-red-700 text-sm font-medium
+                                                                                                                              dark:text-red-500 dark:hover:text-red-400">
+                  <LogOut className="w-4 h-4 mr-1" /> <span>Đăng xuất</span>
+                </button>
+              </>
+            )}
           </div>
-        </header>
+        </div>
+      </header>
 
       <main className="py-6 max-w-5xl mx-auto">
         {/* Loading + Error */}
