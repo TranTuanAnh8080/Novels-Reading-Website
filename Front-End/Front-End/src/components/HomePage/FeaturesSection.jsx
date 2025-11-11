@@ -44,7 +44,7 @@ const features = [
 function FeaturesSection() {
   return (
     <section className="py-1">
-      <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+      <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
         ✨ Tính năng nổi bật
       </h2>
 
@@ -52,11 +52,12 @@ function FeaturesSection() {
         {features.map((f, idx) => (
           <div
             key={idx}
-            className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex flex-col gap-2 hover:shadow-md transition"
+            className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex flex-col gap-2 hover:shadow-md transition
+                       dark:bg-gray-800 dark:border-gray-700 dark:hover:shadow-lg"
           >
-            <f.icon className="h-6 w-6 text-[#2E5BFF]" />
-            <h3 className="text-base font-bold">{f.title}</h3>
-            <p className="text-sm text-gray-600">{f.desc}</p>
+            <f.icon className="h-6 w-6 text-[#2E5BFF] dark:text-blue-400" />
+            <h3 className="text-base font-bold text-gray-900 dark:text-white">{f.title}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{f.desc}</p>
           </div>
         ))}
       </div>

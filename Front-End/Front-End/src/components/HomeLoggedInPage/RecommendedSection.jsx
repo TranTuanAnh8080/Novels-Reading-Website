@@ -38,11 +38,11 @@ function RecommendedSection() {
     <section className="my-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="flex items-center text-lg font-bold text-gray-800">
+        <h2 className="flex items-center text-lg font-bold text-gray-800 dark:text-white">
           <Target className="h-5 w-5 text-red-500 mr-2" />
           Truyện đề cử cho bạn
         </h2>
-        <Link to="/RecommendedAll" className="text-[#2E5BFF] text-sm hover:underline">
+        <Link to="/RecommendedAll" className="text-[#2E5BFF] text-sm hover:underline dark:text-blue-400">
           Xem tất cả &gt;
         </Link>
       </div>
@@ -52,7 +52,8 @@ function RecommendedSection() {
         {recommendedData.map((novel) => (
           <div
             key={novel.id}
-            className="bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden"
+            className="bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden
+                       dark:bg-gray-800 dark:hover:bg-gray-700"
           >
             <img
               src={novel.img}
@@ -60,16 +61,16 @@ function RecommendedSection() {
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
-              <h3 className="font-semibold text-base">{novel.title}</h3>
-              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              <h3 className="font-semibold text-base text-gray-900 dark:text-white">{novel.title}</h3>
+              <p className="text-sm text-gray-600 mt-1 line-clamp-2 dark:text-gray-300">
                 {novel.desc}
               </p>
               <div className="flex items-center justify-between mt-3">
-                <p className="flex items-center text-yellow-500 text-sm">
+                <p className="flex items-center text-yellow-500 text-sm dark:text-yellow-400">
                   <Star className="h-4 w-4 mr-1" />
                   {novel.rating}/5
                 </p>
-                <button className="text-sm text-[#2E5BFF] hover:underline">
+                <button className="text-sm text-[#2E5BFF] hover:underline dark:text-blue-400">
                   + Theo dõi
                 </button>
               </div>
