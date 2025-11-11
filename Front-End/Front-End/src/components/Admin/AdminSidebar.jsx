@@ -8,7 +8,7 @@ import axios from "axios";
 const menuItems = [
   { id: 1, name: "Dashboard", icon: LayoutDashboard, route: "dashboard" },
   { id: 2, name: "Tài khoản nội bộ", icon: Users, route: "accounts" },
-  { id: 3, name: "Quản lý truyện", icon: BookOpen, route: "novels" },
+  // { id: 3, name: "Quản lý truyện", icon: BookOpen, route: "novels" },
   { id: 4, name: "Thống kê doanh thu", icon: BarChart2, route: "revenue" },
   { id: 5, name: "Hồ sơ cá nhân", icon: UserCircle, route: "profile" },
 ];
