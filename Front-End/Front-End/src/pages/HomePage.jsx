@@ -8,7 +8,7 @@ import Footer from "../components/SharedComponents/Footer";
 
 function HomePage() {
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col">
+    <div className="bg-gray-50 min-h-screen flex flex-col dark:bg-gray-900">
       <Header />
       <main className="flex-1 max-w-7xl mx-auto px-4 py-6 space-y-12">
         <HeroSection />

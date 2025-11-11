@@ -8,13 +8,13 @@ import Footer from "../components/SharedComponents/Footer";
 
 function HomeLoggedIn() {
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen dark:bg-gray-900">
       <HeaderLoggedIn />
       <main className="max-w-7xl mx-auto px-4 py-6">
         <div className="mb-10"> 
           <HeroBanner />
         </div>
-        <HeroSection />
+        <HeroSection /> 
         <ReadingSection />
         <RecommendedSection />
       </main>

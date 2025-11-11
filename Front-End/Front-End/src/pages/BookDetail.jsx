@@ -15,12 +15,10 @@ export default function BookDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // state login
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
 
-  // lắng nghe thay đổi localStorage
   useEffect(() => {
     const checkLogin = () => {
       setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
@@ -35,7 +33,6 @@ export default function BookDetail() {
     };
   }, []);
 
-  // 🔹 Gọi API lấy chi tiết truyện
   useEffect(() => {
     const fetchBook = async () => {
       try {
@@ -44,7 +41,7 @@ export default function BookDetail() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ novelId: id }), // id lấy từ useParams
+          body: JSON.stringify({ novelId: id }),
         });
 
         if (!res.ok) {
@@ -57,7 +54,7 @@ export default function BookDetail() {
         console.error("Error fetching novel:", error);
         setError("Lỗi khi tải dữ liệu truyện!");
       } finally {
-        setLoading(false); // 🔹 Dù lỗi hay thành công đều thoát trạng thái loading
+        setLoading(false);
       }
     };
 
@@ -70,11 +67,10 @@ export default function BookDetail() {
     { id: 3, title: "Phàm Nhân Tu Tiên", author: "Vong Ngữ", cover: "https://dtv-ebook.com.vn/images/files_2/2025/062025/pham-nhan-tu-tien.jpg" },
   ];
 
-    if (loading) {
+  if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="flex items-center space-x-3">
-          {/* Spinner SVG */}
           <svg
             className="animate-spin h-6 w-6 text-blue-500"
             xmlns="http://www.w3.org/2000/svg"
@@ -95,18 +91,28 @@ export default function BookDetail() {
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <span className="text-xl font-semibold text-gray-700">
+          <span className="text-xl font-semibold text-gray-700 dark:text-gray-300">
             Đang tải dữ liệu...
           </span>
         </div>
       </div>
     );
   }
-  if (error) return <div className="p-6 text-red-500">{error}</div>;
-  if (!book) return <div className="p-6">❌ Không tìm thấy truyện</div>;
+
+  if (error) return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 text-red-500 dark:text-red-400">
+      {error}
+    </div>
+  );
+
+  if (!book) return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 text-gray-800 dark:text-gray-200">
+      ❌ Không tìm thấy truyện
+    </div>
+  );
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans">
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans">
       <HeaderBook isLoggedIn={isLoggedIn} />
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
       <BookInfo
