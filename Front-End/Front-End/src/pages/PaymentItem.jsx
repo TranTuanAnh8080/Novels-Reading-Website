@@ -10,7 +10,7 @@ const PaymentItem = () => {
     const { darkMode, setDarkMode } = useDarkMode();
     return (
         <div className={`min-h-screen flex flex-col ${darkMode
-                ? "dark:bg-[#0b0f19] text-gray-100"
+                ? "dark:bg-gray-900 text-gray-100"
                 : "bg-gradient-to-r from-sky-100 via-transparent to-rose-100 text-gray-900"
             }`}>
             <HeaderProfile />

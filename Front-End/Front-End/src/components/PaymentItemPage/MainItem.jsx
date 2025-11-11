@@ -290,7 +290,7 @@ const MainItem = () => {
     return (
        <div>
     {/* Nội dung chính */}
-    <main className="flex-grow py-12 px-4 bg-gray-50 dark:bg-[#0b0f19] transition-colors duration-300">
+    <main className="flex-grow py-12 px-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         {/* Nút Trở lại */}
         <div className="max-w-7xl mx-auto w-full px-6 py-4 text-lg">
             <Link
