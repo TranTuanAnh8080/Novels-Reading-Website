@@ -8,21 +8,26 @@ import {
   Clock,
   LogOut,
   Loader2,
-  Volume2, // Icon cho nút nghe
-  StopCircle, // Icon cho nút dừng
+  Volume2,
+  StopCircle,
+  Moon,
+  Sun 
 } from "lucide-react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import logo from "../assets/inkrealm_logo.png"; // Đảm bảo đường dẫn này đúng
-import defaultCover from "../assets/book-cover-blank.jpg"; // Đảm bảo đường dẫn này đúng
-import Footer from "../components/SharedComponents/Footer"; // Đảm bảo đường dẫn này đúng
+import logo from "../assets/inkrealm_logo.png";
+import defaultCover from "../assets/book-cover-blank.jpg"
+import Footer from "../components/SharedComponents/Footer"; 
+import { useTheme } from "../components/SharedComponents/ThemeContext";
 
 export default function ReadPage() {
-  const { id } = useParams(); // chapterId
+  const { id } = useParams(); 
   const navigate = useNavigate();
   const location = useLocation();
   const storyId = location.state?.storyId;
   const commentsRef = useRef(null);
+
+  const { theme, toggleTheme } = useTheme();
 
   const [chapter, setChapter] = useState(null);
   const [novel, setNovel] = useState(null);
@@ -38,31 +43,26 @@ export default function ReadPage() {
     sessionStorage.getItem("isLoggedIn") === "true"
   );
 
-  const [buyResult, setBuyResult] = useState(null); // "success" | "error" | null
+  const [purchaseInfo, setPurchaseInfo] = useState(null);
+  const [isBuying, setIsBuying] = useState(false); 
+  const [buyResult, setBuyResult] = useState(null);
 
-
-  // --- STATE MỚI ĐỂ QUẢN LÝ MUA CHƯƠNG ---
-  const [purchaseInfo, setPurchaseInfo] = useState(null); // Lưu thông tin { error, price } khi cần mua
-  const [isBuying, setIsBuying] = useState(false); // Trạng thái loading khi nhấn nút mua
-
-  // --- STATE MỚI ĐỂ QUẢN LÝ TTS ---
-  const [isSpeaking, setIsSpeaking] = useState(false); // Trạng thái đang đọc TTS
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const fetchChapter = async () => {
     try {
       setLoading(true);
       setError("");
-      setChapterText(""); // Xóa nội dung chương cũ
-      setPurchaseInfo(null); // Reset trạng thái cần mua
+      setChapterText("");
+      setPurchaseInfo(null);
+      setBuyResult(null);
 
-      // 1. Lấy chi tiết chương
       const detailRes = await axios.get(
         `https://be-ink-realm-c7jk.vercel.app/chapter/detail`,
         { params: { chapterId: id } }
       );
       setChapter(detailRes.data);
 
-      // 2. Chuẩn bị token
       const token = sessionStorage.getItem("token");
       if (!token) {
         setError("Bạn cần đăng nhập để đọc chương này 🔒");
@@ -70,7 +70,6 @@ export default function ReadPage() {
         return;
       }
 
-      // 3. Lấy nội dung chương
       const textRes = await axios.get(
         `https://be-ink-realm-c7jk.vercel.app/chapter/text`,
         {
@@ -78,9 +77,8 @@ export default function ReadPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setChapterText(textRes.data.chapterText); // Set nội dung nếu thành công
+      setChapterText(textRes.data.chapterText); 
 
-      // 4. Gọi thêm API /novel/novelId để lấy tên truyện
       if (storyId) {
         const novelRes = await axios.post(
           "https://be-ink-realm-c7jk.vercel.app/novel/novelId",
@@ -89,7 +87,6 @@ export default function ReadPage() {
         setNovel(novelRes.data);
       }
 
-      // 5. Lấy tổng số chương của truyện
       try {
         const listRes = await axios.get(
           `https://be-ink-realm-c7jk.vercel.app/chapter/list/${storyId}`
@@ -103,7 +100,6 @@ export default function ReadPage() {
         console.warn("Không thể lấy danh sách chương:", err);
       }
 
-      // 6. Lấy comments (tạm giả lập)
       setComments([
         {
           user: "NguyenReader",
@@ -120,17 +116,15 @@ export default function ReadPage() {
       ]);
     } catch (err) {
       console.error(err);
-      setChapterText(""); // Đảm bảo không hiển thị nội dung cũ khi có lỗi
+      setChapterText("");
       if (err.response) {
         const { status, data } = err.response;
         if (status === 401) {
           setError("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại 🔑");
           localStorage.removeItem("token");
         } else if (status === 403) {
-          // --- LOGIC MỚI KHI GẶP LỖI 403 ---
           setError(data?.error || "Chương này cần mua để đọc ❌");
-          setPurchaseInfo(data); // Lưu thông tin { error, price }
-          // --- KẾT THÚC LOGIC MỚI ---
+          setPurchaseInfo(data);
         } else if (status === 404) {
           setError("Không tìm thấy chương này ❗");
         } else {
@@ -144,32 +138,22 @@ export default function ReadPage() {
     }
   };
 
-  // Sẽ chạy lại mỗi khi `id` (chapterId) thay đổi
   useEffect(() => {
-    // --- TÍCH HỢP TTS ---
-    // Dừng đọc TTS nếu đang đọc khi chuyển chương
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     }
-    // --- KẾT THÚC TTS ---
-
     fetchChapter();
   }, [id]);
 
-  // --- TÍCH HỢP TTS ---
-  // Dừng đọc khi rời khỏi trang (unmount)
   useEffect(() => {
-    // Cleanup function này sẽ chạy khi component bị unmount
     return () => {
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
     };
-  }, []); // Dependency rỗng nghĩa là nó chỉ chạy 1 lần lúc mount và cleanup lúc unmount
-  // --- KẾT THÚC TTS ---
+  }, []);
 
-  // --- HÀM MỚI ĐỂ XỬ LÝ MUA CHƯƠNG ---
   const handleBuyChapter = async () => {
     if (!id) return;
     setIsBuying(true);
@@ -195,46 +179,38 @@ export default function ReadPage() {
         setPurchaseInfo(null);
         setIsBuying(false);
         fetchChapter();
-      }, 1200); // spinner hiển thị thêm 1.2s rồi reload
+      }, 1200);
     } catch (err) {
+      console.error("Lỗi khi mua chương:", err);
       setBuyResult("error");
       setError(
         err.response?.data?.message || "Đã xảy ra lỗi khi mua."
       );
       setTimeout(() => {
         setIsBuying(false);
-      }, 1200); // spinner hiển thị thêm 1.2s rồi báo lỗi
+      }, 1200);
     }
   };
 
-  // --- HÀM MỚI XỬ LÝ TTS ---
   const handleSpeak = () => {
-    // Kiểm tra trình duyệt có hỗ trợ không
     if (!("speechSynthesis" in window)) {
       alert("Xin lỗi, trình duyệt của bạn không hỗ trợ chức năng này.");
       return;
     }
 
     if (isSpeaking) {
-      // Nếu đang đọc -> Dừng
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     } else {
-      // Nếu chưa đọc -> Bắt đầu đọc
       if (!chapterText) {
         alert("Nội dung chương chưa được tải hoặc chương này cần mua.");
         return;
       }
 
-      // Tạo một đối tượng phát âm
-      // Thêm tiêu đề chương vào nội dung đọc
       const fullTextToSpeak = `${chapter?.chapterTitle || "Bắt đầu đọc"
         }. ${chapterText}`;
 
       const utterance = new SpeechSynthesisUtterance(fullTextToSpeak);
-
-      // Cố gắng tìm giọng tiếng Việt
-      // (Lưu ý: getVoices() có thể bất đồng bộ, nên set lang là cách an toàn)
       utterance.lang = "vi-VN";
 
       const voices = window.speechSynthesis.getVoices();
@@ -245,11 +221,9 @@ export default function ReadPage() {
         utterance.voice = vietnameseVoice;
       }
 
-      // Tùy chỉnh tốc độ, cao độ (tùy chọn)
-      utterance.rate = 1; // Tốc độ (1 là bình thường)
-      utterance.pitch = 1; // Cao độ
+      utterance.rate = 1;
+      utterance.pitch = 1;
 
-      // Xử lý sự kiện khi đọc xong (hoặc bị lỗi)
       utterance.onend = () => {
         setIsSpeaking(false);
       };
@@ -258,14 +232,11 @@ export default function ReadPage() {
         console.error("Đã xảy ra lỗi khi đọc TTS.");
       };
 
-      // Bắt đầu đọc
       window.speechSynthesis.speak(utterance);
       setIsSpeaking(true);
     }
   };
-  // --- KẾT THÚC HÀM TTS ---
 
-  // Comment functions
   const addComment = () => {
     if (!newComment.trim()) return;
     const newC = {
@@ -282,8 +253,9 @@ export default function ReadPage() {
     sortOrder === "new" ? comments : [...comments].reverse();
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <header className="bg-gradient-to-r from-gray-900 via-gray-900 to-gray-900 text-white sticky top-0 z-50 border-b border-gray-800 shadow-lg">
+    <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <header className="bg-white text-gray-900 border-b border-gray-200 shadow-md sticky top-0 z-50
+                     dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
         <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between gap-6">
           {/* LOGO */}
           <div className="flex items-center space-x-3">
@@ -301,23 +273,23 @@ export default function ReadPage() {
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium flex-1 justify-center">
             <Link
               to={isLoggedIn ? "/HomeLoggedIn" : "/HomePage"}
-              className="hover:text-blue-400 transition-colors"
+              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
             >
               Trang chủ
             </Link>
-            <Link to="/the-loai" className="hover:text-blue-400 transition-colors">
+            <Link to="/the-loai" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
               Thể loại
             </Link>
-            <Link to="/xep-hang" className="hover:text-blue-400 transition-colors">
+            <Link to="/xep-hang" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
               Xếp hạng
             </Link>
             <Link
               to="/moi-cap-nhat"
-              className="hover:text-blue-400 transition-colors"
+              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
             >
               Mới cập nhật
             </Link>
-            <Link to="/sang-tac" className="hover:text-blue-400 transition-colors">
+            <Link to="/sang-tac" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
               Sáng tác
             </Link>
           </nav>
@@ -329,18 +301,32 @@ export default function ReadPage() {
               <input
                 type="text"
                 placeholder="Tìm kiếm truyện..."
-                className="rounded-full bg-gray-800 border border-gray-700 pl-4 pr-10 py-1.5 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 
-                         placeholder-gray-400 text-sm w-56"
+                className="rounded-full bg-gray-100 border border-gray-300 pl-4 pr-10 py-1.5 
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 
+                           placeholder-gray-500 text-sm w-56
+                           dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
               />
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
+
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )}
+            </button>
 
             {/* USER AREA */}
             {!isLoggedIn ? (
               <div className="flex items-center gap-3">
                 <Link to="/LoginPage">
-                  <button className="px-4 py-1.5 text-sm rounded-full border border-gray-700 hover:bg-gray-800 transition">
+                  <button className="px-4 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-100 transition
+                                     dark:border-gray-700 dark:hover:bg-gray-800">
                     Đăng nhập
                   </button>
                 </Link>
@@ -356,7 +342,7 @@ export default function ReadPage() {
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     alt="user avatar"
-                    className="w-9 h-9 rounded-full border border-gray-700 cursor-pointer hover:opacity-90 transition"
+                    className="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-700 cursor-pointer hover:opacity-90 transition"
                   />
                 </Link>
                 <button
@@ -365,7 +351,7 @@ export default function ReadPage() {
                     window.dispatchEvent(new Event("loginStateChanged"));
                     window.location.href = "/HomePage";
                   }}
-                  className="flex items-center gap-1 text-red-500 hover:text-red-400 text-sm font-medium transition"
+                  className="flex items-center gap-1 text-red-500 hover:text-red-600 dark:hover:text-red-400 text-sm font-medium transition"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Đăng xuất</span>
@@ -374,71 +360,64 @@ export default function ReadPage() {
             )}
           </div>
         </div>
-
-        {/* Animation (fadeIn) */}
-        <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-5px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.25s ease-out;
-        }
-      `}</style>
       </header>
 
       {/* Main */}
       <main className="max-w-5xl mx-auto mt-8 p-4">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8
+                      dark:bg-gray-800 dark:border-gray-700">
           {/* Title & meta */}
           <div className="flex gap-6">
             <div className="w-28 h-36 flex-shrink-0">
               <img
                 src={novel?.novel_img_url || defaultCover}
                 alt={novel?.novelTitle || "Book cover"}
-                className="w-full h-full object-cover rounded-md border"
+                className="w-full h-full object-cover rounded-md border dark:border-gray-700"
               />
             </div>
             <div className="flex-1">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-3xl font-extrabold text-slate-900">
+                  <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">
                     {novel?.novelTitle || "Đang tải..."}
                   </h1>
-                  <h1 className="mt-2 text-sm text-slate-600">
+                  <h1 className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                     {chapter?.chapterTitle || "Đang tải..."}
                   </h1>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
-                    className="px-3 py-2 rounded-full bg-[#2E5BFF] text-white text-sm shadow-sm"
+                    className="px-3 py-2 rounded-full bg-[#2E5BFF] text-white text-sm shadow-sm
+                               dark:bg-blue-500 dark:hover:bg-blue-600"
                     title="Đọc"
                   >
                     Đọc truyện
                   </button>
-                  <button className="px-3 py-2 rounded-full border border-gray-200 text-sm">
+                  <button className="px-3 py-2 rounded-full border border-gray-200 text-sm
+                                     dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                     Theo dõi
                   </button>
                 </div>
               </div>
               <div className="mt-4 flex items-center gap-6">
-                <span className="inline-flex items-center bg-emerald-100 text-emerald-700 text-xs font-medium px-2 py-1 rounded-full">
+                <span className="inline-flex items-center bg-emerald-100 text-emerald-700 text-xs font-medium px-2 py-1 rounded-full
+                                 dark:bg-emerald-900 dark:text-emerald-300">
                   Truyện dịch
                 </span>
                 <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-2 text-slate-700">
-                    <BookOpen className="w-4 h-4 text-[#2E5BFF]" />
-                    <span className="text-slate-600">
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-gray-300">
+                    <BookOpen className="w-4 h-4 text-[#2E5BFF] dark:text-blue-400" />
+                    <span className="text-slate-600 dark:text-gray-400">
                       {totalChapters || 0} chương
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-700">
-                    <User className="w-4 h-4 text-[#2E5BFF]" />
-                    <span className="text-slate-600">{novel?.author || ""}</span>
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-gray-300">
+                    <User className="w-4 h-4 text-[#2E5BFF] dark:text-blue-400" />
+                    <span className="text-slate-600 dark:text-gray-400">{novel?.author || ""}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-700">
-                    <Clock className="w-4 h-4 text-[#2E5BFF]" />
-                    <span className="text-slate-600">
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-gray-300">
+                    <Clock className="w-4 h-4 text-[#2E5BFF] dark:text-blue-400" />
+                    <span className="text-slate-600 dark:text-gray-400">
                       {novel?.createDate || ""}
                     </span>
                   </div>
@@ -457,24 +436,25 @@ export default function ReadPage() {
                   state: { storyId },
                 })
               }
-              className="flex items-center gap-2 px-4 py-2 rounded-md border text-sm bg-white hover:shadow-sm disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-md border text-sm bg-white hover:shadow-sm disabled:opacity-50
+                         dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:opacity-50"
             >
               <ChevronLeft className="w-4 h-4" /> Chương trước
             </button>
             <button
               onClick={() => navigate(`/ChapterList/${storyId}`)}
-              className="flex items-center gap-2 px-4 py-2 rounded-md border text-sm bg-white hover:shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 rounded-md border text-sm bg-white hover:shadow-sm
+                         dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
             >
               <BookOpen className="w-4 h-4" /> Mục lục
             </button>
 
-            {/* --- NÚT TTS ĐÃ TÍCH HỢP --- */}
             <button
               onClick={handleSpeak}
-              disabled={loading || !chapterText || purchaseInfo} // Không cho đọc khi đang load, chưa có text, hoặc đang ở màn hình mua
+              disabled={loading || !chapterText || purchaseInfo}
               className={`flex items-center gap-2 px-4 py-2 rounded-md border text-sm hover:shadow-sm disabled:opacity-50 ${isSpeaking
-                ? "bg-red-50 text-red-600 border-red-200" // Style khi đang đọc
-                : "bg-white" // Style bình thường
+                  ? "bg-red-50 text-red-600 border-red-200 dark:bg-red-900 dark:text-red-300 dark:border-red-700"
+                  : "bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
                 }`}
             >
               {isSpeaking ? (
@@ -484,7 +464,6 @@ export default function ReadPage() {
               )}
               {isSpeaking ? "Dừng đọc" : "Nghe đọc"}
             </button>
-            {/* --- KẾT THÚC NÚT TTS --- */}
 
             <button
               disabled={!chapter?.next?.chapterId}
@@ -494,33 +473,35 @@ export default function ReadPage() {
                   state: { storyId },
                 })
               }
-              className="flex items-center gap-2 px-4 py-2 rounded-md border text-sm bg-white hover:shadow-sm disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-md border text-sm bg-white hover:shadow-sm disabled:opacity-50
+                         dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 dark:disabled:opacity-50"
             >
               Chương sau <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* --- CONTENT (LOGIC ĐÃ CẬP NHẬT) --- */}
-          <article className="mt-8 text-gray-800 leading-8 prose max-w-none">
+          {/* CONTENT */}
+          <article className="mt-8 text-gray-800 leading-8 prose max-w-none dark:text-gray-300">
             {loading ? (
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 dark:text-gray-300">
                 <Loader2 className="animate-spin w-5 h-5" /> Đang tải chương...
               </div>
             ) : error ? (
               <div className="text-center">
                 {purchaseInfo ? (
-                  // Hiển thị giao diện Mua chương
-                  <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <h3 className="text-lg font-bold text-yellow-800">
+                  <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg
+                                dark:bg-yellow-900 dark:border-yellow-700">
+                    <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200">
                       {purchaseInfo.error || "Chương này cần mua"}
                     </h3>
-                    <p className="text-yellow-700 mt-2 italic">
+                    <p className="text-yellow-700 mt-2 italic dark:text-yellow-300">
                       Vui lòng mua chương để tiếp tục đọc.
                     </p>
                     <button
                       onClick={handleBuyChapter}
                       disabled={isBuying}
-                      className="mt-4 px-6 py-2 bg-[#2E5BFF] text-white rounded-full font-semibold hover:bg-indigo-600 disabled:bg-gray-400 flex items-center justify-center mx-auto shadow-md"
+                      className="mt-4 px-6 py-2 bg-[#2E5BFF] text-white rounded-full font-semibold hover:bg-indigo-600 disabled:bg-gray-400 flex items-center justify-center mx-auto shadow-md
+                                 dark:bg-blue-500 dark:hover:bg-blue-600 dark:disabled:bg-gray-500"
                     >
                       {isBuying ? (
                         <>
@@ -532,25 +513,18 @@ export default function ReadPage() {
                       )}
                     </button>
 
-                    {/* Hiển thị kết quả sau khi mua */}
                     {buyResult === "success" && !isBuying && (
-                      <p className="text-green-600 font-bold text-sm mt-3">Mua chương thành công! 🎉</p>
+                      <p className="text-green-600 font-bold text-sm mt-3 dark:text-green-400">Mua chương thành công! 🎉</p>
                     )}
                     {buyResult === "error" && !isBuying && error && (
-                      <p className="text-red-600 font-bold text-sm mt-3">{error}</p>
-                    )}  
-                    {/* Hiển thị lỗi Mua hàng (vd: Số dư không đủ)
-                    {!isBuying && error && error !== purchaseInfo.error && (
-                      <p className="text-red-600 font-bold text-sm mt-3">{error}</p>
-                    )} */}
+                      <p className="text-red-600 font-bold text-sm mt-3 dark:text-red-400">{error}</p>
+                    )}
                   </div>
                 ) : (
-                  // Hiển thị lỗi khác (vd: 404, 500)
-                  <div className="text-red-600">{error}</div>
+                  <div className="text-red-600 dark:text-red-400">{error}</div>
                 )}
               </div>
             ) : (
-              // Hiển thị nội dung chương
               chapterText && (
                 <>
                   <div className="whitespace-pre-line">{chapterText}</div>
@@ -558,22 +532,23 @@ export default function ReadPage() {
               )
             )}
           </article>
-          {/* --- KẾT THÚC CONTENT --- */}
 
           {/* Comments */}
           <section className="mt-10">
-            <hr className="my-6 border-gray-200" />
-            <h3 className="text-xl font-semibold mb-3">Bình luận</h3>
+            <hr className="my-6 border-gray-200 dark:border-gray-700" />
+            <h3 className="text-xl font-semibold mb-3 dark:text-white">Bình luận</h3>
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Viết bình luận..."
-              className="w-full border border-gray-200 rounded-md p-3 text-sm resize-none h-24"
+              className="w-full border border-gray-200 rounded-md p-3 text-sm resize-none h-24
+                         dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
             />
             <div className="flex justify-between mt-3">
               <button
                 onClick={addComment}
-                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm"
+                className="px-4 py-2 bg-[#2E5BFF] text-white rounded-md text-sm
+                           dark:bg-blue-500 dark:hover:bg-blue-600"
               >
                 Gửi bình luận
               </button>
@@ -581,8 +556,8 @@ export default function ReadPage() {
                 <button
                   onClick={() => setSortOrder("new")}
                   className={`px-3 py-1 rounded-md text-sm ${sortOrder === "new"
-                    ? "bg-indigo-50 text-[#2E5BFF] font-medium"
-                    : "bg-gray-50 text-slate-600 hover:bg-gray-100"
+                      ? "bg-indigo-50 text-[#2E5BFF] font-medium dark:bg-blue-900 dark:text-blue-300"
+                      : "bg-gray-50 text-slate-600 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                     }`}
                 >
                   Mới nhất
@@ -590,8 +565,8 @@ export default function ReadPage() {
                 <button
                   onClick={() => setSortOrder("old")}
                   className={`px-3 py-1 rounded-md text-sm ${sortOrder === "old"
-                    ? "bg-indigo-50 text-indigo-600 font-medium"
-                    : "bg-gray-50 text-slate-600 hover:bg-gray-100"
+                      ? "bg-indigo-50 text-indigo-600 font-medium dark:bg-blue-900 dark:text-blue-300"
+                      : "bg-gray-50 text-slate-600 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                     }`}
                 >
                   Cũ nhất
@@ -608,11 +583,11 @@ export default function ReadPage() {
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <div className="font-medium text-sm">{c.user}</div>
-                      <div className="text-xs text-slate-500">· {c.time}</div>
+                      <div className="font-medium text-sm dark:text-white">{c.user}</div>
+                      <div className="text-xs text-slate-500 dark:text-gray-400">· {c.time}</div>
                     </div>
-                    <p className="text-sm text-slate-700 mt-1">{c.text}</p>
-                    <div className="border-t border-gray-100 mt-3" />
+                    <p className="text-sm text-slate-700 mt-1 dark:text-gray-300">{c.text}</p>
+                    <div className="border-t border-gray-100 mt-3 dark:border-gray-700" />
                   </div>
                 </div>
               ))}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react"; // Thêm useMemo
+import { useEffect, useState, useMemo } from "react";
 import HeaderProfile from "../components/ProfilePage/HeaderProfile";
 import SidebarLibrary from "../components/LibraryPage/SidebarLibrary";
 import UploadBookCard from "../components/UploadPage/UploadBookCard";
@@ -8,11 +8,9 @@ import axios from "axios";
 
 function UploadPage() {
     const [books, setBooks] = useState([]);
-    // 1. State cho các bộ lọc
-    const [statusFilter, setStatusFilter] = useState("all"); // 'all', 'completed', 'ongoing', 'pending'
-    const [sortFilter, setSortFilter] = useState("newest"); // 'newest', 'oldest', 'name-az', 'name-za'
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [sortFilter, setSortFilter] = useState("newest");
 
-    // Gọi API lấy danh sách truyện
     useEffect(() => {
         const fetchNovels = async () => {
             try {
@@ -27,20 +25,15 @@ function UploadPage() {
         fetchNovels();
     }, []);
 
-    // 2. Dùng useMemo để xử lý lọc và sắp xếp
     const processedBooks = useMemo(() => {
         let filteredBooks = [...books];
 
-        // --- Lọc theo trạng thái ---
-        // Giả sử object 'book' của bạn có thuộc tính 'status'
         if (statusFilter !== "all") {
             filteredBooks = filteredBooks.filter(
                 (book) => book.status === statusFilter
             );
         }
 
-        // --- Sắp xếp ---
-        // Giả sử object 'book' có 'createdAt' (cho mới/cũ) và 'novelTitle' (cho A-Z)
         switch (sortFilter) {
             case "newest":
                 filteredBooks.sort(
@@ -63,7 +56,7 @@ function UploadPage() {
         }
 
         return filteredBooks;
-    }, [books, statusFilter, sortFilter]); // Chạy lại khi 1 trong 3 giá trị này thay đổi
+    }, [books, statusFilter, sortFilter]); 
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-black">
@@ -77,7 +70,6 @@ function UploadPage() {
 
                     <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center gap-4">
-                            {/* 3. Cập nhật JSX cho Filter Trạng thái */}
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -89,7 +81,6 @@ function UploadPage() {
                                 <option value="pending">Đang xét duyệt</option>
                             </select>
 
-                            {/* 3. Cập nhật JSX cho Filter Sắp xếp */}
                             <select
                                 value={sortFilter}
                                 onChange={(e) => setSortFilter(e.target.value)}
@@ -112,10 +103,8 @@ function UploadPage() {
                         </div>
                     </div>
 
-                    {/* 3. Render danh sách đã được xử lý */}
                     <div className="grid grid-cols-3 gap-6">
                         {processedBooks.map((book) => (
-                            // Sử dụng _id hoặc một ID duy nhất làm key
                             <UploadBookCard key={book._id || book.novelId} {...book} />
                         ))}
                     </div>

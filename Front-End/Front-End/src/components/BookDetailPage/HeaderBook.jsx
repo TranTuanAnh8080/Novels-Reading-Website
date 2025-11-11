@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Search, LogOut } from "lucide-react";
+import { Search, LogOut, Sun, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/inkrealm_logo.png";
+import { useTheme } from "../../components/SharedComponents/ThemeContext";
 
 export default function HeaderBook() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     sessionStorage.getItem("isLoggedIn") === "true"
   );
+
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const checkLogin = () => {
@@ -24,7 +27,8 @@ export default function HeaderBook() {
   }, []);
 
   return (
-    <header className="bg-gradient-to-r from-gray-900 via-gray-900 to-gray-900 text-white sticky top-0 z-50 border-b border-gray-800 shadow-lg">
+    <header className="bg-white text-gray-900 border-b border-gray-200 shadow-md sticky top-0 z-50
+                   dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
       <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between gap-6">
         {/* LOGO */}
         <div className="flex items-center space-x-3">
@@ -42,23 +46,23 @@ export default function HeaderBook() {
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium flex-1 justify-center">
           <Link
             to={isLoggedIn ? "/HomeLoggedIn" : "/HomePage"}
-            className="hover:text-blue-400 transition-colors"
+            className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
           >
             Trang chủ
           </Link>
-          <Link to="/the-loai" className="hover:text-blue-400 transition-colors">
+          <Link to="/the-loai" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
             Thể loại
           </Link>
-          <Link to="/xep-hang" className="hover:text-blue-400 transition-colors">
+          <Link to="/xep-hang" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
             Xếp hạng
           </Link>
           <Link
             to="/moi-cap-nhat"
-            className="hover:text-blue-400 transition-colors"
+            className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
           >
             Mới cập nhật
           </Link>
-          <Link to="/sang-tac" className="hover:text-blue-400 transition-colors">
+          <Link to="/sang-tac" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
             Sáng tác
           </Link>
         </nav>
@@ -70,18 +74,32 @@ export default function HeaderBook() {
             <input
               type="text"
               placeholder="Tìm kiếm truyện..."
-              className="rounded-full bg-gray-800 border border-gray-700 pl-4 pr-10 py-1.5 
+              className="rounded-full bg-gray-100 border border-gray-300 pl-4 pr-10 py-1.5 
                          focus:outline-none focus:ring-2 focus:ring-blue-500 
-                         placeholder-gray-400 text-sm w-56"
+                         placeholder-gray-500 text-sm w-56
+                         dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
             />
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           </div>
+
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            {theme === 'light' ? (
+              <Moon className="w-5 h-5" />
+            ) : (
+              <Sun className="w-5 h-5" />
+            )}
+          </button>
 
           {/* USER AREA */}
           {!isLoggedIn ? (
             <div className="flex items-center gap-3">
               <Link to="/LoginPage">
-                <button className="px-4 py-1.5 text-sm rounded-full border border-gray-700 hover:bg-gray-800 transition">
+                <button className="px-4 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-100 transition
+                                   dark:border-gray-700 dark:hover:bg-gray-800">
                   Đăng nhập
                 </button>
               </Link>
@@ -97,7 +115,7 @@ export default function HeaderBook() {
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                   alt="user avatar"
-                  className="w-9 h-9 rounded-full border border-gray-700 cursor-pointer hover:opacity-90 transition"
+                  className="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-700 cursor-pointer hover:opacity-90 transition"
                 />
               </Link>
               <button
@@ -106,7 +124,7 @@ export default function HeaderBook() {
                   window.dispatchEvent(new Event("loginStateChanged"));
                   window.location.href = "/HomePage";
                 }}
-                className="flex items-center gap-1 text-red-500 hover:text-red-400 text-sm font-medium transition"
+                className="flex items-center gap-1 text-red-500 hover:text-red-600 dark:hover:text-red-400 text-sm font-medium transition"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Đăng xuất</span>
@@ -116,7 +134,6 @@ export default function HeaderBook() {
         </div>
       </div>
 
-      {/* Animation (fadeIn) */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-5px); }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Calendar,
   Hash,
@@ -8,13 +8,15 @@ import {
   Save,
   Send,
   Trash2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import Footer from "../components/SharedComponents/Footer";
 import logo from "../assets/inkrealm_logo.png";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTheme } from "../components/SharedComponents/ThemeContext";
 
-// ✅ TẠO MỘT MAP ĐỂ QUẢN LÝ TRẠNG THÁI
 const STATUS_MAP = {
   DRAFT: 2,
   REVIEW: 5,
@@ -24,6 +26,7 @@ export default function AddChapterPage() {
   const { novelId, chapterId } = useParams();
   const navigate = useNavigate();
   const isEditMode = Boolean(chapterId);
+  const { theme, toggleTheme } = useTheme();
 
   const [isTranslated, setIsTranslated] = useState(false);
   const [chapterNumber, setChapterNumber] = useState("");
@@ -37,12 +40,10 @@ export default function AddChapterPage() {
   const [novelTitle, setNovelTitle] = useState("");
   const token = sessionStorage.getItem("token");
 
-  const [isLoadingData, setIsLoadingData] = useState(false); // State loading cho edit mode
-  const [isSubmitting, setIsSubmitting] = useState(false); // State loading khi submit
+  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 🔹 Load lại dữ liệu từ localStorage (CHỈ KHI THÊM MỚI)
   useEffect(() => {
-    // Nếu là edit mode, không load local storage
     if (isEditMode) return;
 
     const saved = localStorage.getItem("addChapterDraft");
@@ -56,9 +57,8 @@ export default function AddChapterPage() {
       setContent(data.content || "");
       setTranslatedContent(data.translatedContent || "");
     }
-  }, [isEditMode]); // Thêm dependency
+  }, [isEditMode]);
 
-  // Fetch thông tin truyện (cho breadcrumb)
   useEffect(() => {
     const fetchNovel = async () => {
       try {
@@ -74,20 +74,18 @@ export default function AddChapterPage() {
     if (novelId) fetchNovel();
   }, [novelId]);
 
-  // useEffect để tải dữ liệu chương KHI Ở CHẾ ĐỘ EDIT
   useEffect(() => {
-    if (!isEditMode) return; // Chỉ chạy khi edit
+    if (!isEditMode) return;
 
     const fetchChapterData = async () => {
       setIsLoadingData(true);
       try {
         if (!token) {
           alert("Bạn cần đăng nhập để chỉnh sửa.");
-          navigate('/LoginPage');
+          navigate("/LoginPage");
           return;
         }
 
-        // 1. Lấy nội dung text
         const textRes = await axios.get(
           `https://be-ink-realm-c7jk.vercel.app/chapter/text`,
           {
@@ -97,14 +95,15 @@ export default function AddChapterPage() {
         );
         setContent(textRes.data?.chapterText || "");
 
-        // 2. Lấy thông tin (index, title)
         const listRes = await axios.get(
           `https://be-ink-realm-c7jk.vercel.app/chapter/list/${novelId}`
         );
 
         if (listRes.data.success) {
           const allChapters = listRes.data.chapters || [];
-          const currentChapter = allChapters.find(ch => ch.chapterId === Number(chapterId));
+          const currentChapter = allChapters.find(
+            (ch) => ch.chapterId === Number(chapterId)
+          );
           if (currentChapter) {
             setChapterNumber(currentChapter.chapterIndex.toString());
             setChapterTitle(currentChapter.chapterTitle);
@@ -131,7 +130,6 @@ export default function AddChapterPage() {
     fetchChapterData();
   }, [isEditMode, chapterId, novelId, navigate, token]);
 
-  // 🔹 Lưu bản nháp (Lưu tạm vào trình duyệt)
   const handleSaveDraftLocal = () => {
     const draft = {
       isTranslated,
@@ -147,7 +145,6 @@ export default function AddChapterPage() {
     alert("✅ Bản nháp đã được lưu tạm!");
   };
 
-  // 🔹 Xóa bản nháp (Xóa khỏi trình duyệt)
   const handleDeleteDraftLocal = () => {
     if (window.confirm("🗑️ Bạn có chắc muốn xóa bản nháp lưu tạm này không?")) {
       localStorage.removeItem("addChapterDraft");
@@ -162,12 +159,21 @@ export default function AddChapterPage() {
     }
   };
 
-  // ✅ Đổi tên hàm: Xử lý THÊM MỚI chương
   const handleAddNewChapter = async () => {
     if (!chapterNumber || !chapterTitle || !content) {
       alert("⚠️ Vui lòng điền đầy đủ: Số chương, Tiêu đề, và Nội dung!");
       return;
     }
+
+    const accountId = sessionStorage.getItem("accountId");
+
+    if (!token || !accountId) {
+      alert("⚠️ Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+      setIsSubmitting(false);
+      navigate('/LoginPage');
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       const response = await axios.post(
@@ -178,6 +184,7 @@ export default function AddChapterPage() {
           chapterTitle,
           chapterText: content,
           chapterStatusId: chapterStatusId,
+          accountId: Number(accountId), 
         },
         {
           headers: {
@@ -193,24 +200,23 @@ export default function AddChapterPage() {
         } else {
           alert("✅ Đã gửi chương đi kiểm duyệt thành công!");
         }
-        // Reset form
         setChapterNumber("");
         setChapterTitle("");
         setContent("");
         setChapterStatusId(STATUS_MAP.DRAFT);
-        // Chuyển về trang quản lý
         navigate(`/ModerationStatusPage/${novelId}`);
       }
     } catch (error) {
       console.error("Lỗi khi thêm chapter:", error);
-      const msg = error?.response?.data?.message || "❌ Lỗi khi thêm chapter. Vui lòng thử lại!";
+      const msg =
+        error?.response?.data?.message ||
+        "❌ Lỗi khi thêm chapter. Vui lòng thử lại!";
       alert(msg);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Xử lý CẬP NHẬT nội dung chương (cho chế độ Edit)
   const handleUpdateChapter = async () => {
     if (!content) {
       alert("⚠️ Vui lòng điền nội dung chương!");
@@ -221,37 +227,50 @@ export default function AddChapterPage() {
     try {
       const res = await axios.put(
         `https://be-ink-realm-c7jk.vercel.app/chapter/${chapterId}/text/update`,
-        { chapterText: content }, // API chỉ nhận chapterText
+        { chapterText: content },
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       alert("✅ " + (res.data.message || "Cập nhật thành công!"));
       navigate(`/ModerationStatusPage/${novelId}`);
-
     } catch (error) {
-      console.error("❌ Lỗi cập nhật:", error.response)
+      console.error("❌ Lỗi cập nhật:", error.response);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
           <Link to="/HomeLoggedIn" className="flex items-center space-x-2">
-            <img src={logo} alt="InkRealm" className="h-10 w-auto" />
+            <span className="text-2xl font-extrabold tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
+              INKREALM
+            </span>
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">Tác giả</span>
+            {/* Thêm nút Toggle */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )}
+            </button>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tác giả</span>
             <Link to="/Profile" className="flex items-center">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                 alt="User Avatar"
-                className="w-9 h-9 rounded-full border border-gray-200"
+                className="w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700"
               />
             </Link>
           </div>
@@ -259,55 +278,55 @@ export default function AddChapterPage() {
       </header>
 
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto w-full px-6 py-6 text-sm text-gray-500">
-        <Link to="/Profile" className="hover:text-blue-600 hover:underline">
+      <div className="max-w-7xl mx-auto w-full px-6 py-6 text-sm text-gray-500 dark:text-gray-400">
+        <Link to="/Profile" className="hover:text-blue-600 hover:underline dark:hover:text-blue-400">
           Trang cá nhân
         </Link>
         <span className="mx-2">›</span>
-        <Link to="/UploadPage" className="hover:text-blue-600 hover:underline">
+        <Link to="/UploadPage" className="hover:text-blue-600 hover:underline dark:hover:text-blue-400">
           Đăng truyện
         </Link>
         <span className="mx-2">›</span>
         <Link
           to={`/ModerationStatusPage/${novelId}`}
-          className="font-medium text-gray-800 hover:text-blue-600 hover:underline"
+          className="font-medium text-gray-800 hover:text-blue-600 hover:underline dark:text-gray-200 dark:hover:text-blue-400"
         >
           {novelTitle || "..."}
         </Link>
         <span className="mx-2">›</span>
-        <span className="text-gray-900 font-medium">
+        <span className="text-gray-900 font-medium dark:text-white">
           {isEditMode ? "Chỉnh sửa chương" : "Thêm chương mới"}
         </span>
       </div>
 
       {isLoadingData ? (
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-20 text-gray-500 dark:text-gray-400">
           Đang tải dữ liệu chương, vui lòng chờ...
         </div>
       ) : (
         <main className="flex-grow">
-          <div className="max-w-5xl mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-8 mb-16">
-            <h1 className="text-2xl font-bold mb-2">
+          <div className="max-w-5xl mx-auto bg-white rounded-lg border border-gray-200 shadow-sm p-8 mb-16
+                        dark:bg-gray-800 dark:border-gray-700">
+            <h1 className="text-2xl font-bold mb-2 dark:text-white">
               {isEditMode ? "Chỉnh sửa chương" : "Thêm chương mới"}
             </h1>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-8 dark:text-gray-300">
               {isEditMode
                 ? `Chỉnh sửa nội dung cho truyện "${novelTitle || "..."}"`
-                : `Thêm chương mới cho truyện “${novelTitle || "..."}”`
-              }
+                : `Thêm chương mới cho truyện “${novelTitle || "..."}”`}
             </p>
 
             {/* --- Thông tin chương --- */}
-            <section className="border border-gray-200 rounded-lg p-6 mb-6">
-              <h2 className="text-base font-semibold text-gray-900 mb-6">
+            <section className="border border-gray-200 rounded-lg p-6 mb-6 dark:border-gray-700">
+              <h2 className="text-base font-semibold text-gray-900 mb-6 dark:text-white">
                 Thông tin chương
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Số chương */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <Hash className="w-4 h-4 text-gray-700" />
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+                    <Hash className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                     Số chương
                   </label>
                   <input
@@ -317,14 +336,16 @@ export default function AddChapterPage() {
                     placeholder="Ví dụ: 12"
                     disabled={isEditMode}
                     readOnly={isEditMode}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none
+                               dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                               disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-700 dark:disabled:opacity-50"
                   />
                 </div>
 
                 {/* Tiêu đề chương */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <Type className="w-4 h-4 text-gray-700" />
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+                    <Type className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                     Tiêu đề chương
                   </label>
                   <input
@@ -334,21 +355,26 @@ export default function AddChapterPage() {
                     placeholder="Ví dụ: Khúc dạo đầu mới"
                     disabled={isEditMode}
                     readOnly={isEditMode}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none
+                               dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                               disabled:bg-gray-200 disabled:cursor-not-allowed dark:disabled:bg-gray-700 dark:disabled:opacity-50"
                   />
                 </div>
 
                 {!isEditMode && (
                   <>
                     <div>
-                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                        <FileText className="w-4 h-4 text-gray-700" />
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+                        <FileText className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                         Hành động
                       </label>
                       <select
                         value={chapterStatusId}
-                        onChange={(e) => setChapterStatusId(Number(e.target.value))}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+                        onChange={(e) =>
+                          setChapterStatusId(Number(e.target.value))
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white
+                                   dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       >
                         <option value={STATUS_MAP.DRAFT}>Lưu bản nháp</option>
                         <option value={STATUS_MAP.REVIEW}>Gửi kiểm duyệt</option>
@@ -357,8 +383,8 @@ export default function AddChapterPage() {
 
                     {/* Thời gian đăng */}
                     <div>
-                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                        <Clock className="w-4 h-4 text-gray-700" />
+                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+                        <Clock className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                         Thời gian đăng (tùy chọn)
                       </label>
                       <div className="relative">
@@ -366,7 +392,8 @@ export default function AddChapterPage() {
                           type="datetime-local"
                           value={releaseDate}
                           onChange={(e) => setReleaseDate(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none pr-10"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none pr-10
+                                     dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
                         />
                         <Calendar className="absolute right-3 top-2.5 w-5 h-5 text-gray-400 pointer-events-none" />
                       </div>
@@ -382,9 +409,10 @@ export default function AddChapterPage() {
                       type="checkbox"
                       checked={isTranslated}
                       onChange={(e) => setIsTranslated(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500
+                                 dark:border-gray-600 dark:bg-gray-700"
                     />
-                    <span className="text-sm text-gray-700 font-medium">
+                    <span className="text-sm text-gray-700 font-medium dark:text-gray-300">
                       Là truyện dịch
                     </span>
                   </label>
@@ -393,9 +421,9 @@ export default function AddChapterPage() {
             </section>
 
             {/* --- Nội dung chương --- */}
-            <section className="border border-gray-200 rounded-lg p-6">
-              <h2 className="flex items-center gap-2 text-base font-semibold text-gray-900 mb-6">
-                <FileText className="w-5 h-5 text-gray-900" />
+            <section className="border border-gray-200 rounded-lg p-6 dark:border-gray-700">
+              <h2 className="flex items-center gap-2 text-base font-semibold text-gray-900 mb-6 dark:text-white">
+                <FileText className="w-5 h-5 text-gray-900 dark:text-white" />
                 Nội dung chương
               </h2>
 
@@ -405,46 +433,48 @@ export default function AddChapterPage() {
                   onChange={(e) => setContent(e.target.value)}
                   rows={15}
                   placeholder="Nhập nội dung chương..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none
+                             dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
-              ) : (
-                isTranslated ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm text-gray-700 mb-2">
-                        Nhập nội dung cần dịch
-                      </label>
-                      <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        rows={12}
-                        placeholder="Nhập nội dung cần dịch..."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-gray-700 mb-2">
-                        Nội dung đã được dịch
-                      </label>
-                      <textarea
-                        value={translatedContent}
-                        onChange={(e) => setTranslatedContent(e.target.value)}
-                        rows={12}
-                        placeholder="Nhập nội dung bản dịch..."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-                      />
-                    </div>
+              ) : isTranslated ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-2 dark:text-gray-300">
+                      Nhập nội dung cần dịch
+                    </label>
+                    <textarea
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      rows={12}
+                      placeholder="Nhập nội dung cần dịch..."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none
+                                 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    />
                   </div>
-                ) : (
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={15}
-                    placeholder="Nhập nội dung chương..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-                  />
-                )
+
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-2 dark:text-gray-300">
+                      Nội dung đã được dịch
+                    </label>
+                    <textarea
+                      value={translatedContent}
+                      onChange={(e) => setTranslatedContent(e.target.value)}
+                      rows={12}
+                      placeholder="Nhập nội dung bản dịch..."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none
+                                 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  rows={15}
+                  placeholder="Nhập nội dung chương..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none
+                             dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                />
               )}
             </section>
 
@@ -454,14 +484,16 @@ export default function AddChapterPage() {
                 <>
                   <button
                     onClick={handleDeleteDraftLocal}
-                    className="flex items-center gap-2 px-6 py-2.5 text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50 font-medium"
+                    className="flex items-center gap-2 px-6 py-2.5 text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50 font-medium
+                               dark:bg-gray-800 dark:border-red-500 dark:text-red-400 dark:hover:bg-gray-700"
                   >
                     <Trash2 className="w-4 h-4" />
                     Xóa bản nháp
                   </button>
                   <button
                     onClick={handleSaveDraftLocal}
-                    className="flex items-center gap-2 px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+                    className="flex items-center gap-2 px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium
+                               dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                   >
                     <Save className="w-4 h-4" />
                     Lưu tạm bản nháp
@@ -469,12 +501,12 @@ export default function AddChapterPage() {
                 </>
               )}
 
-              {/* ✅ Hiển thị nút bấm tùy theo chế độ */}
               {isEditMode ? (
                 <button
                   onClick={handleUpdateChapter}
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-6 py-2.5 text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-medium disabled:bg-blue-300"
+                  className="flex items-center gap-2 px-6 py-2.5 text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-medium disabled:bg-blue-300
+                             dark:bg-blue-500 dark:hover:bg-blue-600 dark:disabled:bg-blue-400"
                 >
                   <Save className="w-4 h-4" />
                   {isSubmitting ? "Đang lưu..." : "Lưu thay đổi"}
@@ -483,15 +515,15 @@ export default function AddChapterPage() {
                 <button
                   onClick={handleAddNewChapter}
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-6 py-2.5 text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-medium disabled:bg-blue-300"
+                  className="flex items-center gap-2 px-6 py-2.5 text-white bg-blue-600 rounded-lg hover:bg-blue-700 font-medium disabled:bg-blue-300
+                             dark:bg-blue-500 dark:hover:bg-blue-600 dark:disabled:bg-blue-400"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting
                     ? "Đang gửi..."
                     : chapterStatusId === STATUS_MAP.DRAFT
-                      ? "Lưu bản nháp"
-                      : "Gửi kiểm duyệt"
-                  }
+                    ? "Lưu bản nháp"
+                    : "Gửi kiểm duyệt"}
                 </button>
               )}
             </div>
@@ -503,4 +535,4 @@ export default function AddChapterPage() {
       <Footer />
     </div>
   );
-} 
+}
