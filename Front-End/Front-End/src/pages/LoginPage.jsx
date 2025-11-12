@@ -205,7 +205,7 @@ const LoginPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mb-3 w-40 h-15 contrast-125 brightness-90 saturate-200"
+                    className="mb-3 w-44 h-17 contrast-125 brightness-100 saturate-200"
                 />
                 <p className="text-gray-600 mb-3 text-2xl font-medium ">
                     Khám phá thế giới truyện <br /> đa sắc màu cùng chúng tôi ❤️
@@ -214,7 +214,7 @@ const LoginPage = () => {
                 {/* Form đăng nhập */}
                 <form onSubmit={handleSubmit}>
                     {/* Username */}
-                    <div className="mb-3 mt-5">
+                    <div className="mb-3 mt-5 w-96">
                         <label className="block text-gray-600 font-medium text-md mb-2">Tên Đăng Nhập<strong className="text-red-600">*</strong></label>
                         <div className="relative">
                             <input
@@ -258,7 +258,7 @@ const LoginPage = () => {
                         disabled={isLoading || showSuccess}
                         className={`w-65 bg-gradient-to-br ${isLoading || showSuccess
                             ? 'from-blue-200 via-rose-300 to-purple-300 cursor-not-allowed'
-                            : 'from-blue-100 via-red-300 to-purple-500 hover:bg-blue-600 hover:scale-105'
+                            : 'from-blue-100 via-red-300 to-purple-400 hover:bg-blue-600 hover:scale-105'
                             } text-white py-2 rounded-3xl transition duration-300 justify-center flex items-center mx-auto mb-4 font-bold transform mt-7`}
                     >
                         {isLoading ? (
@@ -311,7 +311,7 @@ const LoginPage = () => {
 
 
                 {/* Quên mật khẩu */}
-                <div className="text-center mb-2">
+                <div className="text-center">
                     <a
                         href="/ForgotPasswordModal"
                         className="text-blue-600 font-bold"
@@ -321,7 +321,7 @@ const LoginPage = () => {
                 </div>
 
                 {/* Đăng nhập với Google */}
-                <div className="mt-4 rounded-4xl flex justify-center items-center">
+                {/* <div className="mt-4 rounded-4xl flex justify-center items-center">
                     <button
                         type="button"
                         className="w-100 h-auto flex items-center justify-center bg-white border
@@ -335,21 +335,20 @@ const LoginPage = () => {
                         />
                         Đăng nhập với Google
                     </button>
-                </div>
+                </div> */}
 
                 {/* Tạo tài khoản */}
-                <div className="text-center mt-6">
-                    <p className="text-gray-600 font-medium">
+                <div className="text-center mt-6 flex justify-center items-center gap-1.5">
+                    <p className="text-gray-700 font-medium">
                         Bạn chưa có tài khoản?
                     </p>
                     <a
                         href="/RegisterPage"
                         className="text-blue-600 font-bold"
                     >
-                        Đăng Ký Ngay
+                        Đăng Ký
                     </a>
                 </div>
-
 
                 <div />
             </div>

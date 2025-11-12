@@ -313,7 +313,7 @@ const RegisterPage = () => {
                 <img
                     src={image}
                     alt="Inkrealm Logo"
-                    className="mt-2 mr-36 w-34 h-13 contrast-150 brightness-105 saturate-200 mx-auto"
+                    className="mt-3 mr-36 w-35 h-14 contrast-150 brightness-100 saturate-200 mx-auto"
                 />
 
                 <form onSubmit={handleSubmit} className="space-y-4">
