@@ -21,28 +21,19 @@ const ModerateOriginalNovels = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest'); // Mặc định sắp xếp theo mới nhất
     const [statusList, setStatusList] = useState([]);
-    const [activeTab, setActiveTab] = useState('Pending');
+    const [activeTab, setActiveTab] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = 5;
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    // ... (logic statusCounts, filteredData, renderActionButton, statusColors, pages giữ nguyên) ...
-    // const statusCounts = { Pending: 1, Moderating: 2, Approved: 3, Rejected: 4, Published: 5 };
-    // const filteredData = mockData.filter(item => activeTab === 'Pending' ? item.status === 'Pending' : item.status === activeTab);
-    // const statusColors = { Pending: { text: "text-yellow-700", bg: "bg-yellow-100", dot: "bg-yellow-500" }, Moderating: { text: "text-indigo-700", bg: "bg-indigo-100", dot: "bg-indigo-500" }, Approved: { text: "text-green-700", bg: "bg-green-100", dot: "bg-green-500" }, Rejected: { text: "text-red-700", bg: "bg-red-100", dot: "bg-red-500" }, Published: { text: "text-blue-700", bg: "bg-blue-100", dot: "bg-blue-500" }, };
-    const totalPages = 5;
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     const [chapterData, setChapterData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [statusCounts, setStatusCounts] = useState({
-        Pending: 0,
-        Moderating: 0,
-        Approved: 0,
-        Rejected: 0,
-        Published: 0,
-    });
+    // ✅ Khởi tạo với object rỗng
+    const [statusCounts, setStatusCounts] = useState({});
 
     // 🗺️ Map status code -> ID (API sẽ dùng ID)
     const statusIdMap = {
@@ -162,6 +153,45 @@ const ModerateOriginalNovels = () => {
         }
     };
 
+
+    // 🎯 Hàm cập nhật trạng thái chapter
+    const updateChapterStatus = async (chapterId, statusId) => {
+        try {
+            const token = sessionStorage.getItem("token");
+
+            const res = await fetch(
+                `https://be-ink-realm-c7jk.vercel.app/moderator/chapter/${chapterId}/status/${statusId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        accept: "*/*",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (!res.ok) throw new Error("Không thể cập nhật trạng thái");
+
+            const data = await res.json();
+
+            console.log("✅ Cập nhật trạng thái thành công:", data);
+
+            // 🔄 Refresh lại danh sách chapter sau khi cập nhật
+            // Tự động gọi lại useEffect để fetch chapters
+            setChapterData((prev) =>
+                prev.filter((chapter) => chapter.chapterId !== chapterId)
+            );
+
+            // 📢 Hiển thị thông báo thành công (optional)
+            alert(data.message || "Cập nhật trạng thái thành công!");
+
+        } catch (err) {
+            console.error("❌ Lỗi khi cập nhật trạng thái:", err);
+            alert("Không thể cập nhật trạng thái. Vui lòng thử lại!");
+        }
+    };
+
+
     // 🚪 Đăng xuất
     const handleLogout = () => {
         sessionStorage.clear();
@@ -243,25 +273,25 @@ const ModerateOriginalNovels = () => {
                                     </a>
 
                                     {/* Truyện Dịch */}
-                                    <a
+                                    {/* <a
                                         href="/ModerateTranslatedNovels"
                                         className="px-3 py-2 rounded-lg dark:text-white hover:bg-green-100 hover:text-green-700 transition duration-150 flex items-center gap-3"
                                     >
                                         <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
                                         Truyện Dịch
-                                    </a>
+                                    </a> */}
                                 </div>
                             )}
                         </div>
 
                         <div className="border-t border-gray-100 my-2"></div>
 
-                        <a
+                        {/* <a
                             href="#overview"
                             className="block dark:text-white px-3 py-2 rounded-lg hover:bg-green-300 font-medium text-gray-700"
                         >
                             Dashboard thống kê
-                        </a>
+                        </a> */}
                         <a
                             onClick={handleLogout}
                             className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300 hover:cursor-pointer"
@@ -283,19 +313,49 @@ const ModerateOriginalNovels = () => {
                 </header>
 
                 <div className="flex flex-wrap gap-3 mb-8 justify-center">
-                    {statusList.map((s) => (
-                        <button
-                            key={s.chapterStatusId}
-                            onClick={() => setActiveTab(s.chapterStatusCode)}
-                            className={`px-4 py-2 rounded-lg font-semibold text-sm transition ring-2 
-              ${activeTab === s.chapterStatusCode
-                                    ? "bg-blue-600 text-white ring-blue-600"
-                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200 ring-gray-300"
-                                }`}
-                        >
-                            {s.chapterStatusDescription} ({statusCounts[s.chapterStatusId] || 0})
-                        </button>
-                    ))}
+                    {statusList.map((s) => {
+                        const statusConfig = {
+                            "WAIT FOR VERIFY": {
+                                active: "bg-yellow-500 text-white ring-yellow-500",
+                                inactive: "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 ring-yellow-300",
+                                icon: "⏳"
+                            },
+                            "VERIFIED": {
+                                active: "bg-green-500 text-white ring-green-500",
+                                inactive: "bg-green-50 text-green-700 hover:bg-green-100 ring-green-300",
+                                icon: "✓"
+                            },
+                            "REFUSE": {
+                                active: "bg-red-500 text-white ring-red-500",
+                                inactive: "bg-red-50 text-red-700 hover:bg-red-100 ring-red-300",
+                                icon: "✗"
+                            }
+                        };
+
+                        const isActive = activeTab === s.chapterStatusCode;
+                        const config = statusConfig[s.chapterStatusCode] || {
+                            active: "bg-blue-600 text-white ring-blue-600",
+                            inactive: "bg-gray-100 text-gray-800 hover:bg-gray-200 ring-gray-300",
+                            icon: "📋"
+                        };
+
+                        return (
+                            <button
+                                key={s.chapterStatusId}
+                                onClick={() => setActiveTab(s.chapterStatusCode)}
+                                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 ring-2 transform hover:scale-105
+                    ${isActive ? config.active + " shadow-lg scale-105" : config.inactive}
+                `}
+                            >
+                                <span className="mr-2">{config.icon}</span>
+                                {s.chapterStatusDescription}
+                                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${isActive ? "bg-white bg-opacity-20" : "bg-black bg-opacity-5"
+                                    }`}>
+                                    {statusCounts[s.chapterStatusId] || 0}
+                                </span>
+                            </button>
+                        );
+                    })}
                 </div>
 
 
@@ -351,7 +411,9 @@ const ModerateOriginalNovels = () => {
                             <th className="px-6 py-3 text-left text-sm font-semibold">Ngày tạo</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Trạng thái</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Nội dung</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Cập nhật</th>
+                            {activeTab === "WAIT FOR VERIFY" && (
+                                <th className="px-6 py-3 text-left text-sm font-semibold">Cập nhật</th>
+                            )}
                         </tr>
                     </thead>
 
@@ -405,20 +467,24 @@ const ModerateOriginalNovels = () => {
                                                 </button>
                                             </td>
 
-                                            {/* 👉 Nút cập nhật trạng thái */}
+                                            {/* 👉 Nút cập nhật trạng thái - chỉ hiện khi ở tab "WAIT FOR VERIFY" */}
                                             <td className="px-6 py-4 space-x-2">
-                                                <button
-                                                    // onClick={() => updateChapterStatus(item.chapterId, 6)} // VERIFIED
-                                                    className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
-                                                >
-                                                    Duyệt
-                                                </button>
-                                                <button
-                                                    // onClick={() => updateChapterStatus(item.chapterId, 7)} // REFUSE
-                                                    className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
-                                                >
-                                                    Từ chối
-                                                </button>
+                                                {activeTab === "WAIT FOR VERIFY" && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => updateChapterStatus(item.chapterId, 6)}
+                                                            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition"
+                                                        >
+                                                            Duyệt
+                                                        </button>
+                                                        <button
+                                                            onClick={() => updateChapterStatus(item.chapterId, 7)}
+                                                            className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition"
+                                                        >
+                                                            Từ chối
+                                                        </button>
+                                                    </>
+                                                )}
                                             </td>
                                         </tr>
 

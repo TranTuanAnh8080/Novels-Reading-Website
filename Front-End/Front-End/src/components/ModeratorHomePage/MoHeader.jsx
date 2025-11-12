@@ -48,11 +48,11 @@ const MoHeader = () => {
     const isHovering = (type) => hoverContent && hoverContent.title === contentMap[type].title;
 
     // 🚪 Đăng xuất
-    const handleLogout = () => {
-        sessionStorage.clear();
-        delete axios.defaults.headers.common['Authorization'];
-        navigate('/LoginPage', { replace: true });
-    };
+    // const handleLogout = () => {
+    //     sessionStorage.clear();
+    //     delete axios.defaults.headers.common['Authorization'];
+    //     navigate('/LoginPage', { replace: true });
+    // };
 
     return (
         <header

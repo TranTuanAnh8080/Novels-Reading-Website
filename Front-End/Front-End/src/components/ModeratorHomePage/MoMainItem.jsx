@@ -92,14 +92,14 @@ const MoMainItem = () => {
                                         Truyện Sáng Tác
                                     </a>
                                     {/* Truyện Dịch */}
-                                    <a
+                                    {/* <a
                                         href="/ModerateTranslatedNovels"
                                         className="px-3 py-2 rounded-lg dark:text-white hover:bg-green-100 hover:text-green-700 transition duration-150 flex items-center gap-3"
-                                    >
+                                    > */}
                                         {/* Đổi màu chấm tròn cho dễ phân biệt */}
-                                        <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
+                                        {/* <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
                                         Truyện Dịch
-                                    </a>
+                                    </a> */}
                                 </div>
                             )}
                         </div>
@@ -108,12 +108,12 @@ const MoMainItem = () => {
                         <div className="border-t border-gray-100 my-2"></div>
 
                         {/* Các mục khác */}
-                        <a
+                        {/* <a
                             href="#overview"
                             className="block dark:text-white px-3 py-2 rounded-lg hover:bg-green-300 font-medium text-gray-700"
                         >
                             Dashboard thống kê
-                        </a>
+                        </a> */}
                         <a
                             onClick={handleLogout}
                             className="block px-3 py-2 mt-1 rounded-lg text-red-500 font-medium hover:bg-red-300"
