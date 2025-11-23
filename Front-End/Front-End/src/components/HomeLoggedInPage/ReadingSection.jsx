@@ -37,41 +37,7 @@ const readingData = [
 function ReadingSection() {
   return (
     <section className="my-10">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="flex items-center text-lg font-bold text-gray-800 dark:text-white">
-          <BookOpen className="h-5 w-5 text-[#2E5BFF] dark:text-blue-400 mr-2" />
-          Truyện đang đọc gần đây
-        </h2>
-        <button className="text-[#2E5BFF] text-sm hover:underline dark:text-blue-400">
-          Xem tất cả &gt;
-        </button>
-      </div>
-
-      {/* Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {readingData.map((novel) => (
-          <div
-            key={novel.id}
-            className="bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden
-                       dark:bg-gray-800 dark:hover:bg-gray-700"
-          >
-            <img
-              src={novel.img}
-              alt={novel.title}
-              className="w-full h-40 object-cover"
-            />
-            <div className="p-3">
-              <h3 className="font-semibold text-sm text-gray-900 dark:text-white">{novel.title}</h3>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">{novel.updated}</p>
-              <button className="mt-2 w-full bg-[#2E5BFF] text-white text-xs rounded-full py-1 hover:bg-blue-700
-                                 dark:bg-blue-500 dark:hover:bg-blue-600">
-                Tiếp tục đọc
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+     
     </section>
   );
 }

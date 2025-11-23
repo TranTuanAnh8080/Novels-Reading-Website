@@ -64,7 +64,7 @@ function HeroSection() {
     <section>
       {/* --- Truyện nổi bật Tháng --- */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">🔥 Truyện nổi bật Tháng</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white">🔥 Các Thể Loại Truyện Nổi Bật</h2>
         <button className="text-sm text-[#2E5BFF] hover:underline dark:text-blue-400">
           Xem tất cả &gt;
         </button>
@@ -100,14 +100,6 @@ function HeroSection() {
             </div>
           </Link>
         ))}
-      </div>
-
-      {/* --- Truyện nổi bật Năm --- */}
-      <div className="flex items-center justify-between mt-8 mb-4">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">🔥 Truyện nổi bật Năm</h2>
-        <button className="text-sm text-[#2E5BFF] hover:underline dark:text-blue-400">
-          Xem tất cả &gt;
-        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
