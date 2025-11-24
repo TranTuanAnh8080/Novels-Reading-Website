@@ -84,7 +84,7 @@ function HeroSection() {
                       : defaultCover
                   }
                   alt={novel.novelTitle}
-                  className="w-full h-48 object-cover object-center"
+                  className="w-full h-full contrast-100 brightness-95 saturate-150 object-cover object-center"
                   loading="lazy"
                 />
               </div>
