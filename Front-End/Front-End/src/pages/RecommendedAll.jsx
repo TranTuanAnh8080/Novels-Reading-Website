@@ -180,7 +180,7 @@ export default function RecommendedAll() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F3F4F6] flex flex-col font-sans dark:bg-gray-900">
       <HeaderLoggedIn />
       <div className="flex-grow w-full max-w-[1320px] mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 md:p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
