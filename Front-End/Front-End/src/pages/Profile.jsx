@@ -314,7 +314,7 @@ function Profile() {
                 { to: '/LibraryPage', icon: <Book className="h-5 w-5" />, label: 'Tủ truyện' },
                 { to: '/UploadPage', icon: <Upload className="h-5 w-5" />, label: 'Đăng truyện' },
                 { to: '/PaymentItem', icon: <CreditCard className="h-5 w-5" />, label: 'Nạp xu' },
-                { to: '/TransactionPayment', icon: <Clock className="h-5 w-5" />, label: 'Lịch sử giao dịch' },
+                // { to: '/TransactionPayment', icon: <Clock className="h-5 w-5" />, label: 'Lịch sử giao dịch' },
                 { to: '/ChangePasswordModal', icon: <MdPassword className="h-5 w-5" />, label: 'Đổi mật khẩu' },
               ].map(({ to, icon, label }) => (
                 <Link

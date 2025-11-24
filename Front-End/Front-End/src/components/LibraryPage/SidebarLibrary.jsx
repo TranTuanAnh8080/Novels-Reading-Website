@@ -16,7 +16,7 @@ function SidebarLibrary() {
     { path: "/LibraryPage", label: "Tủ truyện", icon: BookOpen },
     { path: "/UploadPage", label: "Đăng truyện", icon: Upload },
     { path: "/PaymentItem", label: "Nạp xu", icon: CreditCard },
-    { path: "/TransactionPayment", label: "Lịch sử giao dịch", icon: Clock },
+    // { path: "/TransactionPayment", label: "Lịch sử giao dịch", icon: Clock },
     { path: "/ChangePasswordModal", label: "Đổi mật khẩu", icon: PiPassword },
   ];
 

@@ -420,7 +420,7 @@ const Dashboard = () => (
         </motion.div>
 
         {/* KPI CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
             {kpiData.map((data, i) => (
                 <motion.div
                     key={i}
@@ -431,7 +431,7 @@ const Dashboard = () => (
                     <KpiCard {...data} />
                 </motion.div>
             ))}
-        </div>
+        </div> */}
 
         {/* BIỂU ĐỒ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
