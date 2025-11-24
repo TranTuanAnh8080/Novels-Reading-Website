@@ -6,22 +6,27 @@ import {
   BookOpen,
   User,
   Clock,
-  LogOut,
   Loader2,
   Volume2,
   StopCircle,
   Moon,
-  Sun 
+  Sun,
+  LogOut
 } from "lucide-react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/inkrealm_logo.png";
-import defaultCover from "../assets/book-cover-blank.jpg"
-import Footer from "../components/SharedComponents/Footer"; 
+import defaultCover from "../assets/book-cover-blank.jpg";
+import Footer from "../components/SharedComponents/Footer";
 import { useTheme } from "../components/SharedComponents/ThemeContext";
 
+const formatDate = (dateString) => {
+  if (!dateString) return "Đang cập nhật";
+  return new Date(dateString).toLocaleDateString("vi-VN");
+};
+
 export default function ReadPage() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const storyId = location.state?.storyId;
@@ -44,7 +49,7 @@ export default function ReadPage() {
   );
 
   const [purchaseInfo, setPurchaseInfo] = useState(null);
-  const [isBuying, setIsBuying] = useState(false); 
+  const [isBuying, setIsBuying] = useState(false);
   const [buyResult, setBuyResult] = useState(null);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -77,7 +82,7 @@ export default function ReadPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setChapterText(textRes.data.chapterText); 
+      setChapterText(textRes.data.chapterText);
 
       if (storyId) {
         const novelRes = await axios.post(
@@ -255,7 +260,7 @@ export default function ReadPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <header className="bg-white text-gray-900 border-b border-gray-200 shadow-md sticky top-0 z-50
-                     dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
+                      dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
         <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between gap-6">
           {/* LOGO */}
           <div className="flex items-center space-x-3">
@@ -302,9 +307,9 @@ export default function ReadPage() {
                 type="text"
                 placeholder="Tìm kiếm truyện..."
                 className="rounded-full bg-gray-100 border border-gray-300 pl-4 pr-10 py-1.5 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 
-                           placeholder-gray-500 text-sm w-56
-                           dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
+                                 focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                 placeholder-gray-500 text-sm w-56
+                                 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
               />
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
@@ -326,7 +331,7 @@ export default function ReadPage() {
               <div className="flex items-center gap-3">
                 <Link to="/LoginPage">
                   <button className="px-4 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-100 transition
-                                     dark:border-gray-700 dark:hover:bg-gray-800">
+                                         dark:border-gray-700 dark:hover:bg-gray-800">
                     Đăng nhập
                   </button>
                 </Link>
@@ -418,7 +423,7 @@ export default function ReadPage() {
                   <div className="flex items-center gap-2 text-slate-700 dark:text-gray-300">
                     <Clock className="w-4 h-4 text-[#2E5BFF] dark:text-blue-400" />
                     <span className="text-slate-600 dark:text-gray-400">
-                      {novel?.createDate || ""}
+                      {formatDate(novel?.createDate)}
                     </span>
                   </div>
                 </div>
