@@ -100,7 +100,7 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
                              dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 
                              z-50 animate-fadeIn backdrop-blur-sm"
                 >
-                  <h3 className="text-base font-semibold text-indigo-600 dark:text-indigo-400 mb-1">
+                  <h3 className="text-base font-bold text-blue-600  dark:text-blue-400 mb-1">
                     {contentMap[key].title}
                   </h3>
                   <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300 text-wrap whitespace-pre-line">
@@ -120,7 +120,7 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
                 type="text"
                 placeholder="Tìm truyện, thể loại, tác giả..."
                 className="w-full min-w-0 rounded-full border border-gray-300 bg-gray-100 text-sm px-4 pr-10 py-2 
-                           focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500
                            dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
               />
               <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-500" />

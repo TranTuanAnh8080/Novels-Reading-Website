@@ -91,7 +91,7 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
               bg-gray-800/95 text-gray-100 shadow-xl rounded-xl p-4 border border-gray-700 
               backdrop-blur-md animate-fadeIn"
                 >
-                  <h3 className="text-base font-semibold text-indigo-400 mb-1">
+                  <h3 className="text-base font-semibold text-blue-400 mb-1">
                     {contentMap[key].title}
                   </h3>
                   <p className="text-sm leading-relaxed text-gray-300 whitespace-pre-line">
