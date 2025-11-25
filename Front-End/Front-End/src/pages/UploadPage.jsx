@@ -18,11 +18,28 @@ function UploadPage() {
     useEffect(() => {
         const fetchNovels = async () => {
             setIsLoading(true);
+
+            const currentAccountId = sessionStorage.getItem("accountId");
+
+            if (!currentAccountId) {
+                console.log("Chưa đăng nhập hoặc hết phiên làm việc");
+                setBooks([]); 
+                setIsLoading(false);
+                return;
+            }
+
             try {
                 const response = await axios.post(
                     "https://be-ink-realm-c7jk.vercel.app/novel/all"
                 );
-                setBooks(response.data);
+                
+                const allNovels = response.data;
+
+                const myNovels = allNovels.filter(novel => 
+                    String(novel.accountId) === String(currentAccountId)
+                );
+
+                setBooks(myNovels);
             } catch (error) {
                 console.error("Lỗi khi lấy danh sách truyện:", error);
             } finally {
@@ -148,7 +165,7 @@ function UploadPage() {
 
                     {isLoading ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[1, 2, 3, 4, 5, 6].map((n) => (
+                            {[1, 2, 3].map((n) => (
                                 <div key={n} className="bg-white dark:bg-gray-800 rounded-xl h-[320px] animate-pulse border border-gray-100 dark:border-gray-700">
                                     <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-t-xl w-full"></div>
                                     <div className="p-4 space-y-3">
@@ -171,9 +188,9 @@ function UploadPage() {
                             <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">Không tìm thấy truyện nào</h3>
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">Bạn chưa đăng truyện nào</h3>
                             <p className="text-gray-500 dark:text-gray-400 max-w-sm">
-                                Thử thay đổi bộ lọc hoặc bắt đầu sáng tác tác phẩm đầu tiên của bạn.
+                                Hãy bắt đầu sáng tác tác phẩm đầu tiên của bạn ngay hôm nay.
                             </p>
                         </div>
                     )}
@@ -231,4 +248,4 @@ function UploadPage() {
     );
 }
 
-export default UploadPage;  
+export default UploadPage;
