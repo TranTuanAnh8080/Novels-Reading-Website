@@ -237,15 +237,18 @@ function HeroSection() {
     <section className="py-10">
       {featuredNovel && <FeaturedHero novel={featuredNovel} />}
       <div className="flex items-center justify-between mb-6 px-1">
-        <h2 className="flex items-center text-xl font-bold text-gray-900 dark:text-white gap-2">
-          <div className="bg-blue-100 dark:bg-blue-900/30 p-1.5 rounded-lg">
-             <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg text-blue-600 dark:text-blue-400">
+            <Sparkles className="w-6 h-6" fill="currentColor" />
           </div>
-          <span className="relative">
-            Mới Cập Nhật
+
+          <div className="relative">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white leading-none pb-1">
+              Mới Cập Nhật
+            </h2>
             <span className="absolute -bottom-1 left-0 w-1/2 h-[3px] bg-blue-500 rounded-full"></span>
-          </span>
-        </h2>
+          </div>
+        </div>
         
         <Link 
           to="/RecommendedAll" 
