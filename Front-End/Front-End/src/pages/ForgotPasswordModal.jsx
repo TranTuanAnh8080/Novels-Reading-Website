@@ -131,7 +131,7 @@ const ForgotPasswordModal = () => {
                     <img
                         src={image}
                         alt="Inkrealm Logo"
-                        className="mb-2 w-40 mr-29 h-15 mx-auto contrast-150 brightness-105 saturate-150"
+                        className="mb-2 w-38 mr-30 h-15 mx-auto contrast-150 brightness-105 saturate-150"
                     />
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Quên mật khẩu?</h2>
                     <p className="text-gray-600 mt-2">
