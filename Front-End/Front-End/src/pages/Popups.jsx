@@ -5,7 +5,6 @@ import Confetti from "react-confetti";
 import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";
 import LoadingPage from "./LoadingPage";
-import sun from "../assets/sun.jpg"
 const Popups = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ const Popups = () => {
   // preload background image
   useEffect(() => {
     const img = new Image();
-    img.src = sun;
+    img.src = landscapeImage;
     img.onload = () => {
       setBgLoaded(true);
       setShowConfetti(true); // chỉ bật confetti khi ảnh nền sẵn sàng
@@ -35,12 +34,12 @@ const Popups = () => {
       className="fixed inset-0 flex justify-center items-center z-50 
       overflow-hidden transition-all duration-700"
       style={{
-        backgroundImage: bgLoaded ? `url(${sun})` : "none",
+        backgroundImage: bgLoaded ? `url(${landscapeImage})` : "none",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
-        filter: "contrast(1.1) brightness(1.05)", // Enhance image quality
+        filter: "contrast(1.0) brightness(1.05)", // Enhance image quality
         WebkitBackfaceVisibility: "hidden", // Improve performance
         MozBackfaceVisibility: "hidden",
         backfaceVisibility: "hidden"
