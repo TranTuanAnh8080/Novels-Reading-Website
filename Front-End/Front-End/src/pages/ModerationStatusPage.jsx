@@ -431,7 +431,7 @@ export default function ModerationStatusPage() {
                     <div className="flex items-start gap-2">
                       <Tag className="w-4 h-4 mt-1 text-gray-400" />
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1.5">
+                        <div className="flex items-center gap-2 mb-4">
                             <span className="font-semibold text-gray-800 dark:text-gray-100">Thể loại:</span>
                             <button 
                                 onClick={handleOpenGenreModal}
