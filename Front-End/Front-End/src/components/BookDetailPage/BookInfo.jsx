@@ -149,9 +149,9 @@ export default function BookInfo({ book, genres }) {
 
         <div className="col-span-8 flex flex-col gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2 dark:text-white leading-tight">{title}</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4 dark:text-white leading-tight">{title}</h1>
             
-            <div className="text-sm font-semibold text-gray-700 mb-3 dark:text-gray-300 flex flex-wrap items-center gap-4">
+            <div className="text-sm font-semibold text-gray-700 mb-6 dark:text-gray-300 flex flex-wrap items-center gap-6">
               <span>
                 Tác giả:{" "}
                 <span className="text-[#2E5BFF] font-medium dark:text-blue-400">
@@ -164,16 +164,16 @@ export default function BookInfo({ book, genres }) {
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-3 mb-4">
                 {genres && genres.length > 0 ? (
                     genres.map((genre) => (
                         <span 
                             key={genre.genreId || Math.random()} 
-                            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
+                            className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium 
                                      bg-blue-50 text-blue-700 border border-blue-100 
                                      dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800"
                         >
-                            <Tag className="w-3 h-3 mr-1" />
+                            <Tag className="w-3.5 h-3.5 mr-1.5" />
                             {genre.genreName}
                         </span>
                     ))
