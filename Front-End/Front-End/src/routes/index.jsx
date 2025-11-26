@@ -17,7 +17,6 @@ import RecommendedAll from "../pages/RecommendedAll";
 import BookDetail from "../pages/BookDetail";
 import ChapterList from "../pages/ChapterList";
 import ReadPage from "../pages/ReadPage";
-import SoloLevelingSearch from "../pages/SoloLevelingSearch";
 import ModeratorHomePage from "../pages/ModeratorHomePage";
 import ModerateOriginalNovels from "../pages/ModerateOriginalNovels";
 import ModerateTranslatedNovels from "../pages/ModerateTranslatedNovels";
@@ -31,6 +30,7 @@ import AccountManagement from "../components/Admin/AccountManagement";
 import Dashboard from "../components/Admin/Dashboard";
 import RevenueStatistics from "../components/Admin/RevenueStatistics";
 import PersonalProfile from "../components/Admin/PersonalProfile";
+import GenreSearchPage from "../pages/GenreSearchPage";
 
 const AppRouter = createBrowserRouter([
 
@@ -52,7 +52,6 @@ const AppRouter = createBrowserRouter([
   { path: "/BookDetail/:id", element: <BookDetail /> },
   { path: "/ChapterList/:id", element: <ChapterList /> },
   { path: "/ReadPage/:id", element: <ReadPage /> },
-  { path: "/SoloLevelingSearch", element: <SoloLevelingSearch /> },
   { path: "/ModeratorHomePage", element: <ModeratorHomePage /> },
   { path: "/ModerateOriginalNovels", element: <ModerateOriginalNovels /> },
   { path: "/ModerateTranslatedNovels", element: <ModerateTranslatedNovels /> },
@@ -62,6 +61,7 @@ const AppRouter = createBrowserRouter([
   { path: "/ChangePasswordModal", element: <ChangePasswordModal /> },
   { path: "/MainItem", element: <PaymentItem /> },
   { path: "/EditChapterPage/:novelId/:chapterId", element: <AddChapterPage /> },
+  { path: "/Search", element: <GenreSearchPage /> },
 
   {
     path: "/Admin",

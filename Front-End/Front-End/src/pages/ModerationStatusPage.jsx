@@ -1,18 +1,20 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Search,
   Clock,
   Check,
   FileText,
   Edit3,
-  X,
   DollarSign,
   PlusCircle,
   Sun,
   Moon,
+  X,        
+  Tag,      
+  Save,     
+  FolderOpen
 } from 'lucide-react';
 import Footer from "../components/SharedComponents/Footer";
-import logo from '../assets/inkrealm_logo.png';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useTheme } from "../components/SharedComponents/ThemeContext";
@@ -21,20 +23,14 @@ const uploadNovelCoverApi = async (novelId, coverFile, token) => {
   const formData = new FormData();
   formData.append("novelId", String(novelId));
   formData.append("cover", coverFile);
-
   try {
     const response = await axios.post(
       "https://be-ink-realm-c7jk.vercel.app/uploader/novel/upload-cover",
       formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;
   } catch (error) {
-    console.error("Lỗi khi upload cover:", error.response?.data || error.message);
     throw error.response?.data || new Error("Upload ảnh bìa thất bại");
   }
 };
@@ -44,9 +40,13 @@ export default function ModerationStatusPage() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [novelData, setNovelData] = useState(null);
   const [allChapters, setAllChapters] = useState([]);
+  
+  const [currentGenres, setCurrentGenres] = useState([]);
+  const [allSystemCategories, setAllSystemCategories] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('published');
 
@@ -56,6 +56,10 @@ export default function ModerationStatusPage() {
 
   const fileInputRef = useRef(null);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+
+  const [showGenreModal, setShowGenreModal] = useState(false);
+  const [selectedGenreIds, setSelectedGenreIds] = useState([]); 
+  const [isUpdatingGenre, setIsUpdatingGenre] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,12 +75,39 @@ export default function ModerationStatusPage() {
         const chaptersRes = await axios.get(
           `https://be-ink-realm-c7jk.vercel.app/chapter/list/${novelId}`
         );
-
         if (chaptersRes.data.success) {
           setAllChapters(chaptersRes.data.chapters || []);
         } else {
           setAllChapters([]);
         }
+
+        try {
+          const genreRes = await axios.get(
+            `https://be-ink-realm-c7jk.vercel.app/novel/${novelId}/genre`
+          );
+
+          const flatGenres = [];
+          if (Array.isArray(genreRes.data)) {
+            genreRes.data.forEach(cat => {
+              if (cat.genres) {
+                cat.genres.forEach(g => flatGenres.push(g));
+              }
+            });
+          }
+          setCurrentGenres(flatGenres);
+        } catch (e) {
+          console.error("Lỗi lấy genre hiện tại:", e);
+        }
+
+        try {
+          const allGenreRes = await axios.get(
+            "https://be-ink-realm-c7jk.vercel.app/novel/genre/all"
+          );
+          setAllSystemCategories(allGenreRes.data || []);
+        } catch (e) {
+          console.error("Lỗi lấy danh sách hệ thống:", e);
+        }
+
       } catch (error) {
         console.error("❌ Lỗi tải dữ liệu:", error);
         setNovelData(null);
@@ -88,6 +119,79 @@ export default function ModerationStatusPage() {
 
     if (novelId) fetchData();
   }, [novelId]);
+
+
+  const handleOpenGenreModal = () => {
+    const currentIds = currentGenres.map(g => g.genreId);
+    setSelectedGenreIds(currentIds);
+    setShowGenreModal(true);
+  };
+
+  const toggleGenreSelection = (id) => {
+    setSelectedGenreIds(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id) 
+        : [...prev, id] 
+    );
+  };
+
+  const findGenreNameById = (id) => {
+    for (const cat of allSystemCategories) {
+      if (cat.genres) {
+        const found = cat.genres.find(g => g.genreId === id);
+        if (found) return found.genreName;
+      }
+    }
+    return "";
+  };
+
+  const handleSaveGenres = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Bạn cần đăng nhập!");
+      return;
+    }
+
+    setIsUpdatingGenre(true);
+
+    const currentIds = currentGenres.map(g => g.genreId);
+    
+    const idsToAdd = selectedGenreIds.filter(id => !currentIds.includes(id));
+    const listToAdd = idsToAdd.map(id => ({
+      genreId: id, 
+      genreName: findGenreNameById(id)
+    }));
+
+    const idsToRemove = currentIds.filter(id => !selectedGenreIds.includes(id));
+    const listToRemove = idsToRemove.map(id => ({
+       genreId: id, 
+       genreName: findGenreNameById(id)
+    }));
+
+    if (listToAdd.length === 0 && listToRemove.length === 0) {
+      setShowGenreModal(false);
+      setIsUpdatingGenre(false);
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `https://be-ink-realm-c7jk.vercel.app/uploader/novel/${novelId}/update/genre`,
+        { add: listToAdd, remove: listToRemove },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setCurrentGenres(response.data.genres || []);
+      alert("Cập nhật thể loại thành công!");
+      setShowGenreModal(false);
+
+    } catch (error) {
+      console.error("Lỗi cập nhật genre:", error);
+      alert(error.response?.data?.message || "Lỗi khi cập nhật thể loại");
+    } finally {
+      setIsUpdatingGenre(false);
+    }
+  };
 
   const openPriceModal = (chapter) => {
     setPriceModalChapter(chapter);
@@ -233,17 +337,13 @@ export default function ModerationStatusPage() {
               />
               <Search className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
-            {/* Thêm nút Toggle */}
+
             <button
               onClick={toggleTheme}
               aria-label="Toggle dark mode"
               className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              {theme === 'light' ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5" />
-              )}
+              {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </button>
             <Link to="/Profile">
               <img
@@ -264,7 +364,7 @@ export default function ModerationStatusPage() {
           <div className="text-center text-red-500 py-20 dark:text-red-400">Không tìm thấy thông tin truyện.</div>
         ) : (
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6
-                        dark:bg-gray-800 dark:border-gray-700">
+                       dark:bg-gray-800 dark:border-gray-700">
 
             <input
               type="file"
@@ -315,19 +415,45 @@ export default function ModerationStatusPage() {
                       <span className="font-medium text-gray-500 dark:text-gray-400">{novelData.author}</span>
                     </div>
                     <div>
-                      <span className="font-semibold text-gray-800 dark:text-gray-100">Loại truyện:</span>{" "}
-                      <span className="font-medium text-[#2E5BFF] dark:text-blue-400">{novelData.type || "Không rõ"}</span>
-                    </div>
-                    <div>
                       <span className="font-semibold text-gray-800 dark:text-gray-100">Trạng thái:</span>{" "}
                       <span className="inline-block px-2 py-0.5 rounded bg-green-50 text-green-700 text-xs font-medium
-                                     dark:bg-green-900 dark:text-green-300">
+                                    dark:bg-green-900 dark:text-green-300">
                         {novelData.status || "Đang viết"}
                       </span>
                     </div>
                     <div>
                       <span className="font-semibold text-gray-800 dark:text-gray-100">Tổng số chương:</span>{" "}
                       <span className="font-medium text-gray-500 dark:text-gray-400">{allChapters.length}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <div className="flex items-start gap-2">
+                      <Tag className="w-4 h-4 mt-1 text-gray-400" />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1.5">
+                            <span className="font-semibold text-gray-800 dark:text-gray-100">Thể loại:</span>
+                            <button 
+                                onClick={handleOpenGenreModal}
+                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-blue-600 transition-colors"
+                                title="Chỉnh sửa thể loại"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </button>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2">
+                          {currentGenres && currentGenres.length > 0 ? (
+                            currentGenres.map((genre) => (
+                                <span key={genre.genreId || Math.random()} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
+                                  {genre.genreName}
+                                </span>
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-500 italic">Chưa có thể loại</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -388,7 +514,7 @@ export default function ModerationStatusPage() {
                 <tbody>
                   {filteredChapters.map((ch) => (
                     <tr key={ch.chapterId} className="border-b border-gray-200 hover:bg-gray-50 transition
-                                                   dark:border-gray-700 dark:hover:bg-gray-700">
+                                                    dark:border-gray-700 dark:hover:bg-gray-700">
                       <td className="py-3 text-sm text-gray-800 dark:text-gray-100">Chương {ch.chapterIndex}</td>
                       <td className="py-3 text-sm text-gray-800 dark:text-gray-100">
                         {ch.chapterTitle}
@@ -405,14 +531,14 @@ export default function ModerationStatusPage() {
                           <button
                             onClick={() => openPriceModal(ch)}
                             className="text-green-600 hover:underline flex items-center gap-1 text-sm
-                                       dark:text-green-400 dark:hover:text-green-300"
+                                     dark:text-green-400 dark:hover:text-green-300"
                           >
                             <DollarSign className="w-4 h-4" /> Đặt giá
                           </button>
                           <button
                             onClick={() => navigate(`/EditChapterPage/${novelId}/${ch.chapterId}`)}
                             className="text-blue-600 hover:underline flex items-center gap-1 text-sm
-                                       dark:text-blue-400 dark:hover:text-blue-300"
+                                     dark:text-blue-400 dark:hover:text-blue-300"
                           >
                             <Edit3 className="w-4 h-4" /> Chỉnh sửa
                           </button>
@@ -427,7 +553,89 @@ export default function ModerationStatusPage() {
         )}
       </main>
 
-      {/* Modal Đặt giá */}
+      {showGenreModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <Tag className="w-5 h-5 text-blue-500" />
+                Chỉnh sửa Thể loại
+              </h3>
+              <button onClick={() => setShowGenreModal(false)} className="text-gray-400 hover:text-red-500 transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto custom-scrollbar">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-100 dark:border-blue-800">
+                 Chọn các thể loại phù hợp nhất với truyện của bạn.
+              </p>
+              
+              <div className="space-y-8">
+                {allSystemCategories.length > 0 ? (
+                  allSystemCategories.map((category) => (
+                    <div key={category.categoryId}>
+                        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
+                            <FolderOpen className="w-5 h-5 text-gray-400" />
+                            <h4 className="font-bold text-gray-700 dark:text-gray-200 text-base">
+                                {category.categoryName}
+                            </h4>
+                            <span className="text-xs text-gray-400 font-normal ml-auto hidden sm:inline">
+                                {category.categoryDescription}
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            {category.genres && category.genres.map((genre) => {
+                                const isSelected = selectedGenreIds.includes(genre.genreId);
+                                return (
+                                    <div 
+                                        key={genre.genreId}
+                                        onClick={() => toggleGenreSelection(genre.genreId)}
+                                        className={`cursor-pointer px-3 py-2 rounded-lg border text-sm font-medium flex items-center gap-2 transition-all select-none
+                                            ${isSelected 
+                                                ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/30 dark:border-blue-400 dark:text-blue-300 shadow-sm' 
+                                                : 'bg-white border-gray-200 text-gray-600 hover:border-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300'
+                                            }`}
+                                        title={genre.genreDescription}
+                                    >
+                                        <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors
+                                            ${isSelected ? 'bg-blue-500 border-blue-500' : 'bg-white border-gray-300'}`}>
+                                            {isSelected && <Check className="w-3 h-3 text-white" />}
+                                        </div>
+                                        <span className="truncate">{genre.genreName}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-400 py-4">Đang tải danh sách thể loại...</div>
+                )}
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3 bg-gray-50 dark:bg-gray-900">
+                <button 
+                    onClick={() => setShowGenreModal(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600 transition-colors"
+                >
+                    Hủy bỏ
+                </button>
+                <button 
+                    onClick={handleSaveGenres}
+                    disabled={isUpdatingGenre}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center gap-2 disabled:bg-blue-400 transition-colors shadow-sm"
+                >
+                    {isUpdatingGenre ? "Đang lưu..." : <><Save className="w-4 h-4" /> Lưu thay đổi</>}
+                </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {priceModalChapter && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white w-[450px] p-6 rounded-lg shadow-lg
@@ -445,7 +653,7 @@ export default function ModerationStatusPage() {
               value={newPrice}
               onChange={(e) => setNewPrice(Number(e.target.value))}
               className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#2E5BFF]
-                         dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="Nhập giá (ví dụ: 50)"
             />
             <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Nhập 0 để đặt là chương miễn phí.</p>
