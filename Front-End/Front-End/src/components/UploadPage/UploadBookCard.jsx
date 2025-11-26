@@ -11,11 +11,10 @@ function UploadBookCard({
 }) {
   return (
     <div
-      className="relative bg-white rounded-xl shadow-lg overflow-hidden 
-                 flex flex-col transform transition-all duration-300
+      className="group relative bg-white rounded-xl shadow-lg overflow-hidden 
+                 flex flex-col h-full transform transition-all duration-300
                  hover:shadow-xl hover:scale-[1.02] hover:ring-2 hover:ring-blue-400/50"
     >
-      {/* Ảnh bìa */}
       <Link to={`/BookDetail/${novelId}`} className="relative block group">
         <div className="aspect-[3/4] w-full bg-gray-200 overflow-hidden">
           <img
@@ -25,6 +24,7 @@ function UploadBookCard({
             }
             alt={novelTitle}
             className="object-cover w-full h-full transition-opacity duration-300 group-hover:opacity-85"
+            onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/300x400?text=Error"; }}
           />
           <div
             className="absolute inset-0 bg-black/30 flex items-center justify-center
@@ -35,21 +35,24 @@ function UploadBookCard({
         </div>
       </Link>
 
-      {/* Thông tin truyện */}
       <div className="p-4 flex-1 flex flex-col">
-        <div className="flex-1 mb-3">
-          <h3 className="text-xl font-bold text-gray-900 leading-tight line-clamp-2 mb-1">
+        <div className="mb-3">
+          <h3 
+            className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 mb-1"
+            title={novelTitle}
+          >
             {novelTitle}
           </h3>
+
           <p className="text-sm text-gray-600 font-medium mb-3">
             của <span className="text-blue-600 hover:underline">{author}</span>
           </p>
+
           <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
             {novelDescription}
           </p>
         </div>
 
-        {/* Các nút hành động */}
         <div className="mt-auto pt-3 border-t border-gray-100 flex justify-between items-center gap-2">
           <Link
             to={`/ModerationStatusPage/${novelId}`}
