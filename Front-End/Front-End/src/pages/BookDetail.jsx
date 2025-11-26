@@ -11,6 +11,7 @@ import axios from "axios";
 export default function BookDetail() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
+  const [genres, setGenres] = useState([]);
   const [similarBooks, setSimilarBooks] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,23 @@ export default function BookDetail() {
         );
         setBook(bookRes.data);
 
+        try {
+          const genreRes = await axios.get(
+            `https://be-ink-realm-c7jk.vercel.app/novel/${id}/genre`
+          );
+          const flatGenres = [];
+          if (Array.isArray(genreRes.data)) {
+            genreRes.data.forEach(cat => {
+              if (cat.genres) {
+                cat.genres.forEach(g => flatGenres.push(g));
+              }
+            });
+          }
+          setGenres(flatGenres);
+        } catch (genreError) {
+          console.error("Lỗi lấy genre:", genreError);
+        }
+
         const allNovelsRes = await axios.post(
           "https://be-ink-realm-c7jk.vercel.app/novel/all",
           {},
@@ -52,7 +70,6 @@ export default function BookDetail() {
         );
 
         const allNovels = allNovelsRes.data;
-        
         const related = allNovels
           .filter((n) => n.novelId !== Number(id))
           .sort(() => 0.5 - Math.random())
@@ -105,6 +122,7 @@ export default function BookDetail() {
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 space-y-8">
         <BookInfo
           book={book}
+          genres={genres} 
           isFollowing={isFollowing}
           setIsFollowing={setIsFollowing}
           defaultCover={defaultCover}
