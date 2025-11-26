@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Search, Bell, Bookmark, LogOut, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, LogOut, Sun, Moon, Filter } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/inkrealm_logo.png";
 import { useTheme } from "../../components/SharedComponents/ThemeContext";
+
 export default function HeaderLoggedIn() {
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const { theme, toggleTheme } = useTheme();
@@ -22,25 +23,32 @@ export default function HeaderLoggedIn() {
     window.location.reload();
   };
 
+  const handleSearchSubmit = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/Search?keyword=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const goToGenreSearch = () => {
+    navigate("/Search"); 
+  };
+
   const contentMap = {
     about: {
       title: "Về Chúng Tôi",
-      body: `
-InkRealm là nền tảng đọc truyện sáng tạo, nơi công nghệ và cảm xúc gặp nhau.  
+      body: `InkRealm là nền tảng đọc truyện sáng tạo, nơi công nghệ và cảm xúc gặp nhau.  
 Chúng tôi mang đến không gian đọc hiện đại – mượt mà, cá nhân hóa, không quảng cáo gây gián đoạn. 
 Sứ mệnh của chúng tôi là tôn vinh tác giả Việt, lan tỏa tinh thần sáng tạo, và mang đến cho độc giả trải nghiệm đọc truyện thật sự trọn vẹn.`,
     },
     policy: {
       title: "Chính Sách",
-      body: `
-Chính sách của InkRealm được xây dựng dựa trên sự tôn trọng và minh bạch. 
+      body: `Chính sách của InkRealm được xây dựng dựa trên sự tôn trọng và minh bạch. 
 Chúng tôi cam kết bảo mật tuyệt đối thông tin cá nhân, bảo vệ quyền sở hữu trí tuệ của tác giả và người dùng. 
 Mọi hoạt động đều tuân thủ nghiêm ngặt quy định pháp luật Việt Nam và chuẩn mực cộng đồng văn minh.`,
     },
     rules: {
       title: "Quy Định",
-      body: `
-Để giữ cho InkRealm luôn là nơi đọc truyện tích cực và an toàn, mọi thành viên vui lòng: 
+      body: `Để giữ cho InkRealm luôn là nơi đọc truyện tích cực và an toàn, mọi thành viên vui lòng: 
 • Tôn trọng lẫn nhau và dùng ngôn ngữ lịch sự. 
 • Không chia sẻ, đăng tải nội dung vi phạm bản quyền hoặc trái thuần phong mỹ tục. 
 • Giữ tinh thần xây dựng và báo cáo các nội dung không phù hợp. 
@@ -48,8 +56,7 @@ Chúng tôi mong muốn cùng bạn xây dựng một cộng đồng đọc truy
     },
     support: {
       title: "Hỗ Trợ",
-      body: `
-Bạn gặp vấn đề khi đăng nhập, thanh toán, hay đọc truyện? 
+      body: `Bạn gặp vấn đề khi đăng nhập, thanh toán, hay đọc truyện? 
 Đừng lo – đội ngũ hỗ trợ InkRealm luôn sẵn sàng giúp bạn! 
 • Gửi yêu cầu qua mục “Trung tâm Hỗ Trợ”. 
 • Hoặc liên hệ trực tiếp qua email: support@inkrealm.vn. 
@@ -57,8 +64,7 @@ Chúng tôi cam kết phản hồi nhanh chóng trong vòng 24 giờ làm việc
     },
     contact: {
       title: "Liên Hệ",
-      body: `
-InkRealm luôn hoan nghênh mọi đóng góp, hợp tác và phản hồi từ độc giả, tác giả và đối tác. 
+      body: `InkRealm luôn hoan nghênh mọi đóng góp, hợp tác và phản hồi từ độc giả, tác giả và đối tác. 
 📍 Văn phòng đại diện: FPT University, TP. Hồ Chí Minh, Việt Nam. 
 📧 Email: contact@inkrealm.vn 
 📞 Hotline: (+84) 901 711 899 
@@ -68,9 +74,8 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
 
   return (
     <header className="bg-white text-gray-900 shadow-md sticky top-0 z-50
-                   dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white">
+                    dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-6 relative">
-        {/* LOGO */}
         <div className="flex-shrink-0">
           <Link
             to="/HomeLoggedIn"
@@ -80,7 +85,6 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
           </Link>
         </div>
 
-        {/* NAVIGATION */}
         <nav className="hidden md:flex items-center gap-6 whitespace-nowrap flex-shrink-0 relative">
           {Object.keys(contentMap).map((key) => (
             <div
@@ -95,12 +99,12 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
 
               {hoveredItem === key && (
                 <div
-                  className="absolute left-1/2 -translate-x-1/2 mt-3 w-72 
-                             bg-white text-gray-800 shadow-xl rounded-xl p-4 border border-gray-200 
+                  className="absolute left-1/2 -translate-x-1/2 mt-3 w-96 
+                             bg-white text-gray-800 shadow-xl rounded-xl p-5 border border-gray-200 
                              dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 
                              z-50 animate-fadeIn backdrop-blur-sm"
                 >
-                  <h3 className="text-base font-bold text-blue-600  dark:text-blue-400 mb-1">
+                  <h3 className="text-base font-bold text-blue-600 dark:text-blue-400 mb-2 border-b pb-1 border-gray-100 dark:border-gray-700">
                     {contentMap[key].title}
                   </h3>
                   <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300 text-wrap whitespace-pre-line">
@@ -112,23 +116,35 @@ Hãy cùng chúng tôi kiến tạo tương lai đọc truyện trực tuyến �
           ))}
         </nav>
 
-        {/* SEARCH */}
         <div className="flex-1 min-w-0">
-          <div className="max-w-md mx-auto">
-            <div className="relative">
+          <div className="max-w-md mx-auto flex items-center gap-2">
+            <div className="relative w-full">
               <input
                 type="text"
-                placeholder="Tìm truyện, thể loại, tác giả..."
+                placeholder="Tìm truyện, tác giả..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearchSubmit}
                 className="w-full min-w-0 rounded-full border border-gray-300 bg-gray-100 text-sm px-4 pr-10 py-2 
                            focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500
                            dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400"
               />
-              <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-500" />
+              <Search 
+                className="absolute right-3 top-2.5 h-5 w-5 text-gray-500 cursor-pointer hover:text-blue-500" 
+                onClick={() => navigate(`/Search?keyword=${encodeURIComponent(searchTerm)}`)}
+              />
             </div>
+            
+            <button 
+                onClick={goToGenreSearch}
+                className="p-2 rounded-full bg-gray-100 border border-gray-300 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 transition-colors dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                title="Lọc theo thể loại"
+            >
+                <Filter className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
-        {/* USER ACTIONS */}
         <div className="flex items-center gap-4 flex-shrink-0">
           <button
             onClick={toggleTheme}
