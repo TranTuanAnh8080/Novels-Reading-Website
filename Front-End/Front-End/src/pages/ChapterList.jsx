@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  ChevronLeft,
-  Search,
   Filter,
   BookOpen,
   User,
   Clock,
-  LogOut,
-  Sun,
-  Moon,
 } from "lucide-react";
 import Footer from "../components/SharedComponents/Footer";
+import HeaderBook from "../components/BookDetailPage/HeaderBook";
 import defaultCover from "../assets/book-cover-blank.jpg";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useTheme } from "../components/SharedComponents/ThemeContext";
 
 export default function ChapterList() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   const [novel, setNovel] = useState(null);
   const [chapters, setChapters] = useState([]);
@@ -66,108 +62,7 @@ export default function ChapterList() {
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen dark:bg-gray-900">
-      <header className="bg-white text-gray-900 border-b border-gray-200 shadow-md sticky top-0 z-50
-                          dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 dark:text-white dark:border-gray-800 dark:shadow-lg">
-        <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between gap-6">
-          <div className="flex items-center space-x-3">
-            <Link
-              to={isLoggedIn ? "/HomeLoggedIn" : "/HomePage"}
-              className="flex items-center space-x-2 group"
-            >
-              <span className="text-2xl font-extrabold tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
-                INKREALM
-              </span>
-            </Link>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium flex-1 justify-center">
-            <Link
-              to={isLoggedIn ? "/HomeLoggedIn" : "/HomePage"}
-              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
-            >
-              Trang chủ
-            </Link>
-            <Link to="/the-loai" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
-              Thể loại
-            </Link>
-            <Link to="/xep-hang" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
-              Xếp hạng
-            </Link>
-            <Link
-              to="/moi-cap-nhat"
-              className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors"
-            >
-              Mới cập nhật
-            </Link>
-            <Link to="/sang-tac" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors">
-              Sáng tác
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Tìm kiếm truyện..."
-                className="rounded-full bg-gray-100 border border-gray-300 pl-4 pr-10 py-1.5 
-                                 focus:outline-none focus:ring-2 focus:ring-blue-500 
-                                 placeholder-gray-500 text-sm w-56
-                                 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white"
-              />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            </div>
-
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle dark mode"
-              className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              {theme === 'light' ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5" />
-              )}
-            </button>
-
-            {!isLoggedIn ? (
-              <div className="flex items-center gap-3">
-                <Link to="/LoginPage">
-                  <button className="px-4 py-1.5 text-sm rounded-full border border-gray-300 hover:bg-gray-100 transition
-                                         dark:border-gray-700 dark:hover:bg-gray-800">
-                    Đăng nhập
-                  </button>
-                </Link>
-                <Link to="/RegisterPage">
-                  <button className="px-4 py-1.5 text-sm rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:brightness-110 transition">
-                    Đăng ký
-                  </button>
-                </Link>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <Link to="/Profile">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                    alt="user avatar"
-                    className="w-9 h-9 rounded-full border border-gray-300 dark:border-gray-700 cursor-pointer hover:opacity-90 transition"
-                  />
-                </Link>
-                <button
-                  onClick={() => {
-                    sessionStorage.clear();
-                    window.dispatchEvent(new Event("loginStateChanged"));
-                    window.location.href = "/HomePage";
-                  }}
-                  className="flex items-center gap-1 text-red-500 hover:text-red-600 dark:hover:text-red-400 text-sm font-medium transition"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Đăng xuất</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+      <HeaderBook />
 
       <main className="py-6 max-w-5xl mx-auto">
         {loading && <p className="text-center text-gray-600 dark:text-gray-300">Đang tải...</p>}
@@ -209,7 +104,7 @@ export default function ChapterList() {
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4 text-[#2E5BFF] dark:text-blue-400" />
                     <span className="font-medium text-gray-500 dark:text-gray-400">
-                      Cập nhật: {novel.createDate ? new Date(novel.createDate).toLocaleDateString() : "Không rõ"}
+                      Cập nhật: {novel.createDate ? new Date(novel.createDate).toLocaleDateString("vi-VN") : "Không rõ"}
                     </span>
                   </div>
                 </div>
@@ -280,7 +175,7 @@ export default function ChapterList() {
                       </td>
                       <td className="px-4 py-3 text-gray-600 dark:text-gray-300">
                         {chapter.createDate
-                          ? new Date(chapter.createDate).toLocaleDateString()
+                          ? new Date(chapter.createDate).toLocaleDateString("vi-VN")
                           : "Không rõ"}
                       </td>
                     </tr>
