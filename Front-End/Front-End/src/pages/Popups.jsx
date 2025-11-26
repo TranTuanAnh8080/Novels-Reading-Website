@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import landscapeImage from "../assets/landscape.jpg";
+import landscapeImage from "../assets/sun.jpg";
 import Confetti from "react-confetti";
 import image from "../assets/inkrealm_logo.png";
 import vietnamFlag from "../assets/vietnam_flag.png";

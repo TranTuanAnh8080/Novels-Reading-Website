@@ -2,79 +2,38 @@ import React, { useState } from "react";
 import {
     TrendingUp, Users, BookOpen, DollarSign, LayoutDashboard, Icon
 } from "lucide-react";
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LineChart, Legend, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList } from "recharts";
+import { LineChart, Legend, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList } from "recharts";
 import { useEffect } from "react";
 
-// --- DỮ LIỆU GIẢ LẬP ---
-const kpiData = [
-    {
-        title: "Tổng Doanh Thu",
-        value: "18,800,000 VND",
-        icon: DollarSign,
-        color: "text-emerald-500",
-        bgColor: "from-emerald-50 to-emerald-100/50 dark:from-emerald-900/10 dark:to-emerald-800/10",
-    },
-    {
-        title: "Tổng Người Dùng",
-        value: "30",
-        icon: Users,
-        color: "text-blue-500",
-        bgColor: "from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-800/10",
-    },
-    {
-        title: "Truyện Đã Đăng",
-        value: "10",
-        icon: BookOpen,
-        color: "text-amber-500",
-        bgColor: "from-amber-50 to-amber-100/50 dark:from-amber-900/10 dark:to-amber-800/10",
-    },
-    {
-        title: "Tăng trưởng Tuần",
-        value: "+12.5%",
-        icon: TrendingUp,
-        color: "text-rose-500",
-        bgColor: "from-rose-50 to-rose-100/50 dark:from-rose-900/10 dark:to-rose-800/10",
-        description: "So với tuần trước",
-    },
+
+// --- DỮ LIỆU THỂ LOẠI ---
+const genreData = [
+    { name: "Tiên Hiệp", value: 18 },
+    { name: "Ngôn Tình", value: 15 },
+    { name: "Kiếm Hiệp", value: 12 },
+    { name: "Huyễn Huyền", value: 10 },
+    { name: "Đô Thị", value: 9 },
+    { name: "Trinh Thám", value: 8 },
+    { name: "Khoa Huyễn", value: 7 },
+    { name: "Cung Đấu", value: 7 },
+    { name: "Viễn Tưởng", value: 7 },
+    { name: "Khác", value: 7 },
 ];
 
-const revenueData = {
-    week: [
-        { name: "Tuần 1", DoanhThu: 1200000 },
-        { name: "Tuần 2", DoanhThu: 1500000 },
-        { name: "Tuần 3", DoanhThu: 1000000 },
-        { name: "Tuần 4", DoanhThu: 1880000 },
-        { name: "Tuần 5", DoanhThu: 1300000 },
-        { name: "Tuần 6", DoanhThu: 1600000 },
-        { name: "Tuần 7", DoanhThu: 1100000 },
-        { name: "Tuần 8", DoanhThu: 1700000 },
-        { name: "Tuần 9", DoanhThu: 1400000 },
-        { name: "Tuần 10", DoanhThu: 1550000 },
-    ],
-    month: [
-
-        { name: "Tháng 10", DoanhThu: 3500000 },
-        { name: "Tháng 11", DoanhThu: 6700000 },
-        { name: "Tháng 12", DoanhThu: 4200000 },
-    ],
-    // quarter: [
-    //     { name: "Q1", DoanhThu: 138000000 },
-    //     { name: "Q2", DoanhThu: 164000000 },
-    //     { name: "Q3", DoanhThu: 128000000 },
-    //     { name: "Q4", DoanhThu: 192000000 },
-    // ],
-    year: [
-        { name: "2025", DoanhThu: 18800000 },
-    ],
-};
-
-
-const genreData = [
-    { name: "Tiên Hiệp", value: 40 },
-    { name: "Ngôn Tình", value: 30 },
-    { name: "Kiếm Hiệp", value: 20 },
-    { name: "Huyễn Huyền", value: 26 },
+// Màu cho từng thể loại (theo thứ tự)
+const genreColors = [
+    "#4f46e5", // Tiên Hiệp
+    "#ec4899", // Ngôn Tình
+    "#f97316", // Kiếm Hiệp
+    "#10b981", // Huyễn Huyền
+    "#6366f1", // Đô Thị
+    "#f59e42", // Trinh Thám
+    "#14b8a6", // Khoa Huyễn
+    "#eab308", // Cung Đấu
+    "#a21caf", // Viễn Tưởng
+    "#f43f5e", // Hài Hước
 ];
 
 const topTrendingData = [
@@ -110,7 +69,6 @@ const KpiCard = ({ title, value, icon: Icon, color, bgColor, description }) => (
     </motion.div>
 );
 
-// --- BIỂU ĐỒ DOANH THU ---
 const RevenueChart = () => {
     const [range, setRange] = useState("day");
     const [selectedDate, setSelectedDate] = useState("");
@@ -120,14 +78,12 @@ const RevenueChart = () => {
     const [totalRevenue, setTotalRevenue] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    // --- Gọi API doanh thu ---
     const fetchRevenueData = async () => {
         try {
             setLoading(true);
             const token = sessionStorage.getItem("token");
             let endpoint = "";
 
-            // ✅ Xác định endpoint giống như RevenueStatistics
             if (range === "day") {
                 endpoint = selectedDate ? `date/${selectedDate}` : "today";
             } else if (range === "month") {
@@ -153,7 +109,6 @@ const RevenueChart = () => {
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || "Lỗi tải dữ liệu doanh thu");
 
-            // ✅ Chuẩn hóa dữ liệu cho biểu đồ
             if (range === "day") {
                 setChartData([{ name: data.date, DoanhThu: Number(data.revenue) }]);
                 setTotalRevenue(Number(data.revenue));
@@ -187,17 +142,18 @@ const RevenueChart = () => {
         fetchRevenueData();
     }, [range, selectedDate, fromDate, toDate]);
 
-    // --- Giao diện giống như trước ---
     return (
-        <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Biểu đồ doanh thu
+        <div className="p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border-2 border-blue-300/30 dark:border-blue-700/50 transition-all duration-500 transform hover:shadow-blue-500/50">
+            
+            <div className="flex justify-between items-start mb-6 flex-wrap gap-4">
+                <h2 className="text-2xl font-extrabold text-blue-700 blue:text-blue-400 flex items-center gap-3 tracking-wide uppercase">
+                    <svg className="w-8 h-8 text-blue-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Tổng Quan Doanh Thu
                 </h2>
 
-                {/* Bộ chọn phạm vi */}
-                <div className="flex gap-2 flex-wrap items-center">
+                <div className="flex gap-2 flex-wrap items-center bg-gray-900/10 dark:bg-gray-900/40 p-1.5 rounded-xl shadow-inner border border-gray-700/50">
                     {["day", "month", "year", "range"].map((r) => (
                         <button
                             key={r}
@@ -207,10 +163,11 @@ const RevenueChart = () => {
                                 setFromDate("");
                                 setToDate("");
                             }}
-                            className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${range === r
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
-                                }`}
+                            className={`px-3 py-2 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 ${r === "range" ? "text-red-400" : ""} ${
+                                range === r
+                                    ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/40" 
+                                    : "text-gray-400 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-700/50"
+                            }`}
                         >
                             {r === "day"
                                 ? "Ngày"
@@ -221,43 +178,47 @@ const RevenueChart = () => {
                                         : "Khoảng"}
                         </button>
                     ))}
-
-                    {/* Ngày cụ thể */}
-                    {range === "day" && (
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                            className="p-1.5 border rounded-lg text-sm bg-gray-50 dark:bg-gray-700 dark:text-white"
-                        />
-                    )}
-
-                    {/* Khoảng thời gian */}
-                    {range === "range" && (
-                        <div className="flex items-center gap-2">
-                            <input
-                                type="date"
-                                value={fromDate}
-                                onChange={(e) => setFromDate(e.target.value)}
-                                className="p-1.5 border rounded-lg text-sm bg-gray-50 dark:bg-gray-700 dark:text-white"
-                            />
-                            <span className="text-gray-500 dark:text-gray-300">→</span>
-                            <input
-                                type="date"
-                                value={toDate}
-                                onChange={(e) => setToDate(e.target.value)}
-                                className="p-1.5 border rounded-lg text-sm bg-gray-50 dark:bg-gray-700 dark:text-white"
-                            />
-                        </div>
-                    )}
                 </div>
+
+                {(range === "day" || range === "range") && (
+                    <div className="w-full flex justify-end">
+                        {range === "day" && (
+                            <input
+                                type="date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                                className="p-2 border border-blue-400/50 dark:border-blue-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-4 focus:ring-blue-500/50 transition-colors"
+                            />
+                        )}
+                        {range === "range" && (
+                            <div className="flex items-center gap-3">
+                                <input
+                                    type="date"
+                                    value={fromDate}
+                                    onChange={(e) => setFromDate(e.target.value)}
+                                    className="p-2 border border-blue-400/50 dark:border-blue-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-4 focus:ring-blue-500/50 transition-colors"
+                                />
+                                <span className="text-blue-500 dark:text-blue-400 text-2xl font-black">→</span>
+                                <input
+                                    type="date"
+                                    value={toDate}
+                                    onChange={(e) => setToDate(e.target.value)}
+                                    className="p-2 border border-blue-400/50 dark:border-blue-600 rounded-xl text-sm bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-4 focus:ring-blue-500/50 transition-colors"
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
-            {/* Biểu đồ cột */}
-            <div className="w-full h-[320px] min-h-[300px]">
+            <div className="w-full h-[350px] min-h-[300px] mt-2">
                 {loading ? (
-                    <div className="flex justify-center items-center h-full text-gray-500">
-                        Đang tải dữ liệu...
+                    <div className="flex justify-center items-center h-full text-gray-500 dark:text-gray-400 font-medium">
+                        <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Đang tải dữ liệu ...
                     </div>
                 ) : chartData.length === 0 ? (
                     <div className="flex justify-center items-center h-full text-gray-400">
@@ -265,28 +226,60 @@ const RevenueChart = () => {
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
-                            <XAxis dataKey="name" stroke="#888888" />
+                        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                            {/* Định nghĩa Gradient VÀ Hiệu ứng Shadow cho cột */}
+                            <defs>
+                                <linearGradient id="colorRevenueHoanhTrang" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={1} /> {/* blue đậm */}
+                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.6} /> {/* Blue nhạt hơn */}
+                                </linearGradient>
+                                <filter id="shadowGlow" height="200%">
+                                    <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#3b82f6" floodOpacity="0.8"/>
+                                </filter>
+                            </defs>
+                            
+                            {/* Lưới ngang mỏng */}
+                            <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="#4b5563" strokeOpacity={0.4} />
+                            
+                            {/* Trục X và Y được tinh chỉnh (giữ format cũ) */}
+                            <XAxis
+                                dataKey="name"
+                                stroke="#9ca3af" // Light gray
+                                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                tickLine={false}
+                                axisLine={false}
+                            />
                             <YAxis
                                 tickFormatter={(v) =>
                                     new Intl.NumberFormat("vi-VN", { notation: "compact" }).format(v)
                                 }
-                                stroke="#888888"
+                                stroke="#9ca3af" // Light gray
+                                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                tickLine={false}
+                                axisLine={false}
                             />
+                            
+                            {/* Tooltip Glassmorphism */}
                             <Tooltip
-                            cursor={false}
-                                formatter={(v) => `${new Intl.NumberFormat("vi-VN").format(v)} ₫`}
+                                cursor={{ fill: 'rgba(129, 140, 248, 0.15)', stroke: 'none' }}
+                                formatter={(v) => [`${new Intl.NumberFormat("vi-VN").format(v)} ₫`, 'DOANH THU ĐẠT ĐƯỢC']}
                                 contentStyle={{
-                                    backgroundColor: "#fff",
-                                    borderRadius: "10px",
-                                    border: "1px solid #ddd",
+                                    backgroundColor: "rgba(30, 41, 59, 0.9)", 
+                                    backdropFilter: "blur(5px)",
+                                    borderRadius: "15px", // Bo góc lớn hơn
+                                    border: "2px solid #6366f1", // Viền xanh tím nổi bật
+                                    color: "#fff",
+                                    padding: "12px",
+                                    boxShadow: "0 15px 25px rgba(0,0,0,0.3)",
                                 }}
                             />
+                            
                             <Bar
                                 dataKey="DoanhThu"
-                                fill="#4f46e5"
-                                radius={[8, 8, 0, 0]}
-                                barSize={60}
+                                fill="url(#colorRevenueHoanhTrang)" // Sử dụng Gradient mới
+                                radius={[12, 12, 0, 0]} // Bo góc lớn hơn
+                                barSize={40} // Cột dày hơn
+                                filter="url(#shadowGlow)" // Áp dụng hiệu ứng Shadow/Glow
                             />
                         </BarChart>
                     </ResponsiveContainer>
@@ -294,22 +287,22 @@ const RevenueChart = () => {
             </div>
 
             {/* Tổng doanh thu */}
-            <div className="text-center mt-5">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Tổng doanh thu{" "}
+            <div className="text-center mt-6 pt-5 border-t-2 border-dashed border-gray-300 dark:border-blue-600">
+                <p className="text-base font-semibold text-gray-600 dark:text-gray-300 uppercase ">
+                    TỔNG DOANH THU ĐẠT ĐƯỢC
                     {range === "day"
                         ? selectedDate
-                            ? `ngày ${selectedDate}`
-                            : "hôm nay"
+                            ? ` TRONG NGÀY ${selectedDate}`
+                            : " HÔM NAY"
                         : range === "month"
-                            ? "tháng này"
+                            ? " THÁNG NÀY"
                             : range === "year"
-                                ? "năm nay"
+                                ? " NĂM NAY"
                                 : fromDate && toDate
-                                    ? `từ ${fromDate} → ${toDate}`
+                                    ? ` TỪ ${fromDate} ĐẾN ${toDate}`
                                     : ""}
                 </p>
-                <h3 className="text-2xl font-bold text-blue-600 mt-1">
+                <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-700 mt-2 tracking-tighter drop-shadow-lg">
                     {new Intl.NumberFormat("vi-VN").format(totalRevenue)} ₫
                 </h3>
             </div>
@@ -317,90 +310,219 @@ const RevenueChart = () => {
     );
 };
 
-// --- BIỂU ĐỒ TRÒN ---
-const GenrePieChart = () => (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200/60 dark:border-gray-700 flex flex-col items-center">
-        <h2 className="text-lg font-semibold mb-6 dark:text-white">
-            Phân loại Thể loại Yêu thích
-        </h2>
-        <div className="relative w-48 h-48">
-            <div
-                className="absolute w-full h-full rounded-full"
-                style={{
-                    backgroundImage: `conic-gradient(
-            #4f46e5 0% ${genreData[0].value * 3.6}deg,
-            #ec4899 ${genreData[0].value * 3.6}deg ${(genreData[0].value + genreData[1].value) * 3.6
-                        }deg,
-            #f97316 ${(genreData[0].value + genreData[1].value) * 3.6}deg ${(genreData[0].value + genreData[1].value + genreData[2].value) * 3.6
-                        }deg,
-            #10b981 ${(genreData[0].value +
-                            genreData[1].value +
-                            genreData[2].value) *
-                        3.6
-                        }deg 360deg
-          )`,
-                }}
-            ></div>
-            <div className="absolute inset-0 m-auto w-20 h-20 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center font-semibold text-gray-700 dark:text-gray-200">
-                75%
+const GenrePieChart = () => {
+    // Màu sắc hiện đại (Vibrant Colors)
+    const COLORS = ["#6366f1", "#ec4899", "#f59e0b", "#10b981", "#8b5cf6"];
+
+    // Tính tổng để hiển thị ở giữa (nếu cần)
+    const totalPercent = genreData.reduce((sum, item) => sum + item.value, 0);
+
+    return (
+        <div className="p-6 bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 flex flex-col items-center h-full transition-all duration-300">
+            {/* Header */}
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 self-start w-full">
+                <BookOpen className="w-5 h-5 text-pink-500" /> Phân Bố Thể Loại
+            </h2>
+            <p className="text-sm text-gray-400 self-start mb-6">Tỷ lệ các thể loại được đọc nhiều nhất</p>
+
+            {/* Chart Area */}
+            <div className="relative w-full h-[250px] flex justify-center items-center">
+                <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                        <Pie
+                            data={genreData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={70}
+                            outerRadius={90}
+                            paddingAngle={5}
+                            dataKey="value"
+                            cornerRadius={8}
+                            stroke="none"
+                        >
+                            {genreData.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={COLORS[index % COLORS.length]}
+                                    className="outline-none focus:outline-none"
+                                />
+                            ))}
+                        </Pie>
+                        {/* Tooltip hiện đại */}
+                        <Tooltip
+                            cursor={false}
+                            contentStyle={{
+                                backgroundColor: "rgba(30, 41, 59, 0.9)",
+                                backdropFilter: "blur(4px)",
+                                borderRadius: "12px",
+                                border: "1px solid #374151",
+                                color: "#fff",
+                                padding: "8px 12px",
+                                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                            }}
+                            itemStyle={{ color: "#fff", fontWeight: 600 }}
+                            formatter={(value) => [`${value}%`, 'Tỷ lệ']}
+                        />
+                    </PieChart>
+                </ResponsiveContainer>
+
+                {/* Center Label (Label ở giữa lỗ rỗng) */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-3xl font-extrabold text-gray-800 dark:text-white mt-2">
+                        {genreData.length}
+                    </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">
+                        Thể loại
+                    </span>
+                </div>
+            </div>
+
+            {/* Legend / Chú thích bên dưới */}
+            <div className="mt-7 w-full grid grid-cols-2 gap-3 animate-pulse">
+                {genreData.map((item, i) => (
+                    <div
+                        key={i}
+                        className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-default"
+                    >
+                        <div className="flex items-center gap-3">
+                            <span
+                                className="w-3 h-3 rounded-full shadow-sm ring-2 ring-white dark:ring-gray-800"
+                                style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                            ></span>
+                            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {item.name}
+                            </span>
+                        </div>
+                        <span className="text-sm font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-md">
+                            {item.value}%
+                        </span>
+                    </div>
+                ))}
             </div>
         </div>
-        <div className="mt-6 w-full max-w-xs space-y-2">
-            {genreData.map((item, i) => (
-                <div key={i} className="flex justify-between text-sm dark:text-gray-300">
-                    <div className="flex items-center gap-2">
-                        <span
-                            className="w-3 h-3 rounded-full"
-                            style={{
-                                backgroundColor:
-                                    i === 0
-                                        ? "#4f46e5"
-                                        : i === 1
-                                            ? "#ec4899"
-                                            : i === 2
-                                                ? "#f97316"
-                                                : "#10b981",
-                            }}
-                        ></span>
-                        {item.name}
+    );
+};
+
+const TREND_COLORS = [
+    "#34d399", // Xanh ngọc
+    "#60a5fa", // Xanh dương
+    "#a78bfa", // Tím nhạt
+    "#fb7185", // Hồng đỏ
+    "#facc15", // Vàng
+];
+
+// Icon minh họa
+const FireIcon = ({ className = "w-5 h-5" }) => (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 0110.163 15M13.62 5.62l1.414 1.414a2 2 0 010 2.828l-5.657 5.657a2 2 0 01-2.828 0l-1.414-1.414a2 2 0 010-2.828l5.657-5.657a2 2 0 012.828 0z" />
+    </svg>
+);
+
+const TopTrendingLineChart = () => { 
+    const MAX_LINES = 10;
+
+    const dataKeys = useMemo(() => {
+        if (!topTrendingData || topTrendingData.length === 0) return [];
+        const allKeys = Object.keys(topTrendingData[0]).filter(key => key !== 'day');
+        
+        return allKeys.slice(0, MAX_LINES);
+    }, []);
+
+    return (
+        <div className="bg-white mt-70 dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 transition-all duration-300">
+            <h2 className="text-xl font-bold dark:text-white mb-6 flex items-center gap-2">
+                <FireIcon className="w-6 h-6 text-red-500" /> Xu Hướng Đọc Truyện Trong Tuần
+            </h2>
+
+            <div className="w-full h-[300px]">
+                {topTrendingData && topTrendingData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={topTrendingData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <defs>
+                                {dataKeys.map((key, index) => (
+                                    <filter key={key} id={`shadow-${index}`}>
+                                        <feDropShadow 
+                                            dx="0" dy="5" stdDeviation="5" 
+                                            floodColor={TREND_COLORS[index % TREND_COLORS.length]} 
+                                            floodOpacity="0.4"
+                                        />
+                                    </filter>
+                                ))}
+                            </defs>
+
+                            <CartesianGrid 
+                                strokeDasharray="3 3" 
+                                vertical={false}
+                                stroke="#4b5563"
+                                strokeOpacity={0.5} 
+                            />
+                            
+                            <XAxis 
+                                dataKey="day" 
+                                stroke="#6b7280" 
+                                tickLine={false} 
+                                axisLine={false} 
+                                padding={{ left: 15, right: 15 }} 
+                            />
+                            
+                            <YAxis 
+                                stroke="#6b7280" 
+                                tickLine={false} 
+                                axisLine={false} 
+                                tickFormatter={(v) => new Intl.NumberFormat("vi-VN", { notation: "compact" }).format(v)}
+                            />
+                            
+                            <Tooltip
+                                cursor={{ stroke: '#6366f1', strokeWidth: 1, strokeDasharray: "3 3" }}
+                                contentStyle={{
+                                    backgroundColor: "rgba(30, 41, 59, 0.9)", 
+                                    backdropFilter: "blur(5px)",
+                                    borderRadius: "12px",
+                                    border: "1px solid #374151",
+                                    color: "#fff",
+                                    padding: "10px",
+                                    boxShadow: "0 10px 15px rgba(0,0,0,0.1)",
+                                }}
+                                formatter={(value, name) => [new Intl.NumberFormat("vi-VN").format(value), name]} 
+                            />
+                            
+                            <Legend 
+                                align="center" 
+                                wrapperStyle={{ paddingTop: '20px' }} 
+                                iconType="circle" 
+                                payload={
+                                    dataKeys.map((key, index) => ({
+                                        value: key,
+                                        type: 'circle',
+                                        color: TREND_COLORS[index % TREND_COLORS.length],
+                                    }))
+                                }
+                            />
+                            {dataKeys.map((key, index) => (
+                                <Line 
+                                    key={key}
+                                    type="monotone" 
+                                    dataKey={key} 
+                                    stroke={TREND_COLORS[index % TREND_COLORS.length]} 
+                                    strokeWidth={3} 
+                                    dot={{ r: 4 }} 
+                                    activeDot={{ r: 6 }} 
+                                    filter={`url(#shadow-${index})`} 
+                                />
+                            ))}
+
+                        </LineChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <div className="flex justify-center items-center h-full text-gray-400">
+                        Không có dữ liệu xu hướng đọc truyện.
                     </div>
-                    <span className="font-semibold">{item.value}%</span>
-                </div>
-            ))}
+                )}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
-const TopTrendingLineChart = () => (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200/60 dark:border-gray-700 p-6">
-        <h2 className="text-lg font-semibold mb-4 dark:text-white">
-            🔥 Xu Hướng Đọc Truyện Trong Tuần
-        </h2>
-
-        <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={topTrendingData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="day" stroke="#a1a1aa" />
-                <YAxis stroke="#a1a1aa" />
-                <Tooltip
-                    cursor={false}
-                    contentStyle={{
-                        backgroundColor: "#1f2937",
-                        border: "none",
-                        borderRadius: "8px",
-                        color: "#fff",
-                    }}
-                />
-                <Legend verticalAlign="top" height={36} />
-                <Line type="monotone" dataKey="Đế Bá" stroke="#34d399" strokeWidth={3} dot />
-                <Line type="monotone" dataKey="Thần Đạo Đan Tôn" stroke="#60a5fa" strokeWidth={3} dot />
-                <Line type="monotone" dataKey="Nhất Niệm Vĩnh Hằng" stroke="#a78bfa" strokeWidth={3} dot />
-                <Line type="monotone" dataKey="Linh Vũ Thiên Hạ" stroke="#f472b6" strokeWidth={3} dot />
-                <Line type="monotone" dataKey="Hạ Tân" stroke="#60a5fa" strokeWidth={3} dot />
-            </LineChart>
-        </ResponsiveContainer>
-    </div>
-);
 // --- DASHBOARD CHÍNH ---
 const Dashboard = () => (
     <div className="p-6 sm:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
@@ -418,20 +540,6 @@ const Dashboard = () => (
                 Theo dõi các chỉ số hoạt động, tài chính và xu hướng nội dung gần đây.
             </p>
         </motion.div>
-
-        {/* KPI CARDS */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-            {kpiData.map((data, i) => (
-                <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                >
-                    <KpiCard {...data} />
-                </motion.div>
-            ))}
-        </div> */}
 
         {/* BIỂU ĐỒ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
